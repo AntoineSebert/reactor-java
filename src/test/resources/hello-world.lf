@@ -1,0 +1,7 @@
+target Java;
+
+main reactor Minimal {
+    reaction(startup) {=
+        printf("Hello World.\n");
+    =}
+}

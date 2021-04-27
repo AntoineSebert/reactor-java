@@ -1,0 +1,8 @@
+target Java;
+
+import HelloWorld.lf;
+
+main reactor TwoHelloWorlds {
+    a = new HelloWorld();
+    b = new HelloWorld();
+}
