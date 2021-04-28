@@ -13,10 +13,6 @@
     </inspection_tool>
     <inspection_tool class="CallToStringConcatCanBeReplacedByOperator" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="ChainedEquality" enabled="true" level="WARNING" enabled_by_default="true" />
-    <inspection_tool class="ChainedMethodCall" enabled="true" level="WARNING" enabled_by_default="true">
-      <option name="m_ignoreFieldInitializations" value="true" />
-      <option name="m_ignoreThisSuperCalls" value="true" />
-    </inspection_tool>
     <inspection_tool class="CollectionContainsUrl" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="CollectionsMustHaveInitialCapacity" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="ConfusingOctalEscape" enabled="true" level="WARNING" enabled_by_default="true" />
@@ -61,7 +57,6 @@
       <option name="ignoreSerializable" value="false" />
       <option name="ignoreCloneable" value="false" />
     </inspection_tool>
-    <inspection_tool class="ReturnThis" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="SetReplaceableByEnumSet" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="SimplifiableAnnotation" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="SimplifiableEqualsExpression" enabled="true" level="WARNING" enabled_by_default="true" />
