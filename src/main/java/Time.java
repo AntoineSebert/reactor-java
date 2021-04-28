@@ -1,3 +1,5 @@
 import org.jetbrains.annotations.NotNull;
 
-public record Time(int time, @NotNull Unit unit) {}
+import java.util.Optional;
+
+public record Time(int time, @NotNull Optional<Unit> unit) {}
