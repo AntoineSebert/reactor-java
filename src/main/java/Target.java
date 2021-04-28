@@ -12,7 +12,6 @@ public class Target {
 		log,
 		debug
 	}
-	public record timeoutParameterValue(int time, Units unit) {}
 
 	static {
 		paramSpecification = new HashMap<>(7) {{
@@ -36,7 +35,7 @@ public class Target {
 				add(boolean.class);
 			}});
 			put("timeout", new HashSet<>(1) {{
-				add(timeoutParameterValue.class);
+				add(Time.class);
 			}});
 		}};
 	}
