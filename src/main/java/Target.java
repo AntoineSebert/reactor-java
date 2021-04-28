@@ -7,8 +7,8 @@ import java.util.HashSet;
 public class Target {
 	private String name;
 	private HashMap<String, String> params;
-	public static HashMap<String, HashSet<Class<?>>> paramSpecification;
-	public enum loggingParameterValue {
+	public static final HashMap<String, HashSet<Class<?>>> paramSpecification;
+	public enum loggingParameter {
 		log,
 		debug
 	}
@@ -29,7 +29,7 @@ public class Target {
 				add(boolean.class);
 			}});
 			put("logging", new HashSet<>(1) {{
-				add(loggingParameterValue.class);
+				add(loggingParameter.class);
 			}});
 			put("no-compile", new HashSet<>(1) {{
 				add(boolean.class);
