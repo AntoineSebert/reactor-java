@@ -1,34 +1,30 @@
 import org.jetbrains.annotations.NotNull;
 
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Optional;
 
 /**
  * Target specification class.
  */
 public class Target {
 	private String name;
-	private HashMap<String, Object> params;
-	public enum loggingParameter {
-		log,
-		debug
-	}
+	private HashSet<Parameter<?>> params;
 
 	/**
 	 * @param name name
 	 * @param params parameters
+	 * @throws ExceptionInInitializerError if the name is empty or if the "timeout" parameter is present and invalid
 	 */
-	public Target(@NotNull String name, @NotNull HashMap<String, Object> params) {
+	public Target(@NotNull String name, @NotNull HashSet<Parameter<?>> params) {
 		if (name.isEmpty())
 			throw new ExceptionInInitializerError("Target name cannot be empty");
 
-		if (params.containsKey("timeout")) {
-			Time timeout = (Time)params.get("timeout");
+		for (Parameter<?> param : params)
+			if ("timeout".equals(param.name())) {
+				Time timeout = (Time)param.value();
 
-			if (timeout.time() == 0 || timeout.unit().isEmpty())
-				throw new ExceptionInInitializerError("Timeout parameter must be a non-zero time with unit");
-		}
+				if (timeout.time() == 0 || timeout.unit().isEmpty())
+					throw new ExceptionInInitializerError("Timeout parameter must be a non-zero time with unit");
+			}
 
 		this.name = name;
 		this.params = params;
@@ -44,7 +40,7 @@ public class Target {
 	/**
 	 * @return the parameters
 	 */
-	public HashMap<String, Object> getParams() {
+	public HashSet<Parameter<?>> getParams() {
 		return params;
 	}
 
@@ -58,8 +54,8 @@ public class Target {
 		if (!params.isEmpty()) {
 			builder.append(" {\n");
 
-			for (HashMap.Entry<String, Object> param : params.entrySet())
-				builder.append("\t").append(param.getKey()).append(": ").append(param.getValue()).append(",\n");
+			for (Parameter<?> param : params)
+				builder.append("\t").append(param.name()).append(": ").append(param.value()).append(",\n");
 
 			builder.append("}");
 		}

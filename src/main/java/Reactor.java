@@ -1,21 +1,21 @@
 import org.jetbrains.annotations.NotNull;
 
-import java.util.HashMap;
+import java.util.HashSet;
 
 public class Reactor {
 	private String name;
-	private HashMap<String, Object> params;
+	private HashSet<Parameter<?>> params;
 
 	/**
 	 * @param name name
 	 * @param params parameters
 	 */
-	public Reactor(@NotNull String name, @NotNull HashMap<String, Object> params) {
+	public Reactor(@NotNull String name, @NotNull HashSet<Parameter<?>> params) {
 		if (name.isEmpty())
 			throw new ExceptionInInitializerError("Reactor name cannot be empty");
 
-		for (Object value : params.values())
-			if (value instanceof Time time)
+		for (Parameter<?> param : params)
+			if (param.value() instanceof Time time)
 				if (time.time() == 0 && time.unit().isEmpty())
 					throw new ExceptionInInitializerError("Non-zero time parameter for reactor had no time unit");
 
@@ -33,7 +33,7 @@ public class Reactor {
 	/**
 	 * @return the parameters
 	 */
-	public HashMap<String, Object> getParams() {
+	public HashSet<Parameter<?>> getParams() {
 		return params;
 	}
 
