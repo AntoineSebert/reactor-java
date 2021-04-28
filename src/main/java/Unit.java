@@ -1,4 +1,4 @@
-public enum Units {
+public enum Unit {
 	nsec, // nanoseconds
 	usec, // microseconds
 	msec, // milliseconds
