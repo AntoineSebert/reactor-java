@@ -1,3 +1,5 @@
+import org.jetbrains.annotations.NotNull;
+
 import java.util.HashMap;
 import java.util.HashSet;
 
@@ -41,48 +43,33 @@ public class Target {
 	}
 
 	/**
-	 * Constructs a new Target instance.
-	 *
-	 * @param name a target name
-	 * @param params target parameters
+	 * @param name name
+	 * @param params parameters
 	 */
-	public Target(String name, HashMap<String, String> params) {
-		checkParameters(name, params);
+	public Target(@NotNull String name, @NotNull HashMap<String, String> params) {
+		if (name.isEmpty())
+			throw new ExceptionInInitializerError("Target name cannot be empty");
 
 		this.name = name;
 		this.params = params;
 	}
 
 	/**
-	 * Check whether or not the constructor parameters are valid.
-	 *
-	 * @param name a target name
-	 * @param params target parameters
-	 */
-	private static void checkParameters(String name, HashMap<String, String> params) {
-		if (null == name)
-			throw new ExceptionInInitializerError("Target name cannot be null");
-
-		if (null == params)
-			throw new ExceptionInInitializerError("Target parameters cannot be null");
-	}
-
-	/**
-	 * @return the name of the target
+	 * @return the name
 	 */
 	public String getName() {
 		return name;
 	}
 
 	/**
-	 * @return the parameters of the target
+	 * @return the parameters
 	 */
 	public HashMap<String, String> getParams() {
 		return params;
 	}
 
 	/**
-	 * @return a string representation of the target specification
+	 * @return a string representation in Lingua Franca
 	 */
 	public String toLF() {
 		StringBuilder builder = new StringBuilder();
@@ -103,9 +90,26 @@ public class Target {
 	}
 
 	/**
-	 * @return a string representation of the target specification
+	 * @return a string representation in Java
 	 */
 	public String toJava() {
 		return "";
+	}
+
+	@Override
+	public int hashCode() {
+		return name.hashCode();
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		else if (obj == null)
+			return false;
+		else if (getClass() != obj.getClass())
+			return false;
+		else
+			return name.equals(((Target)obj).name);
 	}
 }
