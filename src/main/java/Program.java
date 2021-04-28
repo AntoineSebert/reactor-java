@@ -1,51 +1,61 @@
-import java.util.ArrayList;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.HashSet;
+import java.util.Optional;
 
 /*
-A Lingua Franca file, which has a .lf extension, contains the following:
-    One or more target specifications.
-    Zero or more import statements.
-    One or more reactor blocks, which contain reaction declarations.
+program := target+, import*, reactor-block+
 */
 public class Program {
-	private ArrayList<Target> targets;
-	private ArrayList<Object/*Import*/> imports;
-	private ArrayList<Object/*reactor*/> reactors;
+	private HashSet<Target> targets;
+	private HashSet<Object/*Import*/> imports;
+	private HashSet<Reactor> reactors;
+	private Optional<Reactor> mainReactor;
 
-	public Program(ArrayList<Target> targets, ArrayList<Object/*Import*/> imports, ArrayList<Object/*reactor*/> reactors) {
-		checkParameters(targets, imports, reactors);
+	public Program(@NotNull HashSet<Target> targets, @NotNull HashSet<Object/*Import*/> imports,
+	               @NotNull HashSet<Reactor> reactors, @NotNull Optional<Reactor> mainReactor) {
+		if (targets.isEmpty())
+			throw new ExceptionInInitializerError("Program targets cannot be empty");
+
+		if (reactors.isEmpty() && mainReactor.isEmpty())
+			throw new ExceptionInInitializerError("Program must contain at least one reactor");
 
 		this.targets = targets;
 		this.imports = imports;
 		this.reactors = reactors;
+		this.mainReactor = mainReactor;
 	}
 
-	private static void checkParameters(ArrayList<Target> targets, ArrayList<Object/*Import*/> imports,
-	                                    ArrayList<Object/*reactor*/> reactors) {
-		if (null == targets)
-			throw new ExceptionInInitializerError("Program targets cannot be null");
-
-		if (null == imports)
-			throw new ExceptionInInitializerError("Program imports cannot be null");
-
-		if (null == reactors)
-			throw new ExceptionInInitializerError("Program reactors cannot be null");
-
-		if (targets.size() < 1)
-			throw new ExceptionInInitializerError("Program must have at least one target");
-
-		if (reactors.size() < 1)
-			throw new ExceptionInInitializerError("Program must have at least one reactor block");
-	}
-
-	ArrayList<Target> getTargets() {
+	/**
+	 * @return
+	 */
+	HashSet<Target> getTargets() {
 		return targets;
 	}
 
-	public ArrayList<Object> getImports() {
+	/**
+	 * @return
+	 */
+	public HashSet<Object/*Import*/> getImports() {
 		return imports;
 	}
 
-	public ArrayList<Object> getReactors() {
+	/**
+	 * @return
+	 */
+	public HashSet<Reactor> getReactors() {
 		return reactors;
 	}
+
+	/**
+	 * @return
+	 */
+	public Optional<Reactor> getMainReactor() {
+		return mainReactor;
+	}
+
+	/**
+	 *
+	 */
+	public void run() {}
 }
