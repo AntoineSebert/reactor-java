@@ -2,53 +2,33 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Optional;
 
 /**
  * Target specification class.
  */
 public class Target {
 	private String name;
-	private HashMap<String, String> params;
-	public static final HashMap<String, HashSet<Class<?>>> paramSpecification;
+	private HashMap<String, Object> params;
 	public enum loggingParameter {
 		log,
 		debug
-	}
-
-	static {
-		paramSpecification = new HashMap<>(7) {{
-			put("compiler", new HashSet<>(1) {{
-				add(String.class);
-			}});
-			put("fast", new HashSet<>(1) {{
-				add(boolean.class);
-			}});
-			put("flags", new HashSet<>(2) {{
-				add(String.class);
-				add(String[].class);
-			}});
-			put("keepalive", new HashSet<>(1) {{
-				add(boolean.class);
-			}});
-			put("logging", new HashSet<>(1) {{
-				add(loggingParameter.class);
-			}});
-			put("no-compile", new HashSet<>(1) {{
-				add(boolean.class);
-			}});
-			put("timeout", new HashSet<>(1) {{
-				add(Time.class);
-			}});
-		}};
 	}
 
 	/**
 	 * @param name name
 	 * @param params parameters
 	 */
-	public Target(@NotNull String name, @NotNull HashMap<String, String> params) {
+	public Target(@NotNull String name, @NotNull HashMap<String, Object> params) {
 		if (name.isEmpty())
 			throw new ExceptionInInitializerError("Target name cannot be empty");
+
+		if (params.containsKey("timeout")) {
+			Time timeout = (Time)params.get("timeout");
+
+			if (timeout.time() == 0 || timeout.unit().isEmpty())
+				throw new ExceptionInInitializerError("Timeout parameter must be a non-zero time with unit");
+		}
 
 		this.name = name;
 		this.params = params;
@@ -64,7 +44,7 @@ public class Target {
 	/**
 	 * @return the parameters
 	 */
-	public HashMap<String, String> getParams() {
+	public HashMap<String, Object> getParams() {
 		return params;
 	}
 
@@ -78,7 +58,7 @@ public class Target {
 		if (!params.isEmpty()) {
 			builder.append(" {\n");
 
-			for (HashMap.Entry<String, String> param : params.entrySet())
+			for (HashMap.Entry<String, Object> param : params.entrySet())
 				builder.append("\t").append(param.getKey()).append(": ").append(param.getValue()).append(",\n");
 
 			builder.append("}");
