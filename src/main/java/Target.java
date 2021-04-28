@@ -8,40 +8,38 @@ public class Target {
 	private String name;
 	private HashMap<String, String> params;
 	public static HashMap<String, HashSet<Class<?>>> paramSpecification;
-
-	static {
-		paramSpecification = new HashMap<>() {{
-			put("compiler", new HashSet<>() {{
-				add(String.class);
-			}});
-			put("fast", new HashSet<>() {{
-				add(boolean.class);
-			}});
-			put("flags", new HashSet<>() {{
-				add(String.class);
-				add(String[].class);
-			}});
-			put("keepalive", new HashSet<>() {{
-				add(boolean.class);
-			}});
-			put("logging", new HashSet<>() {{
-				add(loggingParameterValue.class);
-			}});
-			put("no-compile", new HashSet<>() {{
-				add(boolean.class);
-			}});
-			put("timeout", new HashSet<>() {{
-				add(timeoutParameterValue.class);
-			}});
-		}};
-	}
-
 	public enum loggingParameterValue {
 		log,
 		debug
 	}
-
 	public record timeoutParameterValue(int time, Units unit) {}
+
+	static {
+		paramSpecification = new HashMap<>(7) {{
+			put("compiler", new HashSet<>(1) {{
+				add(String.class);
+			}});
+			put("fast", new HashSet<>(1) {{
+				add(boolean.class);
+			}});
+			put("flags", new HashSet<>(2) {{
+				add(String.class);
+				add(String[].class);
+			}});
+			put("keepalive", new HashSet<>(1) {{
+				add(boolean.class);
+			}});
+			put("logging", new HashSet<>(1) {{
+				add(loggingParameterValue.class);
+			}});
+			put("no-compile", new HashSet<>(1) {{
+				add(boolean.class);
+			}});
+			put("timeout", new HashSet<>(1) {{
+				add(timeoutParameterValue.class);
+			}});
+		}};
+	}
 
 	/**
 	 * Constructs a new Target instance.
