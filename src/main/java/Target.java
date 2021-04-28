@@ -41,7 +41,7 @@ public class Target {
 		debug
 	}
 
-	public record timeoutParameterValue(int time, String unit) {}
+	public record timeoutParameterValue(int time, Units unit) {}
 
 	/**
 	 * Constructs a new Target instance.
