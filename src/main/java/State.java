@@ -16,12 +16,12 @@ public class State<T> {
 		if (name.isEmpty())
 			throw new ExceptionInInitializerError("Target name cannot be empty");
 
-		this.name = name;
-		this.value = value;
-
 		// disallow "state name(parameter);" in favor of "state<parameter.value().getClass()> name(parameter.value());
 		if (value instanceof Parameter<?>)
 			throw new ExceptionInInitializerError("State cannot receive Parameter as parameter");
+
+		this.name = name;
+		this.value = value;
 	}
 
 	/**
@@ -44,14 +44,9 @@ public class State<T> {
 	}
 
 	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		else if (obj == null)
-			return false;
-		else if (getClass() != obj.getClass())
-			return false;
-		else
-			return name.equals(((State<?>)obj).name);
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		return name.equals(((State<?>) o).name);
 	}
 }

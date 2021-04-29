@@ -64,4 +64,16 @@ public class Input<T> implements IO<T> {
 	public boolean isMultiport() {
 		return 1 < width;
 	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		return name.equals(((Input<?>) o).name);
+	}
+
+	@Override
+	public int hashCode() {
+		return name.hashCode();
+	}
 }
