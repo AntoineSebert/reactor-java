@@ -14,7 +14,7 @@ public class State<T> {
 	 */
 	State(@NotNull String name, @NotNull T value) {
 		if (name.isEmpty())
-			throw new ExceptionInInitializerError("Target name cannot be empty");
+			throw new ExceptionInInitializerError(getClass().getTypeName() + " name cannot be empty");
 
 		// disallow "state name(parameter);" in favor of "state<parameter.value().getClass()> name(parameter.value());
 		if (value instanceof Parameter<?>)

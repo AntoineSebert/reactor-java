@@ -16,7 +16,7 @@ public class Target {
 	 */
 	public Target(@NotNull String name, @NotNull HashSet<Parameter<?>> params) {
 		if (name.isEmpty())
-			throw new ExceptionInInitializerError("Target name cannot be empty");
+			throw new ExceptionInInitializerError(getClass().getTypeName() + " name cannot be empty");
 
 		for (Parameter<?> param : params)
 			if ("timeout".equals(param.name())) {
