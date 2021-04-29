@@ -13,6 +13,7 @@ public class Action<T> implements Trigger, Effect {
 	private Time minDelay;
 	private Optional<Time> minSpacing;
 	private Optional<T> value;
+	public static Time TIME_PRECISION;
 
 	public enum Type {
 		logical,
@@ -38,14 +39,14 @@ public class Action<T> implements Trigger, Effect {
 		if (name.isEmpty())
 			throw new ExceptionInInitializerError(getClass().getTypeName() + " name cannot be empty");
 
-		if (minSpacing.isPresent() && minSpacing.get().time() < 0/*Program.getMinTimePrecision() or Target.getMinTimePrecision()*/)
+		if (minSpacing.isPresent() && minSpacing.get().compareTo(TIME_PRECISION) < 0)
 				throw new ExceptionInInitializerError(
 						"Action minimum time spacing must be greater than or equal to the time precision of the target");
 
 		this.name = name;
 		this.type = type;
 		this.policy = policy.orElse(Policy.defer);
-		this.minDelay = minDelay.orElse(new Time(0, Optional.empty()));
+		this.minDelay = minDelay.orElse(Time.ZERO);
 		this.minSpacing = minSpacing;
 		this.value = value;
 	}

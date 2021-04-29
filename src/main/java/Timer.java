@@ -22,8 +22,8 @@ public class Timer implements Trigger {
 			throw new ExceptionInInitializerError(getClass().getTypeName() + " name cannot be empty");
 
 		this.name = name;
-		this.period = period.orElse(new Time(0, Optional.empty()));
-		this.offset = offset.orElse(new Time(0, Optional.empty()));
+		this.period = period.orElse(Time.ZERO);
+		this.offset = offset.orElse(Time.ZERO);
 	}
 
 	/**
