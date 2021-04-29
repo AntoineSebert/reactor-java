@@ -4,6 +4,7 @@ import java.util.Optional;
 
 /**
  * Timer specification class.
+ * https://github.com/icyphy/lingua-franca/wiki/Language-Specification#timer-declaration
  */
 public class Timer implements Trigger {
 	private String name;

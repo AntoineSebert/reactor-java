@@ -2,6 +2,7 @@ import org.jetbrains.annotations.NotNull;
 
 /**
  * State specification class.
+ * https://github.com/icyphy/lingua-franca/wiki/Language-Specification#state-declaration
  */
 public class State<T> {
 	String name;

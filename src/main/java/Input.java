@@ -4,6 +4,7 @@ import java.util.Optional;
 
 /**
  * Input specification class.
+ * https://github.com/icyphy/lingua-franca/wiki/Language-Specification#input-declaration
  */
 public class Input<T> implements Port<T> {
 	String name;

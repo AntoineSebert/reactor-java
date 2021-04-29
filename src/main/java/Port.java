@@ -1,5 +1,6 @@
 /**
  * Port specification class.
+ * https://github.com/icyphy/lingua-franca/wiki/Multiports-and-Banks-of-Reactors#multiports
  */
 public interface Port<T> extends Trigger, Effect {
 	/**

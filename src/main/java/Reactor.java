@@ -4,6 +4,8 @@ import java.util.HashSet;
 
 /**
  * Reactor specification class.
+ * https://github.com/icyphy/lingua-franca/wiki/Language-Specification#reactor-block
+ * https://github.com/icyphy/lingua-franca/wiki/Language-Specification#contained-reactors
  */
 public class Reactor {
 	private String name;

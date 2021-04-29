@@ -4,6 +4,7 @@ import java.util.HashSet;
 
 /**
  * Target specification class.
+ * https://github.com/icyphy/lingua-franca/wiki/Language-Specification#target-specification
  */
 public class Target {
 	private String name;

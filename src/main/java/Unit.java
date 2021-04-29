@@ -1,3 +1,6 @@
+/**
+ * https://github.com/icyphy/lingua-franca/wiki/Language-Specification#parameter-declaration
+ */
 public enum Unit {
 	nsec, // nanoseconds
 	usec, // microseconds

@@ -4,6 +4,7 @@ import java.util.Optional;
 
 /**
  * Output specification class.
+ * https://github.com/icyphy/lingua-franca/wiki/Language-Specification#output-declaration
  */
 public class Output<T> implements Port<T> {
 	String name;

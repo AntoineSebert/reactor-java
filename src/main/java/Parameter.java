@@ -1,3 +1,6 @@
+/**
+ * https://github.com/icyphy/lingua-franca/wiki/Language-Specification#parameter-declaration
+ */
 public record Parameter<T>(String name, T value) {
 	@Override
 	public int hashCode() {

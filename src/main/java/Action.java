@@ -4,6 +4,7 @@ import java.util.Optional;
 
 /**
  * Action specification class.
+ * https://github.com/icyphy/lingua-franca/wiki/Language-Specification#action-declaration
  */
 public class Action<T> implements Trigger, Effect {
 	private String name;
