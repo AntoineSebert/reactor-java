@@ -5,7 +5,7 @@ import java.util.Optional;
 /**
  * Timer specification class.
  */
-public class Timer {
+public class Timer implements Trigger {
 	private String name;
 	private Time period;
 	private Time offset;

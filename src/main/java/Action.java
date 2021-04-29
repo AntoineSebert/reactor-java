@@ -5,7 +5,7 @@ import java.util.Optional;
 /**
  * Action specification class.
  */
-public class Action<T> {
+public class Action<T> implements Trigger, Effect {
 	private String name;
 	private Type type;
 	private Policy policy;

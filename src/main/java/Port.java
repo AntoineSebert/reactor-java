@@ -1,7 +1,7 @@
 /**
  * Port specification class.
  */
-public interface Port<T> {
+public interface Port<T> extends Trigger, Effect {
 	/**
 	 * @return the name
 	 */
