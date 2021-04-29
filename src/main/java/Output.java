@@ -1,4 +1,7 @@
-public class Output<T> implements IO<T> {
+/**
+ * Output specification class.
+ */
+public class Output<T> implements Port<T> {
 	String name;
 	int width;
 
@@ -11,7 +14,8 @@ public class Output<T> implements IO<T> {
 
 	/**
 	 * @param name name
-	 * @param width width
+	 * @param width width of the port
+	 * @throws ExceptionInInitializerError if the name is empty or the width is less than 1
 	 */
 	Output(String name, int width) {
 		if (name.isEmpty())

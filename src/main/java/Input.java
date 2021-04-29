@@ -1,4 +1,7 @@
-public class Input<T> implements IO<T> {
+/**
+ * Input specification class.
+ */
+public class Input<T> implements Port<T> {
 	String name;
 	int width;
 	boolean mutable;
@@ -12,6 +15,7 @@ public class Input<T> implements IO<T> {
 
 	/**
 	 * @param name name
+	 * @param mutable mutability
 	 */
 	Input(String name, boolean mutable) {
 		this(name, 1, mutable);
@@ -19,7 +23,7 @@ public class Input<T> implements IO<T> {
 
 	/**
 	 * @param name name
-	 * @param width width
+	 * @param width width of the port
 	 */
 	Input(String name, int width) {
 		this(name, width, false);

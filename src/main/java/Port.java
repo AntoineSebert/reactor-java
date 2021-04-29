@@ -1,4 +1,7 @@
-public interface IO<T> {
+/**
+ * Port specification class.
+ */
+public interface Port<T> {
 	/**
 	 * @return the name
 	 */
