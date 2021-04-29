@@ -14,6 +14,12 @@ public class Program {
 	private HashSet<Reactor> reactors;
 	private Optional<Reactor> mainReactor;
 
+	/**
+	 * @param targets targets
+	 * @param imports imports
+	 * @param reactors reactors
+	 * @param mainReactor main reactor
+	 */
 	public Program(@NotNull HashSet<Target> targets, @NotNull HashSet<Object/*Import*/> imports,
 	               @NotNull HashSet<Reactor> reactors, @NotNull Optional<Reactor> mainReactor) {
 		if (targets.isEmpty())
@@ -39,35 +45,35 @@ public class Program {
 	}
 
 	/**
-	 * @return
+	 * @return the targets
 	 */
 	HashSet<Target> getTargets() {
 		return targets;
 	}
 
 	/**
-	 * @return
+	 * @return the imports
 	 */
 	public HashSet<Object/*Import*/> getImports() {
 		return imports;
 	}
 
 	/**
-	 * @return
+	 * @return the reactors
 	 */
 	public HashSet<Reactor> getReactors() {
 		return reactors;
 	}
 
 	/**
-	 * @return
+	 * @return the eventual main reactor
 	 */
 	public Optional<Reactor> getMainReactor() {
 		return mainReactor;
 	}
 
 	/**
-	 *
+	 * Runs the program.
 	 */
 	public void run() {}
 }
