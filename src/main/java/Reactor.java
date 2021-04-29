@@ -9,13 +9,16 @@ public class Reactor {
 	private String name;
 	private HashSet<Parameter<?>> params;
 	private HashSet<State<?>> states;
+	private HashSet<Input<?>> inputs;
+	private HashSet<Output<?>> outputs;
 
 	/**
 	 * @param name name
 	 * @param params parameters
 	 * @param states states
 	 */
-	public Reactor(@NotNull String name, @NotNull HashSet<Parameter<?>> params, @NotNull HashSet<State<?>> states) {
+	public Reactor(@NotNull String name, @NotNull HashSet<Parameter<?>> params, @NotNull HashSet<State<?>> states,
+	               @NotNull HashSet<Input<?>> inputs, @NotNull HashSet<Output<?>> outputs) {
 		if (name.isEmpty())
 			throw new ExceptionInInitializerError("Reactor name cannot be empty");
 
@@ -27,6 +30,8 @@ public class Reactor {
 		this.name = name;
 		this.params = params;
 		this.states = states;
+		this.inputs = inputs;
+		this.outputs = outputs;
 	}
 
 	/**
@@ -48,6 +53,14 @@ public class Reactor {
 	 */
 	public HashSet<State<?>> getStates() {
 		return states;
+	}
+
+	public HashSet<Input<?>> getInputs() {
+		return inputs;
+	}
+
+	public HashSet<Output<?>> getOutputs() {
+		return outputs;
 	}
 
 	/**
