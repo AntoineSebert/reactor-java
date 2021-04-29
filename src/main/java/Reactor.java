@@ -11,14 +11,18 @@ public class Reactor {
 	private HashSet<State<?>> states;
 	private HashSet<Input<?>> inputs;
 	private HashSet<Output<?>> outputs;
+	private HashSet<Timer> timers;
 
 	/**
 	 * @param name name
 	 * @param params parameters
 	 * @param states states
 	 */
-	public Reactor(@NotNull String name, @NotNull HashSet<Parameter<?>> params, @NotNull HashSet<State<?>> states,
-	               @NotNull HashSet<Input<?>> inputs, @NotNull HashSet<Output<?>> outputs) {
+	public Reactor(@NotNull String name,
+	               @NotNull HashSet<Parameter<?>> params,
+	               @NotNull HashSet<State<?>> states,
+	               @NotNull HashSet<Input<?>> inputs,
+	               @NotNull HashSet<Output<?>> outputs) {
 		if (name.isEmpty())
 			throw new ExceptionInInitializerError("Reactor name cannot be empty");
 
