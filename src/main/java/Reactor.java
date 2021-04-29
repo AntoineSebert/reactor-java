@@ -2,15 +2,20 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.HashSet;
 
+/**
+ * Reactor specification class.
+ */
 public class Reactor {
 	private String name;
 	private HashSet<Parameter<?>> params;
+	private HashSet<State<?>> states;
 
 	/**
 	 * @param name name
 	 * @param params parameters
+	 * @param states states
 	 */
-	public Reactor(@NotNull String name, @NotNull HashSet<Parameter<?>> params) {
+	public Reactor(@NotNull String name, @NotNull HashSet<Parameter<?>> params, @NotNull HashSet<State<?>> states) {
 		if (name.isEmpty())
 			throw new ExceptionInInitializerError("Reactor name cannot be empty");
 
@@ -21,6 +26,7 @@ public class Reactor {
 
 		this.name = name;
 		this.params = params;
+		this.states = states;
 	}
 
 	/**
@@ -35,6 +41,13 @@ public class Reactor {
 	 */
 	public HashSet<Parameter<?>> getParams() {
 		return params;
+	}
+
+	/**
+	 * @return the states
+	 */
+	public HashSet<State<?>> getStates() {
+		return states;
 	}
 
 	/**
