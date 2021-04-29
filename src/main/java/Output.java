@@ -1,3 +1,7 @@
+import org.jetbrains.annotations.NotNull;
+
+import java.util.Optional;
+
 /**
  * Output specification class.
  */
@@ -7,25 +11,18 @@ public class Output<T> implements Port<T> {
 
 	/**
 	 * @param name name
-	 */
-	Output(String name) {
-		this(name, 1);
-	}
-
-	/**
-	 * @param name name
 	 * @param width width of the port
 	 * @throws ExceptionInInitializerError if the name is empty or the width is less than 1
 	 */
-	Output(String name, int width) {
+	Output(@NotNull String name, @NotNull Optional<Integer> width) {
 		if (name.isEmpty())
-			throw new ExceptionInInitializerError("Input name cannot be empty");
+			throw new ExceptionInInitializerError(getClass().getTypeName() + " name cannot be empty");
 
-		if (width < 1)
-			throw new ExceptionInInitializerError("Input width cannot be less than 1");
+		if (width.isPresent() && width.get() < 1)
+			throw new ExceptionInInitializerError("Output width cannot be less than 1");
 
 		this.name = name;
-		this.width = width;
+		this.width = width.orElse(1);
 	}
 
 	@Override

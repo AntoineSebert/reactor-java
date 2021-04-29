@@ -1,3 +1,5 @@
+import org.jetbrains.annotations.NotNull;
+
 import java.util.Optional;
 
 /**
@@ -10,31 +12,17 @@ public class Timer {
 
 	/**
 	 * @param name name
-	 */
-	public Timer(String name) {
-		this(name, new Time(0, Optional.empty()), new Time(0, Optional.empty()));
-	}
-
-	/**
-	 * @param name name
-	 * @param period period
-	 */
-	public Timer(String name, Time period) {
-		this(name, period, new Time(0, Optional.empty()));
-	}
-
-	/**
-	 * @param name name
 	 * @param period period
 	 * @param offset offset
+	 * @throws ExceptionInInitializerError if the name is empty
 	 */
-	public Timer(String name, Time period, Time offset) {
+	public Timer(@NotNull String name, @NotNull Optional<Time> period, @NotNull Optional<Time> offset) {
 		if (name.isEmpty())
-			throw new ExceptionInInitializerError("Input name cannot be empty");
+			throw new ExceptionInInitializerError(getClass().getTypeName() + " name cannot be empty");
 
 		this.name = name;
-		this.period = period;
-		this.offset = offset;
+		this.period = period.orElse(new Time(0, Optional.empty()));
+		this.offset = offset.orElse(new Time(0, Optional.empty()));
 	}
 
 	/**
