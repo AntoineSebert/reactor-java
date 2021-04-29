@@ -15,6 +15,8 @@ public class Reactor {
 	private HashSet<Output<?>> outputs;
 	private HashSet<Timer> timers;
 	private HashSet<Action<?>> actions;
+	private HashSet<Reaction> reactions;
+	private HashSet<Reactor> containedReactors;
 
 	/**
 	 * @param name name
@@ -22,6 +24,8 @@ public class Reactor {
 	 * @param states states
 	 * @param timers timers
 	 * @param actions actions
+	 * @param reactions reactions
+	 * @param containedReactors contained reactors
 	 */
 	public Reactor(@NotNull String name,
 	               @NotNull HashSet<Parameter<?>> params,
@@ -29,7 +33,9 @@ public class Reactor {
 	               @NotNull HashSet<Input<?>> inputs,
 	               @NotNull HashSet<Output<?>> outputs,
 	               @NotNull HashSet<Timer> timers,
-	               @NotNull HashSet<Action<?>> actions) {
+	               @NotNull HashSet<Action<?>> actions,
+	               @NotNull HashSet<Reaction> reactions,
+	               @NotNull HashSet<Reactor> containedReactors) {
 		if (name.isEmpty())
 			throw new ExceptionInInitializerError(getClass().getTypeName() + " name cannot be empty");
 
@@ -38,6 +44,11 @@ public class Reactor {
 				if (time.time() == 0 && time.unit().isEmpty())
 					throw new ExceptionInInitializerError("Non-zero time parameter for reactor had no time unit");
 
+		for(Reaction reaction : reactions)
+			if(!inputs.containsAll(reaction.getUses()))
+				throw new ExceptionInInitializerError(
+						"At least one unknown Input parameter(s) in Reaction Use list " + reaction.getUses());
+
 		this.name = name;
 		this.params = params;
 		this.states = states;
@@ -45,6 +56,8 @@ public class Reactor {
 		this.outputs = outputs;
 		this.timers = timers;
 		this.actions = actions;
+		this.reactions = reactions;
+		this.containedReactors = containedReactors;
 	}
 
 	/**
@@ -94,6 +107,20 @@ public class Reactor {
 	 */
 	public HashSet<Action<?>> getActions() {
 		return actions;
+	}
+
+	/**
+	 * @return the reactions
+	 */
+	public HashSet<Reaction> getReactions() {
+		return reactions;
+	}
+
+	/**
+	 * @return the contained reactors
+	 */
+	public HashSet<Reactor> getContainedReactors() {
+		return containedReactors;
 	}
 
 	/**
