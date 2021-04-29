@@ -12,19 +12,22 @@ public class Reactor {
 	private HashSet<Input<?>> inputs;
 	private HashSet<Output<?>> outputs;
 	private HashSet<Timer> timers;
+	private HashSet<Action<?>> actions;
 
 	/**
 	 * @param name name
 	 * @param params parameters
 	 * @param states states
 	 * @param timers timers
+	 * @param actions actions
 	 */
 	public Reactor(@NotNull String name,
 	               @NotNull HashSet<Parameter<?>> params,
 	               @NotNull HashSet<State<?>> states,
 	               @NotNull HashSet<Input<?>> inputs,
 	               @NotNull HashSet<Output<?>> outputs,
-	               @NotNull HashSet<Timer> timers) {
+	               @NotNull HashSet<Timer> timers,
+	               @NotNull HashSet<Action<?>> actions) {
 		if (name.isEmpty())
 			throw new ExceptionInInitializerError(getClass().getTypeName() + " name cannot be empty");
 
@@ -39,6 +42,7 @@ public class Reactor {
 		this.inputs = inputs;
 		this.outputs = outputs;
 		this.timers = timers;
+		this.actions = actions;
 	}
 
 	/**
@@ -81,6 +85,13 @@ public class Reactor {
 	 */
 	public HashSet<Timer> getTimers() {
 		return timers;
+	}
+
+	/**
+	 * @return the actions
+	 */
+	public HashSet<Action<?>> getActions() {
+		return actions;
 	}
 
 	/**
