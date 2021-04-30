@@ -1,9 +1,11 @@
+package reactor;
+
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
 
 /**
- * Action specification class.
+ * reactor.Action specification class.
  * https://github.com/icyphy/lingua-franca/wiki/Language-Specification#action-declaration
  */
 public class Action<T> implements Trigger, Effect {
@@ -14,12 +16,10 @@ public class Action<T> implements Trigger, Effect {
 	private Optional<Time> minSpacing;
 	private Optional<T> value;
 	public static Time TIME_PRECISION;
-
 	public enum Type {
 		logical,
 		physical
 	}
-
 	public enum Policy {
 		defer,
 		drop,
@@ -40,8 +40,8 @@ public class Action<T> implements Trigger, Effect {
 			throw new ExceptionInInitializerError(getClass().getTypeName() + " name cannot be empty");
 
 		if (minSpacing.isPresent() && minSpacing.get().compareTo(TIME_PRECISION) < 0)
-				throw new ExceptionInInitializerError(
-						"Action minimum time spacing must be greater than or equal to the time precision of the target");
+			throw new ExceptionInInitializerError(
+					"reactor.Action minimum time spacing must be greater than or equal to the time precision of the target");
 
 		this.name = name;
 		this.type = type;

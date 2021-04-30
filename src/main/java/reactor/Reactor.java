@@ -1,9 +1,12 @@
+package reactor;
+
 import org.jetbrains.annotations.NotNull;
 
+import java.lang.reflect.Type;
 import java.util.HashSet;
 
 /**
- * Reactor specification class.
+ * reactor.Reactor specification class.
  * https://github.com/icyphy/lingua-franca/wiki/Language-Specification#reactor-block
  * https://github.com/icyphy/lingua-franca/wiki/Language-Specification#contained-reactors
  */
@@ -11,12 +14,27 @@ public class Reactor {
 	private String name;
 	private HashSet<Parameter<?>> params;
 	private HashSet<State<?>> states;
-	private HashSet<Input<?>> inputs;
-	private HashSet<Output<?>> outputs;
+	private HashSet<Input.Var> inputs;
+	private HashSet<Output.Var> outputs;
 	private HashSet<Timer> timers;
 	private HashSet<Action<?>> actions;
 	private HashSet<Reaction> reactions;
-	private HashSet<Reactor> containedReactors;
+	private HashSet<Statement> containedReactors;
+	enum Var implements Statement {
+		Reactor(Reactor.class),
+		Bank(Reactor[].class);
+
+		private Type type;
+
+		//Constructor to initialize the instance variable
+		Var(Type type) {
+			this.type = type;
+		}
+
+		public Type getType() {
+			return type;
+		}
+	}
 
 	/**
 	 * @param name name
@@ -30,12 +48,12 @@ public class Reactor {
 	public Reactor(@NotNull String name,
 	               @NotNull HashSet<Parameter<?>> params,
 	               @NotNull HashSet<State<?>> states,
-	               @NotNull HashSet<Input<?>> inputs,
-	               @NotNull HashSet<Output<?>> outputs,
+	               @NotNull HashSet<Input.Var> inputs,
+	               @NotNull HashSet<Output.Var> outputs,
 	               @NotNull HashSet<Timer> timers,
 	               @NotNull HashSet<Action<?>> actions,
 	               @NotNull HashSet<Reaction> reactions,
-	               @NotNull HashSet<Reactor> containedReactors) {
+	               @NotNull HashSet<Statement> containedReactors) {
 		if (name.isEmpty())
 			throw new ExceptionInInitializerError(getClass().getTypeName() + " name cannot be empty");
 
@@ -47,7 +65,7 @@ public class Reactor {
 		for(Reaction reaction : reactions)
 			if(!inputs.containsAll(reaction.getUses()))
 				throw new ExceptionInInitializerError(
-						"At least one unknown Input parameter(s) in Reaction Use list " + reaction.getUses());
+						"At least one unknown reactor.Input parameter(s) in reactor.Reaction Use list " + reaction.getUses());
 
 		this.name = name;
 		this.params = params;
@@ -84,14 +102,14 @@ public class Reactor {
 	/**
 	 * @return the inputs
 	 */
-	public HashSet<Input<?>> getInputs() {
+	public HashSet<Input.Var> getInputs() {
 		return inputs;
 	}
 
 	/**
 	 * @return the outputs
 	 */
-	public HashSet<Output<?>> getOutputs() {
+	public HashSet<Output.Var> getOutputs() {
 		return outputs;
 	}
 
@@ -119,7 +137,7 @@ public class Reactor {
 	/**
 	 * @return the contained reactors
 	 */
-	public HashSet<Reactor> getContainedReactors() {
+	public HashSet<Statement> getContainedReactors() {
 		return containedReactors;
 	}
 

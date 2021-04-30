@@ -1,7 +1,9 @@
+package reactor;
+
 import org.jetbrains.annotations.NotNull;
 
 /**
- * State specification class.
+ * reactor.State specification class.
  * https://github.com/icyphy/lingua-franca/wiki/Language-Specification#state-declaration
  */
 public class State<T> {
@@ -11,7 +13,7 @@ public class State<T> {
 	/**
 	 * @param name name
 	 * @param value value
-	 * @throws ExceptionInInitializerError if the name is empty or value is of type Parameter
+	 * @throws ExceptionInInitializerError if the name is empty or value is of type reactor.Parameter
 	 */
 	State(@NotNull String name, @NotNull T value) {
 		if (name.isEmpty())
@@ -19,7 +21,7 @@ public class State<T> {
 
 		// disallow "state name(parameter);" in favor of "state<parameter.value().getClass()> name(parameter.value());
 		if (value instanceof Parameter<?>)
-			throw new ExceptionInInitializerError("State cannot receive Parameter as parameter");
+			throw new ExceptionInInitializerError("reactor.State cannot receive reactor.Parameter as parameter");
 
 		this.name = name;
 		this.value = value;

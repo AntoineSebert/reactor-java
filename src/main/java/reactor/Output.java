@@ -1,44 +1,45 @@
+package reactor;
+
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Optional;
+import java.lang.reflect.Type;
 
 /**
- * Output specification class.
+ * reactor.Output specification class.
  * https://github.com/icyphy/lingua-franca/wiki/Language-Specification#output-declaration
  */
 public class Output<T> implements Port<T> {
 	String name;
-	int width;
+	enum Var {
+		Output(Output.class),
+		OutputArr(Output[].class);
+
+		private Type type;
+
+		//Constructor to initialize the instance variable
+		Var(Type type) {
+			this.type = type;
+		}
+
+		public Type getType() {
+			return type;
+		}
+	}
 
 	/**
 	 * @param name name
-	 * @param width width of the port
 	 * @throws ExceptionInInitializerError if the name is empty or the width is less than 1
 	 */
-	Output(@NotNull String name, @NotNull Optional<Integer> width) {
+	Output(@NotNull String name) {
 		if (name.isEmpty())
 			throw new ExceptionInInitializerError(getClass().getTypeName() + " name cannot be empty");
 
-		if (width.isPresent() && width.get() < 1)
-			throw new ExceptionInInitializerError("Output width cannot be less than 1");
-
 		this.name = name;
-		this.width = width.orElse(1);
 	}
 
 	@Override
 	public String getName() {
 		return name;
-	}
-
-	@Override
-	public int getWidth() {
-		return width;
-	}
-
-	@Override
-	public boolean isMultiport() {
-		return 1 < width;
 	}
 
 	@Override

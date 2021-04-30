@@ -1,3 +1,5 @@
+package reactor;
+
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashSet;
@@ -5,15 +7,15 @@ import java.util.Objects;
 import java.util.function.Function;
 
 /**
- * Reaction specification class.
+ * reactor.Reaction specification class.
  * https://github.com/icyphy/lingua-franca/wiki/Language-Specification#reaction-declaration
  */
 public class Reaction {
-	private HashSet<Trigger> triggers;
-	private HashSet<Input<?>> uses;
-	private HashSet<Effect> effects;
+	private final HashSet<Trigger> triggers;
+	private final HashSet<Input<?>> uses;
+	private final HashSet<Effect> effects;
 	/** https://github.com/icyphy/lingua-franca/wiki/Language-Specification#target-code */
-	private Function<Reaction, Void> targetCode;
+	private final Function<Reaction, Void> targetCode;
 
 	/**
 	 * @param triggers triggers

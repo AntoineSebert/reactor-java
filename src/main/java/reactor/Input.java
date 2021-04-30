@@ -1,32 +1,45 @@
+package reactor;
+
 import org.jetbrains.annotations.NotNull;
 
+import java.lang.reflect.Type;
 import java.util.Optional;
 
 /**
- * Input specification class.
+ * reactor.Input specification class.
+ * Multiports: new reactor.Input<T[]>()
  * https://github.com/icyphy/lingua-franca/wiki/Language-Specification#input-declaration
  */
 public class Input<T> implements Port<T> {
 	String name;
-	int width;
 	boolean mutable;
+	enum Var {
+		Input(Input.class),
+		InputArr(Input[].class);
+
+		private Type type;
+
+		//Constructor to initialize the instance variable
+		Var(Type type) {
+			this.type = type;
+		}
+
+		public Type getType() {
+			return type;
+		}
+	}
 
 	/**
 	 * @param name name
-	 * @param width width of the port
 	 * @param mutable mutability
 	 * @throws ExceptionInInitializerError if the name is empty or the width is less than 1
 	 */
-	Input(@NotNull String name, @NotNull Optional<Integer> width, @NotNull Optional<Boolean> mutable) {
+	Input(@NotNull String name, @NotNull Optional<Boolean> mutable) {
 		if (name.isEmpty())
 			throw new ExceptionInInitializerError(getClass().getTypeName() + " name cannot be empty");
 
-		if (width.isPresent() && width.get() < 1)
-			throw new ExceptionInInitializerError("Input width cannot be less than 1");
-
 		this.name = name;
 		this.mutable = mutable.orElse(Boolean.FALSE);
-		this.width = width.orElse(1);
 	}
 
 	/**
@@ -39,16 +52,6 @@ public class Input<T> implements Port<T> {
 	@Override
 	public String getName() {
 		return name;
-	}
-
-	@Override
-	public int getWidth() {
-		return width;
-	}
-
-	@Override
-	public boolean isMultiport() {
-		return 1 < width;
 	}
 
 	@Override

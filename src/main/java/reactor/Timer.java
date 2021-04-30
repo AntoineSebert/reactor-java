@@ -1,9 +1,11 @@
+package reactor;
+
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
 
 /**
- * Timer specification class.
+ * reactor.Timer specification class.
  * https://github.com/icyphy/lingua-franca/wiki/Language-Specification#timer-declaration
  */
 public class Timer implements Trigger {

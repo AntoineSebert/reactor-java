@@ -1,20 +1,44 @@
+package target;
+
+import reactor.Parameter;
+import reactor.Time;
 import org.jetbrains.annotations.NotNull;
 
+import java.lang.reflect.Type;
 import java.util.HashSet;
 
 /**
- * Target specification class.
+ * target.Target specification class.
  * https://github.com/icyphy/lingua-franca/wiki/Language-Specification#target-specification
  */
 public class Target {
 	private String name;
 	private HashSet<Parameter<?>> params;
 	private Time precision;
+	enum CodeKeyword {
+		schedule,
+		request_stop,
+	}
+	enum Parameters {
+		Input(),
+		InputArr();
+
+		private Type type;
+
+		//Constructor to initialize the instance variable
+		Parameters(Type type) {
+			this.type = type;
+		}
+
+		public Type getType() {
+			return type;
+		}
+	}
 
 	/**
 	 * @param name name
 	 * @param params parameters
-	 * @param precision time precision, used in Target
+	 * @param precision time precision, used in target.Target
 	 * @throws ExceptionInInitializerError if the name is empty or if the "timeout" parameter is present and invalid
 	 */
 	public Target(@NotNull String name, @NotNull HashSet<Parameter<?>> params, @NotNull Time precision) {
@@ -22,14 +46,14 @@ public class Target {
 			throw new ExceptionInInitializerError(getClass().getTypeName() + " name cannot be empty");
 
 		if (precision.unit().isEmpty())
-			throw new ExceptionInInitializerError("Time precision must have a unit");
+			throw new ExceptionInInitializerError("reactor.Time precision must have a unit");
 
 		for (Parameter<?> param : params)
 			if ("timeout".equals(param.name())) {
 				Time timeout = (Time)param.value();
 
 				if (timeout.time() == 0 || timeout.unit().isEmpty())
-					throw new ExceptionInInitializerError("Target parameter 'timeout' must be a non-zero time with unit");
+					throw new ExceptionInInitializerError("target.Target parameter 'timeout' must be a non-zero time with unit");
 			}
 
 		this.name = name;
