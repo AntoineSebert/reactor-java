@@ -3,9 +3,11 @@ package target;
 import reactor.Parameter;
 import reactor.Time;
 import org.jetbrains.annotations.NotNull;
+import reactor.Unit;
 
 import java.lang.reflect.Type;
 import java.util.HashSet;
+import java.util.Optional;
 
 /**
  * Target specification class.
@@ -42,6 +44,7 @@ public class Target {
 			return type;
 		}
 	}
+	public static final Target Java = new Target("Java", new Time(1, Optional.of(Unit.nsec)), new HashSet<>(0));
 
 	/**
 	 * @param name name
@@ -49,7 +52,7 @@ public class Target {
 	 * @param precision time precision, used in target.Target
 	 * @throws ExceptionInInitializerError if the name is empty or if the "timeout" parameter is present and invalid
 	 */
-	public Target(@NotNull String name, @NotNull HashSet<Parameter<?>> params, @NotNull Time precision) {
+	public Target(@NotNull String name, @NotNull Time precision, @NotNull HashSet<Parameter<?>> params) {
 		if (name.isEmpty())
 			throw new ExceptionInInitializerError(getClass().getTypeName() + " name cannot be empty");
 
