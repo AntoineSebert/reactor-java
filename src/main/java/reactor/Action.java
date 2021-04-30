@@ -5,7 +5,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Optional;
 
 /**
- * reactor.Action specification class.
+ * Action specification class.
  * https://github.com/icyphy/lingua-franca/wiki/Language-Specification#action-declaration
  */
 public class Action<T> implements Trigger, Effect {

@@ -13,7 +13,6 @@ public interface Port<T> extends Trigger, Effect {
 
 		private Type type;
 
-		//Constructor to initialize the instance variable
 		Var(Type type) {
 			this.type = type;
 		}

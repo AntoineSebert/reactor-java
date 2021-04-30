@@ -16,7 +16,6 @@ public class Output<T> implements Port<T> {
 
 		private Type type;
 
-		//Constructor to initialize the instance variable
 		Var(Type type) {
 			this.type = type;
 		}

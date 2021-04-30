@@ -7,7 +7,7 @@ import java.util.Objects;
 import java.util.function.Function;
 
 /**
- * reactor.Reaction specification class.
+ * Reaction specification class.
  * https://github.com/icyphy/lingua-franca/wiki/Language-Specification#reaction-declaration
  */
 public class Reaction {

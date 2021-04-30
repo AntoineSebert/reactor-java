@@ -12,6 +12,7 @@ import java.util.Optional;
 /**
  * program := target+, import*, reactor-block+
  * https://github.com/icyphy/lingua-franca/wiki/Language-Specification
+ * TODO : add toLF() to everything, to check if source is preserved
  */
 public class Program {
 	private HashSet<Target> targets;

@@ -7,8 +7,8 @@ import java.util.Optional;
 
 /**
  * reactor.Input specification class.
- * Multiports: new reactor.Input<T[]>()
  * https://github.com/icyphy/lingua-franca/wiki/Language-Specification#input-declaration
+ * TODO : make interface, then implements in InputVar & InputArr
  */
 public class Input<T> implements Port<T> {
 	String name;
@@ -19,7 +19,6 @@ public class Input<T> implements Port<T> {
 
 		private Type type;
 
-		//Constructor to initialize the instance variable
 		Var(Type type) {
 			this.type = type;
 		}

@@ -8,7 +8,7 @@ import java.lang.reflect.Type;
 import java.util.HashSet;
 
 /**
- * target.Target specification class.
+ * Target specification class.
  * https://github.com/icyphy/lingua-franca/wiki/Language-Specification#target-specification
  */
 public class Target {
