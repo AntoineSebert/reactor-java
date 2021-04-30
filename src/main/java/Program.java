@@ -4,6 +4,7 @@ import target.Target;
 import reactor.Time;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.IOException;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Optional;
@@ -79,5 +80,19 @@ public class Program {
 	/**
 	 * Runs the program.
 	 */
-	public void run() {}
+	public void run() {
+		try {
+			if (mainReactor.isPresent())
+				mainReactor.get().run();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		for (Reactor reactor : reactors)
+			try {
+				reactor.run();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+	}
 }

@@ -2,6 +2,7 @@ package reactor;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.HashSet;
 
@@ -89,6 +90,13 @@ public class Reactor {
 	}
 
 	/**
+	 * @return the preamble
+	 */
+	public String getPreamble() {
+		return preamble;
+	}
+
+	/**
 	 * @return the parameters
 	 */
 	public HashSet<Parameter<?>> getParams() {
@@ -154,6 +162,18 @@ public class Reactor {
 		// TODO
 
 		return builder.toString();
+	}
+
+	private void init() throws IOException {
+		if(!preamble.isEmpty())
+			Runtime.getRuntime().exec(preamble);
+	}
+
+	public void run() throws IOException {
+		init();
+
+		for(Reaction reaction : reactions)
+			reaction.run();
 	}
 
 	/**
