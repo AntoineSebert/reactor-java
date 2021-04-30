@@ -15,17 +15,25 @@ public class Target {
 	private String name;
 	private HashSet<Parameter<?>> params;
 	private Time precision;
+	enum Logging {
+		debug,
+		log,
+	}
 	enum CodeKeyword {
 		schedule,
 		request_stop,
 	}
 	enum Parameters {
-		Input(),
-		InputArr();
+		compiler(String.class),
+		fast(Boolean.class),
+		flags(String[].class),
+		keepalive(Boolean.class),
+		logging(Logging.class),
+		no_compile(Boolean.class),
+		timeout(Time.class);
 
 		private Type type;
 
-		//Constructor to initialize the instance variable
 		Parameters(Type type) {
 			this.type = type;
 		}
