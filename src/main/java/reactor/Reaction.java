@@ -10,27 +10,8 @@ import java.util.function.Function;
  * Reaction specification class.
  * https://github.com/icyphy/lingua-franca/wiki/Language-Specification#reaction-declaration
  */
-public class Reaction {
-	private final HashSet<Trigger> triggers;
-	private final HashSet<Input<?>> uses;
-	private final HashSet<Effect> effects;
-	/** https://github.com/icyphy/lingua-franca/wiki/Language-Specification#target-code */
-	private final Function<Reaction, Void> targetCode;
-
-	/**
-	 * @param triggers triggers
-	 * @param uses uses
-	 * @param effects effects
-	 * @param targetCode target code
-	 */
-	public Reaction(@NotNull HashSet<Trigger> triggers, @NotNull HashSet<Input<?>> uses, @NotNull HashSet<Effect> effects,
-	                @NotNull Function<Reaction, Void> targetCode) {
-		this.triggers = triggers;
-		this.uses = uses;
-		this.effects = effects;
-		this.targetCode = targetCode;
-	}
-
+public record Reaction(@NotNull HashSet<Trigger> triggers, @NotNull HashSet<Input<?>> uses,
+                       @NotNull HashSet<Effect> effects, @NotNull Function<Reaction, Void> targetCode) {
 	/**
 	 * @return the triggers
 	 */
