@@ -12,6 +12,7 @@ import java.util.HashSet;
  */
 public class Reactor {
 	private String name;
+	private String preamble;
 	private HashSet<Parameter<?>> params;
 	private HashSet<State<?>> states;
 	private HashSet<Input.Var> inputs;
@@ -53,7 +54,8 @@ public class Reactor {
 	               @NotNull HashSet<Timer> timers,
 	               @NotNull HashSet<Action<?>> actions,
 	               @NotNull HashSet<Reaction> reactions,
-	               @NotNull HashSet<Statement> containedReactors) {
+	               @NotNull HashSet<Statement> containedReactors,
+	               @NotNull String preamble) {
 		if (name.isEmpty())
 			throw new ExceptionInInitializerError(getClass().getTypeName() + " name cannot be empty");
 
@@ -68,6 +70,7 @@ public class Reactor {
 						"At least one unknown reactor.Input parameter(s) in reactor.Reaction Use list " + reaction.getUses());
 
 		this.name = name;
+		this.preamble = preamble;
 		this.params = params;
 		this.states = states;
 		this.inputs = inputs;
