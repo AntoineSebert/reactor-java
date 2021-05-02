@@ -17,11 +17,6 @@ public class TestReactor {
 		HashSet<Trigger> triggers = new HashSet<>(1);
 		triggers.add(Trigger.STARTUP);
 
-		Function<Reaction, Void> hello_world = (reaction) -> {
-			System.out.println("Hello World.\n");
-			return null;
-		};
-
 		HashSet<Reaction> reactions = new HashSet<>(1);
 		reactions.add(new Reaction(triggers, new HashSet<>(0), new HashSet<>(0), (reaction) -> {
 			System.out.println("Hello World.\n");
@@ -40,6 +35,6 @@ public class TestReactor {
 				new HashSet<>(0),
 				"");
 
-		new Program(targets, new HashSet<Import>(0), new HashSet<>(0), Optional.of(main)).run();
+		new Program(targets, new HashSet<>(0), new HashSet<>(0), Optional.of(main)).run();
 	}
 }
