@@ -1,9 +1,11 @@
-package reactor;
+package _import;
+
+import reactor.Reactor;
 
 import java.io.File;
-import java.io.IOException;
+import java.util.HashMap;
 
-public class Import(){
+public class Import {
     HashMap<String, Reactor> reactors;
 
     File file;
@@ -12,14 +14,13 @@ public class Import(){
         return this.file;
     }
 
-    Reactor getReactor(){
+    HashMap<String, Reactor> getReactor(){
         return reactors;
     }
 
     public Import(File file) {
-     if (!file.exists()){
-         throw new IOException();
-         }
+     if (!file.exists())
+	     throw new ExceptionInInitializerError("The field to import does not exists");
          
          this.file = file;
     }

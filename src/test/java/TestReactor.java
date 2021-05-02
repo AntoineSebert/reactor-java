@@ -1,4 +1,5 @@
 import org.junit.jupiter.api.Test;
+import _import.Import;
 import reactor.Reactor;
 import reactor.Reaction;
 import reactor.Trigger;
@@ -39,6 +40,6 @@ public class TestReactor {
 				new HashSet<>(0),
 				"");
 
-		new Program(targets, new HashSet<>(0), new HashSet<>(0), Optional.of(main)).run();
+		new Program(targets, new HashSet<Import>(0), new HashSet<>(0), Optional.of(main)).run();
 	}
 }

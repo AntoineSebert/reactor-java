@@ -1,3 +1,4 @@
+import _import.Import;
 import reactor.Action;
 import reactor.Reactor;
 import target.Target;
@@ -16,7 +17,7 @@ import java.util.Optional;
  */
 public class Program {
 	private HashSet<Target> targets;
-	private HashSet<Object/*Import*/> imports;
+	private HashSet<Import> imports;
 	private HashSet<Reactor> reactors;
 	private Optional<Reactor> mainReactor;
 
@@ -26,7 +27,7 @@ public class Program {
 	 * @param reactors reactors
 	 * @param mainReactor main reactor
 	 */
-	public Program(@NotNull HashSet<Target> targets, @NotNull HashSet<Object/*Import*/> imports,
+	public Program(@NotNull HashSet<Target> targets, @NotNull HashSet<Import> imports,
 	               @NotNull HashSet<Reactor> reactors, @NotNull Optional<Reactor> mainReactor) {
 		if (targets.isEmpty())
 			throw new ExceptionInInitializerError("Program targets cannot be empty");
@@ -60,7 +61,7 @@ public class Program {
 	/**
 	 * @return the imports
 	 */
-	public HashSet<Object/*Import*/> getImports() {
+	public HashSet<Import> getImports() {
 		return imports;
 	}
 
