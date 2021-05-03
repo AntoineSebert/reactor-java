@@ -6,16 +6,13 @@ import org.jetbrains.annotations.NotNull;
  * reactor.State specification class.
  * https://github.com/icyphy/lingua-franca/wiki/Language-Specification#state-declaration
  */
-public class State<T> {
-	String name;
-	T value;
-
+public record State<T>(String name, T value) {
 	/**
-	 * @param name name
+	 * @param name  name
 	 * @param value value
 	 * @throws ExceptionInInitializerError if the name is empty or value is of type reactor.Parameter
 	 */
-	State(@NotNull String name, @NotNull T value) {
+	public State(@NotNull String name, @NotNull T value) {
 		if (name.isEmpty())
 			throw new ExceptionInInitializerError(getClass().getTypeName() + " name cannot be empty");
 

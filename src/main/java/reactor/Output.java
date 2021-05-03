@@ -8,28 +8,12 @@ import java.lang.reflect.Type;
  * reactor.Output specification class.
  * https://github.com/icyphy/lingua-franca/wiki/Language-Specification#output-declaration
  */
-public class Output<T> implements Port<T> {
-	String name;
-	enum Var {
-		Output(Output.class),
-		OutputArr(Output[].class);
-
-		private Type type;
-
-		Var(Type type) {
-			this.type = type;
-		}
-
-		public Type getType() {
-			return type;
-		}
-	}
-
+public record Output<T>(String name) implements Port<T> {
 	/**
 	 * @param name name
 	 * @throws ExceptionInInitializerError if the name is empty or the width is less than 1
 	 */
-	Output(@NotNull String name) {
+	public Output(@NotNull String name) {
 		if (name.isEmpty())
 			throw new ExceptionInInitializerError(getClass().getTypeName() + " name cannot be empty");
 
@@ -51,5 +35,20 @@ public class Output<T> implements Port<T> {
 	@Override
 	public int hashCode() {
 		return name.hashCode();
+	}
+
+	enum Var {
+		Output(Output.class),
+		OutputArr(Output[].class);
+
+		private Type type;
+
+		Var(Type type) {
+			this.type = type;
+		}
+
+		public Type getType() {
+			return type;
+		}
 	}
 }

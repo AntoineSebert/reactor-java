@@ -6,26 +6,26 @@ import java.io.File;
 import java.util.HashMap;
 
 public class Import {
-    HashMap<String, Reactor> reactors;
+	HashMap<String, Reactor> reactors;
 
-    File file;
+	File file;
 
-    File getFile(){
-        return this.file;
-    }
+	File getFile() {
+		return this.file;
+	}
 
-    HashMap<String, Reactor> getReactor(){
-        return reactors;
-    }
+	HashMap<String, Reactor> getReactor() {
+		return reactors;
+	}
 
-    public Import(File file) {
-     if (!file.exists())
-	     throw new ExceptionInInitializerError("The field to import does not exists");
-         
-         this.file = file;
-    }
+	public Import(File file) {
+		if (!file.exists())
+			throw new ExceptionInInitializerError("The field to import does not exists");
 
-    @Override
+		this.file = file;
+	}
+
+	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;

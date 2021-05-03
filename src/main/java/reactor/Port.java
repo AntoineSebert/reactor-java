@@ -7,21 +7,6 @@ import java.lang.reflect.Type;
  * reactor.Port specification class.
  */
 public interface Port<T> extends Trigger, Effect {
-	enum Var {
-		Port(Port.class),
-		PortArr(Port[].class);
-
-		private Type type;
-
-		Var(Type type) {
-			this.type = type;
-		}
-
-		public Type getType() {
-			return type;
-		}
-	}
-
 	/**
 	 * @return the name
 	 */
@@ -37,4 +22,19 @@ public interface Port<T> extends Trigger, Effect {
 	boolean equals(Object o);
 
 	int hashCode();
+
+	enum Var {
+		Port(Port.class),
+		PortArr(Port[].class);
+
+		private Type type;
+
+		Var(Type type) {
+			this.type = type;
+		}
+
+		public Type getType() {
+			return type;
+		}
+	}
 }

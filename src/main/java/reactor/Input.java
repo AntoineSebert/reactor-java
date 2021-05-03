@@ -11,25 +11,11 @@ import java.util.Optional;
  * TODO : make interface, then implements in InputVar & InputArr
  */
 public class Input<T> implements Port<T> {
-	String name;
-	boolean mutable;
-	enum Var {
-		Input(Input.class),
-		InputArr(Input[].class);
-
-		private Type type;
-
-		Var(Type type) {
-			this.type = type;
-		}
-
-		public Type getType() {
-			return type;
-		}
-	}
+	private final String name;
+	private final boolean mutable;
 
 	/**
-	 * @param name name
+	 * @param name    name
 	 * @param mutable mutability
 	 * @throws ExceptionInInitializerError if the name is empty or the width is less than 1
 	 */
@@ -63,5 +49,20 @@ public class Input<T> implements Port<T> {
 	@Override
 	public int hashCode() {
 		return name.hashCode();
+	}
+
+	enum Var {
+		Input(Input.class),
+		InputArr(Input[].class);
+
+		private Type type;
+
+		Var(Type type) {
+			this.type = type;
+		}
+
+		public Type getType() {
+			return type;
+		}
 	}
 }
