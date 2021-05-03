@@ -1,8 +1,8 @@
 package target;
 
+import org.jetbrains.annotations.NotNull;
 import reactor.Parameter;
 import reactor.Time;
-import org.jetbrains.annotations.NotNull;
 import reactor.Unit;
 
 import java.lang.reflect.Type;
@@ -14,17 +14,20 @@ import java.util.Optional;
  * https://github.com/icyphy/lingua-franca/wiki/Language-Specification#target-specification
  */
 public class Target {
-	private String name;
+	private final String name;
 	private HashSet<Parameter<?>> params;
 	private Time precision;
+
 	enum Logging {
 		debug,
 		log,
 	}
+
 	enum CodeKeyword {
 		schedule,
 		request_stop,
 	}
+
 	enum Parameters {
 		compiler(String.class),
 		fast(Boolean.class),
@@ -44,11 +47,12 @@ public class Target {
 			return type;
 		}
 	}
+
 	public static final Target Java = new Target("Java", new Time(1, Optional.of(Unit.nsec)), new HashSet<>(0));
 
 	/**
-	 * @param name name
-	 * @param params parameters
+	 * @param name      name
+	 * @param params    parameters
 	 * @param precision time precision, used in target.Target
 	 * @throws ExceptionInInitializerError if the name is empty or if the "timeout" parameter is present and invalid
 	 */
@@ -57,14 +61,14 @@ public class Target {
 			throw new ExceptionInInitializerError(getClass().getTypeName() + " name cannot be empty");
 
 		if (precision.unit().isEmpty())
-			throw new ExceptionInInitializerError("reactor.Time precision must have a unit");
+			throw new ExceptionInInitializerError("Time precision must have a unit");
 
 		for (Parameter<?> param : params)
 			if ("timeout".equals(param.name())) {
-				Time timeout = (Time)param.value();
+				Time timeout = (Time) param.value();
 
 				if (timeout.time() == 0 || timeout.unit().isEmpty())
-					throw new ExceptionInInitializerError("target.Target parameter 'timeout' must be a non-zero time with unit");
+					throw new ExceptionInInitializerError("Target parameter 'timeout' must be a non-zero time with unit");
 			}
 
 		this.name = name;
@@ -131,5 +135,31 @@ public class Target {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
 		return name.equals(((Target) o).name);
+	}
+
+	public static class Builder {
+		private String name;
+		private HashSet<Parameter<?>> params = new HashSet<>(); // map<field, val>
+		private Time precision = Time.ZERO;
+
+		public Builder(@NotNull String name) {
+			this.name = name;
+		}
+
+		public Target build() {
+			return new Target(name, precision, params);
+		}
+
+		public <T> Builder param(@NotNull String param, @NotNull T value) {
+			params.add(new Parameter<>(param, value));
+
+			return this;
+		}
+
+		public Builder precision(@NotNull Time precision) {
+			this.precision = precision;
+
+			return this;
+		}
 	}
 }

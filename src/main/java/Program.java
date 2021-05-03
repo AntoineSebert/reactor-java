@@ -1,9 +1,9 @@
 import _import.Import;
+import org.jetbrains.annotations.NotNull;
 import reactor.Action;
 import reactor.Reactor;
-import target.Target;
 import reactor.Time;
-import org.jetbrains.annotations.NotNull;
+import target.Target;
 
 import java.io.IOException;
 import java.util.HashSet;
@@ -15,16 +15,12 @@ import java.util.Optional;
  * https://github.com/icyphy/lingua-franca/wiki/Language-Specification
  * TODO : add toLF() to everything, to check if source is preserved
  */
-public class Program {
-	private HashSet<Target> targets;
-	private HashSet<Import> imports;
-	private HashSet<Reactor> reactors;
-	private Optional<Reactor> mainReactor;
-
+public record Program(HashSet<Target> targets, HashSet<Import> imports,
+                      HashSet<Reactor> reactors, Optional<Reactor> mainReactor) {
 	/**
-	 * @param targets targets
-	 * @param imports imports
-	 * @param reactors reactors
+	 * @param targets     targets
+	 * @param imports     imports
+	 * @param reactors    reactors
 	 * @param mainReactor main reactor
 	 */
 	public Program(@NotNull HashSet<Target> targets, @NotNull HashSet<Import> imports,
@@ -38,10 +34,10 @@ public class Program {
 		Iterator<Target> targetIt = targets.iterator();
 		Action.TIME_PRECISION = targetIt.next().getPrecision();
 
-		while(targetIt.hasNext()) {
+		while (targetIt.hasNext()) {
 			Time newPrecision = targetIt.next().getPrecision();
 
-			if(newPrecision.compareTo(Action.TIME_PRECISION) < 0 )
+			if (newPrecision.compareTo(Action.TIME_PRECISION) < 0)
 				Action.TIME_PRECISION = newPrecision;
 		}
 
@@ -96,5 +92,40 @@ public class Program {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
+	}
+
+	public static class Builder {
+		private HashSet<Target> targets = new HashSet<>();
+		private HashSet<Import> imports = new HashSet<>();
+		private HashSet<Reactor> reactors = new HashSet<>();
+		private Optional<Reactor> mainReactor = Optional.empty();
+
+		public Program build() {
+			return new Program(targets, imports, reactors, mainReactor);
+		}
+
+		public Builder targets(@NotNull HashSet<Target> targets) {
+			this.targets = targets;
+
+			return this;
+		}
+
+		public Builder imports(@NotNull HashSet<Import> imports) {
+			this.imports = imports;
+
+			return this;
+		}
+
+		public Builder reactors(@NotNull HashSet<Reactor> reactors) {
+			this.reactors = reactors;
+
+			return this;
+		}
+
+		public Builder mainReactor(@NotNull Reactor mainReactor) {
+			this.mainReactor = Optional.of(mainReactor);
+
+			return this;
+		}
 	}
 }

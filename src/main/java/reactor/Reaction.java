@@ -59,4 +59,40 @@ public record Reaction(@NotNull HashSet<Trigger> triggers, @NotNull HashSet<Inpu
 	public int hashCode() {
 		return Objects.hash(triggers, uses, effects);
 	}
+
+
+	public static class Builder {
+		private HashSet<Trigger> triggers = new HashSet<>();
+		private HashSet<Input<?>> uses = new HashSet<>();
+		private HashSet<Effect> effects = new HashSet<>();
+		private Function<Reaction, Void> targetCode = (reaction) -> null;
+
+		public Reaction build() {
+			return new Reaction(triggers, uses, effects, targetCode);
+		}
+
+		public Builder triggers(@NotNull HashSet<Trigger> triggers) {
+			this.triggers = triggers;
+
+			return this;
+		}
+
+		public Builder uses(@NotNull HashSet<Input<?>> uses) {
+			this.uses = uses;
+
+			return this;
+		}
+
+		public Builder effects(@NotNull HashSet<Effect> effects) {
+			this.effects = effects;
+
+			return this;
+		}
+
+		public Builder targetCode(@NotNull Function<Reaction, Void> targetCode) {
+			this.targetCode = targetCode;
+
+			return this;
+		}
+	}
 }

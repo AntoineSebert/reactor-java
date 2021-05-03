@@ -2,53 +2,36 @@ package reactor;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Optional;
-
 /**
  * Action specification class.
  * https://github.com/icyphy/lingua-franca/wiki/Language-Specification#action-declaration
  */
 public class Action<T> implements Trigger, Effect {
-	private String name;
-	private Type type;
+	public static Time TIME_PRECISION;
+	private final String name;
+	private final Type type;
 	private Policy policy;
 	private Time minDelay;
-	private Optional<Time> minSpacing;
-	private Optional<T> value;
-	public static Time TIME_PRECISION;
-	public enum Type {
-		logical,
-		physical
-	}
-	public enum Policy {
-		defer,
-		drop,
-		replace
-	}
+	private Comparable<Time> minSpacing;
 
 	/**
 	 * @param name name
 	 * @param type type
-	 * @param policy policy
-	 * @param minDelay minimal delay
-	 * @param minSpacing minimal spacing
-	 * @param value value
 	 */
-	public Action(@NotNull String name, @NotNull Type type, @NotNull Optional<Policy> policy,
-	              @NotNull Optional<Time> minDelay, @NotNull Optional<Time> minSpacing, @NotNull Optional<T> value) {
+	public Action(@NotNull String name, @NotNull Type type, @NotNull Policy policy, @NotNull Time minDelay,
+	              @NotNull Comparable<Time> minSpacing) {
 		if (name.isEmpty())
 			throw new ExceptionInInitializerError(getClass().getTypeName() + " name cannot be empty");
 
-		if (minSpacing.isPresent() && minSpacing.get().compareTo(TIME_PRECISION) < 0)
+		if (minSpacing.compareTo(TIME_PRECISION) < 0)
 			throw new ExceptionInInitializerError(
-					"reactor.Action minimum time spacing must be greater than or equal to the time precision of the target");
+					"Action minimum time spacing must be greater than or equal to the time precision of the target");
 
 		this.name = name;
 		this.type = type;
-		this.policy = policy.orElse(Policy.defer);
-		this.minDelay = minDelay.orElse(Time.ZERO);
+		this.policy = policy;
+		this.minDelay = minDelay;
 		this.minSpacing = minSpacing;
-		this.value = value;
 	}
 
 	/**
@@ -82,15 +65,8 @@ public class Action<T> implements Trigger, Effect {
 	/**
 	 * @return the minimal spacing
 	 */
-	public Optional<Time> getMinSpacing() {
+	public Comparable<Time> getMinSpacing() {
 		return minSpacing;
-	}
-
-	/**
-	 * @return the value
-	 */
-	public Optional<T> getValue() {
-		return value;
 	}
 
 	@Override
@@ -103,5 +79,51 @@ public class Action<T> implements Trigger, Effect {
 	@Override
 	public int hashCode() {
 		return name.hashCode();
+	}
+
+	public enum Type {
+		logical,
+		physical
+	}
+
+	public enum Policy {
+		defer,
+		drop,
+		replace
+	}
+
+	public static class Builder {
+		private String name;
+		private Type type;
+		private Policy policy = Policy.defer;
+		private Time minDelay = Time.ZERO;
+		private Time minSpacing = Time.ZERO;
+
+		public Builder(@NotNull String name, @NotNull Type type) {
+			this.name = name;
+			this.type = type;
+		}
+
+		public Action<?> build() {
+			return new Action<>(name, type, policy, minDelay, minSpacing);
+		}
+
+		public Builder policy(@NotNull Policy policy) {
+			this.policy = policy;
+
+			return this;
+		}
+
+		public Builder minDelay(@NotNull Time minDelay) {
+			this.minDelay = minDelay;
+
+			return this;
+		}
+
+		public Builder minSpacing(@NotNull Time minSpacing) {
+			this.minSpacing = minSpacing;
+
+			return this;
+		}
 	}
 }

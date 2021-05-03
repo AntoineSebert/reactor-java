@@ -2,51 +2,24 @@ package reactor;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Optional;
-
 /**
  * reactor.Timer specification class.
  * https://github.com/icyphy/lingua-franca/wiki/Language-Specification#timer-declaration
  */
-public class Timer implements Trigger {
-	private String name;
-	private Time period;
-	private Time offset;
-
+public record Timer(String name, Time period, Time offset) implements Trigger {
 	/**
-	 * @param name name
+	 * @param name   name
 	 * @param period period
 	 * @param offset offset
 	 * @throws ExceptionInInitializerError if the name is empty
 	 */
-	public Timer(@NotNull String name, @NotNull Optional<Time> period, @NotNull Optional<Time> offset) {
+	public Timer(@NotNull String name, @NotNull Time period, @NotNull Time offset) {
 		if (name.isEmpty())
 			throw new ExceptionInInitializerError(getClass().getTypeName() + " name cannot be empty");
 
 		this.name = name;
-		this.period = period.orElse(Time.ZERO);
-		this.offset = offset.orElse(Time.ZERO);
-	}
-
-	/**
-	 * @return the name
-	 */
-	public String getName() {
-		return name;
-	}
-
-	/**
-	 * @return the period
-	 */
-	public Time getPeriod() {
-		return period;
-	}
-
-	/**
-	 * @return the offset
-	 */
-	public Time getOffset() {
-		return offset;
+		this.period = period;
+		this.offset = offset;
 	}
 
 	@Override
@@ -59,5 +32,31 @@ public class Timer implements Trigger {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
 		return name.equals(((Timer) o).name);
+	}
+
+	public static class Builder {
+		private String name;
+		private Time period = Time.ZERO;
+		private Time offset = Time.ZERO;
+
+		public Builder(@NotNull String name) {
+			this.name = name;
+		}
+
+		public Timer build() {
+			return new Timer(name, period, offset);
+		}
+
+		public Builder period(@NotNull Time period) {
+			this.period = period;
+
+			return this;
+		}
+
+		public Builder offset(@NotNull Time offset) {
+			this.offset = offset;
+
+			return this;
+		}
 	}
 }
