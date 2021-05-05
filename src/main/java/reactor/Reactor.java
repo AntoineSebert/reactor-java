@@ -1,9 +1,11 @@
 package reactor;
 
 import org.jetbrains.annotations.NotNull;
+import reactor.input.Input;
+import reactor.output.Output;
 
 import java.io.IOException;
-import java.lang.reflect.Type;
+import java.util.Arrays;
 import java.util.HashSet;
 
 /**
@@ -11,67 +13,52 @@ import java.util.HashSet;
  * https://github.com/icyphy/lingua-franca/wiki/Language-Specification#reactor-block
  * https://github.com/icyphy/lingua-franca/wiki/Language-Specification#contained-reactors
  */
-public class Reactor {
-	private final String name;
+public class Reactor extends Declaration {
 	private String preamble;
 	private HashSet<Parameter<?>> params;
 	private HashSet<State<?>> states;
-	private HashSet<Input.Var> inputs;
-	private HashSet<Output.Var> outputs;
+	private HashSet<Input<?>> inputs;
+	private HashSet<Output<?>> outputs;
 	private HashSet<Timer> timers;
 	private HashSet<Action<?>> actions;
 	private HashSet<Reaction> reactions;
-	private HashSet<Statement> containedReactors;
+	private HashSet<Reactor> containedReactors;
 
-	/**
-	 * @param name              name
-	 * @param params            parameters
-	 * @param states            states
-	 * @param timers            timers
-	 * @param actions           actions
-	 * @param reactions         reactions
-	 * @param containedReactors contained reactors
-	 */
-	public Reactor(@NotNull String name,
-	               @NotNull HashSet<Parameter<?>> params,
-	               @NotNull HashSet<State<?>> states,
-	               @NotNull HashSet<Input.Var> inputs,
-	               @NotNull HashSet<Output.Var> outputs,
-	               @NotNull HashSet<Timer> timers,
-	               @NotNull HashSet<Action<?>> actions,
-	               @NotNull HashSet<Reaction> reactions,
-	               @NotNull HashSet<Statement> containedReactors,
-	               @NotNull String preamble) {
-		if (name.isEmpty())
-			throw new ExceptionInInitializerError(getClass().getTypeName() + " name cannot be empty");
+	public Reactor(@NotNull String name, @NotNull String preamble, @NotNull HashSet<Reaction> reactions,
+	               @NotNull Iterable<? extends Declaration> declarations) {
+		super(name);
 
 		for (Parameter<?> param : params)
 			if (param.value() instanceof Time time)
 				if (time.time() == 0 && time.unit().isEmpty())
 					throw new ExceptionInInitializerError("Non-zero time parameter for reactor had no time unit");
 
-		for (Reaction reaction : reactions)
+		for (Reaction reaction : reactions) {
+			reaction.self(this);
+
 			if (!inputs.containsAll(reaction.getUses()))
 				throw new ExceptionInInitializerError(
 						"At least one unknown Input parameter(s) in Reaction Use list " + reaction.getUses());
+		}
 
-		this.name = name;
 		this.preamble = preamble;
-		this.params = params;
-		this.states = states;
-		this.inputs = inputs;
-		this.outputs = outputs;
-		this.timers = timers;
-		this.actions = actions;
 		this.reactions = reactions;
-		this.containedReactors = containedReactors;
-	}
 
-	/**
-	 * @return the name
-	 */
-	public String getName() {
-		return name;
+		for (Declaration decl : declarations)
+			if (decl instanceof Parameter)
+				params.add((Parameter<?>) decl);
+			else if(decl instanceof State)
+				states.add((State<?>) decl);
+			else if(decl instanceof Input)
+				inputs.add((Input<?>) decl);
+			else if(decl instanceof Output)
+				outputs.add((Output<?>) decl);
+			else if(decl instanceof Timer)
+				timers.add((Timer) decl);
+			else if(decl instanceof Action)
+				actions.add((Action<?>) decl);
+			else if(decl instanceof Reactor)
+				containedReactors.add((Reactor) decl);
 	}
 
 	/**
@@ -98,14 +85,14 @@ public class Reactor {
 	/**
 	 * @return the inputs
 	 */
-	public HashSet<Input.Var> getInputs() {
+	public HashSet<Input<?>> getInputs() {
 		return inputs;
 	}
 
 	/**
 	 * @return the outputs
 	 */
-	public HashSet<Output.Var> getOutputs() {
+	public HashSet<Output<?>> getOutputs() {
 		return outputs;
 	}
 
@@ -133,7 +120,7 @@ public class Reactor {
 	/**
 	 * @return the contained reactors
 	 */
-	public HashSet<Statement> getContainedReactors() {
+	public HashSet<Reactor> getContainedReactors() {
 		return containedReactors;
 	}
 
@@ -142,7 +129,7 @@ public class Reactor {
 	 */
 	public String toLF() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("reactor ").append(name);
+		builder.append("reactor ").append("");
 
 		// TODO
 
@@ -168,104 +155,35 @@ public class Reactor {
 		return "";
 	}
 
-	@Override
-	public int hashCode() {
-		return name.hashCode();
-	}
-
-	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
-		return name.equals(((Reactor) o).name);
-	}
-
-	enum Var implements Statement {
-		Reactor(Reactor.class),
-		Bank(Reactor[].class);
-
-		private Type type;
-
-		//Constructor to initialize the instance variable
-		Var(Type type) {
-			this.type = type;
-		}
-
-		public Type getType() {
-			return type;
-		}
-	}
-
 	public static class Builder {
 		private String name;
-		private HashSet<Parameter<?>> params = new HashSet<>();
-		private HashSet<State<?>> states = new HashSet<>();
-		private HashSet<Input.Var> inputs = new HashSet<>();
-		private HashSet<Output.Var> outputs = new HashSet<>();
-		private HashSet<Timer> timers = new HashSet<>();
-		private HashSet<Action<?>> actions = new HashSet<>();
-		private HashSet<Reaction> reactions = new HashSet<>();
-		private HashSet<Statement> containedReactors = new HashSet<>();
 		private String preamble = "";
+		private HashSet<Reaction> reactions = new HashSet<>();
+		private HashSet<Declaration> declarations = new HashSet<>();
 
 		public Builder(@NotNull String name) {
 			this.name = name;
 		}
 
+
 		public Reactor build() {
-			return new Reactor(name, params, states, inputs, outputs, timers, actions, reactions, containedReactors, preamble);
+			return new Reactor(name, preamble, reactions, declarations);
 		}
 
-		public Builder params(@NotNull HashSet<Parameter<?>> params) {
-			this.params = params;
+		public Builder preamble(@NotNull String preamble) {
+			this.preamble = preamble;
 
 			return this;
 		}
 
-		public Builder states(@NotNull HashSet<State<?>> states) {
-			this.states = states;
-
-			return this;
-		}
-
-		public Builder inputs(@NotNull HashSet<Input.Var> inputs) {
-			this.inputs = inputs;
-
-			return this;
-		}
-
-		public Builder outputs(@NotNull HashSet<Output.Var> outputs) {
-			this.outputs = outputs;
-
-			return this;
-		}
-
-		public Builder timers(@NotNull HashSet<Timer> timers) {
-			this.timers = timers;
-
-			return this;
-		}
-
-		public Builder actions(@NotNull HashSet<Action<?>> actions) {
-			this.actions = actions;
+		public Builder declarations(Declaration... declarations) {
+			this.declarations = new HashSet<>(Arrays.stream(declarations).toList());
 
 			return this;
 		}
 
 		public Builder reactions(@NotNull HashSet<Reaction> reactions) {
 			this.reactions = reactions;
-
-			return this;
-		}
-
-		public Builder containedReactors(@NotNull HashSet<Statement> containedReactors) {
-			this.containedReactors = containedReactors;
-
-			return this;
-		}
-
-		public Builder preamble(@NotNull String preamble) {
-			this.preamble = preamble;
 
 			return this;
 		}

@@ -6,9 +6,8 @@ import org.jetbrains.annotations.NotNull;
  * Action specification class.
  * https://github.com/icyphy/lingua-franca/wiki/Language-Specification#action-declaration
  */
-public class Action<T> implements Trigger, Effect {
+public class Action<T> extends Declaration implements Trigger, Effect {
 	public static Time TIME_PRECISION;
-	private final String name;
 	private final Type type;
 	private Policy policy;
 	private Time minDelay;
@@ -20,25 +19,16 @@ public class Action<T> implements Trigger, Effect {
 	 */
 	public Action(@NotNull String name, @NotNull Type type, @NotNull Policy policy, @NotNull Time minDelay,
 	              @NotNull Comparable<Time> minSpacing) {
-		if (name.isEmpty())
-			throw new ExceptionInInitializerError(getClass().getTypeName() + " name cannot be empty");
+		super(name);
 
 		if (minSpacing.compareTo(TIME_PRECISION) < 0)
 			throw new ExceptionInInitializerError(
 					"Action minimum time spacing must be greater than or equal to the time precision of the target");
 
-		this.name = name;
 		this.type = type;
 		this.policy = policy;
 		this.minDelay = minDelay;
 		this.minSpacing = minSpacing;
-	}
-
-	/**
-	 * @return the name
-	 */
-	public String getName() {
-		return name;
 	}
 
 	/**
@@ -67,18 +57,6 @@ public class Action<T> implements Trigger, Effect {
 	 */
 	public Comparable<Time> getMinSpacing() {
 		return minSpacing;
-	}
-
-	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
-		return name.equals(((Action<?>) o).name);
-	}
-
-	@Override
-	public int hashCode() {
-		return name.hashCode();
 	}
 
 	public enum Type {

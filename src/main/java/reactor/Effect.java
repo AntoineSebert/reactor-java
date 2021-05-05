@@ -1,7 +1,7 @@
 package reactor;
 
 /**
- * reactor.Effect specification class, either reactor.Timer, reactor.Input, reactor.Output, or reactor.Action.
+ * reactor.Effect specification class, either reactor.Timer, reactor.input.Input, reactor.output.Output, or reactor.Action.
  * https://github.com/icyphy/lingua-franca/wiki/Language-Specification#reaction-declaration
  */
 public interface Effect {

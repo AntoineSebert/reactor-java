@@ -3,16 +3,16 @@ package reactor;
 /**
  * https://github.com/icyphy/lingua-franca/wiki/Language-Specification#parameter-declaration
  */
-public record Parameter<T>(String name, T value) {
-	@Override
-	public int hashCode() {
-		return name.hashCode();
+public class Parameter<T> extends Declaration {
+	private T value;
+
+	public Parameter(String name, T value) {
+		super(name);
+
+		this.value = value;
 	}
 
-	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
-		return name.equals(((Parameter<?>) o).name);
+	public T value() {
+		return value;
 	}
 }
