@@ -1,6 +1,7 @@
 package reactor;
 
 import org.jetbrains.annotations.NotNull;
+import reactor.input.Input;
 
 import java.util.HashSet;
 import java.util.Objects;
@@ -10,8 +11,16 @@ import java.util.function.Function;
  * Reaction specification class.
  * https://github.com/icyphy/lingua-franca/wiki/Language-Specification#reaction-declaration
  */
-public record Reaction(@NotNull HashSet<Trigger> triggers, @NotNull HashSet<Input<?>> uses,
-                       @NotNull HashSet<Effect> effects, @NotNull Function<Reaction, Void> targetCode) {
+public class Reaction {
+	private Reactor self;
+	private HashSet<Trigger> triggers;
+	private HashSet<Input<?>> uses;
+	private HashSet<Effect> effects;
+	private Function<Reaction, Void> targetCode;
+
+	public Reaction(@NotNull HashSet<Trigger> triggers, @NotNull HashSet<Input<?>> uses,
+	                @NotNull HashSet<Effect> effects, @NotNull Function<Reaction, Void> targetCode) {}
+
 	/**
 	 * @return the triggers
 	 */
@@ -33,11 +42,19 @@ public record Reaction(@NotNull HashSet<Trigger> triggers, @NotNull HashSet<Inpu
 		return effects;
 	}
 
+	public Reactor self() {
+		return self;
+	}
+
 	/**
 	 * @return the target code
 	 */
 	public Function<Reaction, Void> getTargetCode() {
 		return targetCode;
+	}
+
+	public void self(@NotNull Reactor self) {
+		this.self = self;
 	}
 
 	/**
@@ -73,6 +90,12 @@ public record Reaction(@NotNull HashSet<Trigger> triggers, @NotNull HashSet<Inpu
 
 		public Builder triggers(@NotNull HashSet<Trigger> triggers) {
 			this.triggers = triggers;
+
+			return this;
+		}
+
+		public Builder addTrigger(@NotNull Trigger trigger) {
+			triggers.add(trigger);
 
 			return this;
 		}
