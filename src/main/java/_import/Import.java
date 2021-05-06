@@ -11,7 +11,7 @@ public class Import {
 	File file;
 
 	File getFile() {
-		return this.file;
+		return file;
 	}
 
 	HashMap<String, Reactor> getReactor() {
