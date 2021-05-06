@@ -13,13 +13,18 @@ import java.util.function.Function;
  */
 public class Reaction {
 	private Reactor self;
-	private HashSet<Trigger> triggers;
-	private HashSet<Input<?>> uses;
-	private HashSet<Effect> effects;
-	private Function<Reaction, Void> targetCode;
+	private final HashSet<Trigger> triggers ;
+	private final HashSet<Input<?>> uses;
+	private final HashSet<Effect> effects;
+	private final Function<Reaction, Void> targetCode;
 
 	public Reaction(@NotNull HashSet<Trigger> triggers, @NotNull HashSet<Input<?>> uses,
-	                @NotNull HashSet<Effect> effects, @NotNull Function<Reaction, Void> targetCode) {}
+	                @NotNull HashSet<Effect> effects, @NotNull Function<Reaction, Void> targetCode) {
+		this.triggers = triggers;
+		this.uses = uses;
+		this.effects = effects;
+		this.targetCode = targetCode;
+	}
 
 	/**
 	 * @return the triggers
@@ -76,7 +81,6 @@ public class Reaction {
 	public int hashCode() {
 		return Objects.hash(triggers, uses, effects);
 	}
-
 
 	public static class Builder {
 		private HashSet<Trigger> triggers = new HashSet<>();

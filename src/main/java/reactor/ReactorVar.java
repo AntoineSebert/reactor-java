@@ -11,13 +11,13 @@ import java.util.HashSet;
 public class ReactorVar extends Reactor {
 	protected String preamble;
 	protected HashSet<Parameter<?>> params;
-	protected HashSet<State<?>> states = new HashSet<>();
-	protected HashSet<Input<?>> inputs = new HashSet<>();
-	protected HashSet<Output<?>> outputs = new HashSet<>();
-	protected HashSet<Timer> timers = new HashSet<>();
-	protected HashSet<Action<?>> actions = new HashSet<>();
+	protected final HashSet<State<?>> states = new HashSet<>();
+	protected final HashSet<Input<?>> inputs = new HashSet<>();
+	protected final HashSet<Output<?>> outputs = new HashSet<>();
+	protected final HashSet<Timer> timers = new HashSet<>();
+	protected final HashSet<Action<?>> actions = new HashSet<>();
 	protected HashSet<Reaction> reactions;
-	protected HashSet<Reactor> containedReactors = new HashSet<>();
+	protected final HashSet<Reactor> containedReactors = new HashSet<>();
 
 	public ReactorVar(@NotNull String name, @NotNull String preamble, @NotNull HashSet<Reaction> reactions,
 	                  @NotNull HashSet<Parameter<?>> params, @NotNull Iterable<? extends Declaration> declarations) {
@@ -135,10 +135,10 @@ public class ReactorVar extends Reactor {
 
 	public static class Builder {
 		protected final String name;
-		protected HashSet<Parameter<?>> params = new HashSet<>();
-		protected String preamble;
+		protected final HashSet<Parameter<?>> params = new HashSet<>();
+		protected String preamble = "";
 		protected HashSet<Declaration> declarations = new HashSet<>();
-		protected HashSet<Reaction> reactions;
+		protected HashSet<Reaction> reactions = new HashSet<>();
 
 		public Builder(@NotNull String name) {
 			this.name = name;
