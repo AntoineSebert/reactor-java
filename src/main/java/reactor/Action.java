@@ -71,8 +71,8 @@ public class Action<T> extends Declaration implements Trigger, Effect {
 	}
 
 	public static class Builder {
-		private String name;
-		private Type type;
+		private final String name;
+		private final Type type;
 		private Policy policy = Policy.defer;
 		private Time minDelay = Time.ZERO;
 		private Time minSpacing = Time.ZERO;

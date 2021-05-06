@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.Optional;
 
 public class InputArr<T> extends Input<T> implements PortArr<T> {
-	private ArrayList<Optional<T>> value = new ArrayList<>();
+	private final ArrayList<Optional<T>> value = new ArrayList<>();
 	private ConnectionArr<T> connection;
 
 	/**

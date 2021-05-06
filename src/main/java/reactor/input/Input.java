@@ -11,7 +11,7 @@ import java.util.Optional;
  * https://github.com/icyphy/lingua-franca/wiki/Language-Specification#input-declaration
  */
 public abstract class Input<T> extends Declaration implements Port<T> {
-	protected boolean mutable;
+	protected final boolean mutable;
 
 	/**
 	 * @param name    name

@@ -37,7 +37,7 @@ public class Target {
 		no_compile(Boolean.class),
 		timeout(Time.class);
 
-		private Type type;
+		private final Type type;
 
 		Parameters(Type type) {
 			this.type = type;
@@ -138,8 +138,8 @@ public class Target {
 	}
 
 	public static class Builder {
-		private String name;
-		private HashSet<Parameter<?>> params = new HashSet<>(); // map<field, val>
+		private final String name;
+		private final HashSet<Parameter<?>> params = new HashSet<>(); // map<field, val>
 		private Time precision = Time.ZERO;
 
 		public Builder(@NotNull String name) {

@@ -7,7 +7,7 @@ import org.jetbrains.annotations.NotNull;
  * https://github.com/icyphy/lingua-franca/wiki/Language-Specification#state-declaration
  */
 public class State<T> extends Declaration {
-	private T value;
+	private final T value;
 
 	/**
 	 * @param name  name
