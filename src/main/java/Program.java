@@ -78,20 +78,12 @@ public record Program(HashSet<Target> targets, HashSet<Import> imports,
 	/**
 	 * Runs the program.
 	 */
-	public void run() {
-		try {
-			if (mainReactor.isPresent())
-				mainReactor.get().run();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+	public void run() throws IOException {
+		if (mainReactor.isPresent())
+			mainReactor.get().run();
 
 		for (Reactor reactor : reactors)
-			try {
-				reactor.run();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+			reactor.run();
 	}
 
 	public static class Builder {
