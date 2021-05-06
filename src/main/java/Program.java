@@ -110,6 +110,12 @@ public record Program(HashSet<Target> targets, HashSet<Import> imports,
 			return this;
 		}
 
+		public Builder addTarget(@NotNull Target target) {
+			targets.add(target);
+
+			return this;
+		}
+
 		public Builder imports(@NotNull HashSet<Import> imports) {
 			this.imports = imports;
 
