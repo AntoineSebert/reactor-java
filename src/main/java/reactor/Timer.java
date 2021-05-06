@@ -32,4 +32,12 @@ public class Timer extends Declaration implements Trigger {
 		this.period = period;
 		this.offset = offset;
 	}
+
+	public Time period() {
+		return period;
+	}
+
+	public Time offset() {
+		return offset;
+	}
 }
