@@ -24,4 +24,9 @@ public class OutputVar<T> extends Output<T> implements PortVar<T> {
 	public void connect(ConnectionVar<T> connection) {
 	this.connection = connection;
 	}
+
+	@Override
+	public long timestamp() {
+		return 0; // TODO
+	}
 }

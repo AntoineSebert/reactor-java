@@ -42,4 +42,9 @@ public class Timer extends Declaration implements Trigger {
 	public Timestamp offset() {
 		return offset;
 	}
+
+	@Override
+	public long timestamp() {
+		return 0; // TODO
+	}
 }

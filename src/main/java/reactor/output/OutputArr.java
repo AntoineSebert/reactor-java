@@ -29,4 +29,9 @@ public class OutputArr<T> extends Output<T> implements PortArr<T> {
 	public void connect(ConnectionArr<T> connection) {
 		this.connection = connection;
 	}
+
+	@Override
+	public long timestamp() {
+		return 0; // TODO
+	}
 }

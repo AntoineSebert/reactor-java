@@ -61,6 +61,14 @@ public class Action<T> extends Declaration implements Trigger, Effect {
 		return minSpacing;
 	}
 
+	@Override
+	public long timestamp() {
+		if(type == Type.logical)
+			return Time.logical() + Time.convert(minDelay); // TODO : minDelay + minDelay
+		else
+			return Time.physical();  // TODO : minDelay + minDelay
+	}
+
 	public enum Type {
 		logical,
 		physical

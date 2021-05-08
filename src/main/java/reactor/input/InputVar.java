@@ -41,4 +41,9 @@ public class InputVar<T> extends Input<T> implements PortVar<T> {
 	public T value() {
 		return value.orElse(null);
 	}
+
+	@Override
+	public long timestamp() {
+		return 0; // TODO
+	}
 }

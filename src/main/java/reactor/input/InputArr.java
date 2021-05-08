@@ -48,4 +48,9 @@ public class InputArr<T> extends Input<T> implements PortArr<T> {
 	public int size() {
 		return value.size();
 	}
+
+	@Override
+	public long timestamp() {
+		return 0; // TODO
+	}
 }

@@ -5,6 +5,16 @@ package reactor;
  * https://github.com/icyphy/lingua-franca/wiki/Language-Specification#reaction-declaration
  */
 public interface Trigger {
-	class STARTUP implements Trigger {}
-	class SHUTDOWN implements Trigger {}
+	long timestamp();
+
+	class STARTUP implements Trigger {
+		public long timestamp() {
+			return 0;
+		}
+	}
+	class SHUTDOWN implements Trigger {
+		public long timestamp() {
+			return Long.MAX_VALUE;
+		}
+	}
 }
