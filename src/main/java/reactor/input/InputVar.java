@@ -3,6 +3,8 @@ package reactor.input;
 import org.jetbrains.annotations.NotNull;
 import reactor.connection.ConnectionVar;
 import reactor.port.PortVar;
+import time.Time;
+import time.Timestamp;
 
 import java.util.Optional;
 
@@ -24,8 +26,12 @@ public class InputVar<T> extends Input<T> implements PortVar<T> {
 	}
 
 	public void set(T value) {
-		if (mutable)
+		if (mutable) {
 			this.value = Optional.of(value);
+			time = Time.physical();
+		} else {
+			throw new RuntimeException("Cannot modify an immutable type");
+		}
 	}
 
 	@Override
@@ -40,10 +46,5 @@ public class InputVar<T> extends Input<T> implements PortVar<T> {
 
 	public T value() {
 		return value.orElse(null);
-	}
-
-	@Override
-	public long timestamp() {
-		return 0; // TODO
 	}
 }

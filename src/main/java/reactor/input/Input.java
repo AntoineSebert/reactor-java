@@ -12,6 +12,7 @@ import java.util.Optional;
  */
 public abstract class Input<T> extends Declaration implements Port<T> {
 	protected final boolean mutable;
+	protected long time;
 
 	/**
 	 * @param name    name
@@ -29,5 +30,10 @@ public abstract class Input<T> extends Declaration implements Port<T> {
 	 */
 	public boolean isMutable() {
 		return mutable;
+	}
+
+	@Override
+	public long timestamp() {
+		return time;
 	}
 }

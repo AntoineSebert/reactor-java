@@ -3,6 +3,7 @@ package reactor.input;
 import org.jetbrains.annotations.NotNull;
 import reactor.connection.ConnectionArr;
 import reactor.port.PortArr;
+import time.Time;
 
 import java.util.ArrayList;
 import java.util.Optional;
@@ -22,8 +23,10 @@ public class InputArr<T> extends Input<T> implements PortArr<T> {
 	}
 
 	public void set(int i, T value) {
-		if (mutable)
+		if (mutable) {
 			this.value.set(i, Optional.of(value));
+			time = Time.physical();
+		}
 	}
 
 	public boolean isPresent(int i) {
@@ -47,10 +50,5 @@ public class InputArr<T> extends Input<T> implements PortArr<T> {
 	@Override
 	public int size() {
 		return value.size();
-	}
-
-	@Override
-	public long timestamp() {
-		return 0; // TODO
 	}
 }
