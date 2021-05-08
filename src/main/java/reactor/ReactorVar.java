@@ -5,6 +5,7 @@ import reactor.input.Input;
 import reactor.output.Output;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 
@@ -16,10 +17,10 @@ public class ReactorVar extends Reactor {
 	protected final HashSet<Output<?>> outputs = new HashSet<>();
 	protected final HashSet<Timer> timers = new HashSet<>();
 	protected final HashSet<Action<?>> actions = new HashSet<>();
-	protected HashSet<Reaction> reactions;
+	protected ArrayList<Reaction> reactions;
 	protected final HashSet<Reactor> containedReactors = new HashSet<>();
 
-	public ReactorVar(@NotNull String name, @NotNull String preamble, @NotNull HashSet<Reaction> reactions,
+	public ReactorVar(@NotNull String name, @NotNull String preamble, @NotNull ArrayList<Reaction> reactions,
 	                  @NotNull HashSet<Parameter<?>> params, @NotNull Iterable<? extends Declaration> declarations) {
 		super(name);
 
@@ -103,7 +104,7 @@ public class ReactorVar extends Reactor {
 	/**
 	 * @return the reactions
 	 */
-	public HashSet<Reaction> getReactions() {
+	public ArrayList<Reaction> getReactions() {
 		return reactions;
 	}
 
@@ -138,7 +139,7 @@ public class ReactorVar extends Reactor {
 		protected final HashSet<Parameter<?>> params = new HashSet<>();
 		protected String preamble = "";
 		protected HashSet<Declaration> declarations = new HashSet<>();
-		protected HashSet<Reaction> reactions = new HashSet<>();
+		protected ArrayList<Reaction> reactions = new ArrayList<>();
 
 		public Builder(@NotNull String name) {
 			this.name = name;
@@ -168,8 +169,8 @@ public class ReactorVar extends Reactor {
 			return this;
 		}
 
-		public Builder reactions(@NotNull HashSet<Reaction> reactions) {
-			this.reactions = reactions;
+		public Builder reactions(Reaction... reactions) {
+			this.reactions = new ArrayList<>(Arrays.stream(reactions).toList());
 
 			return this;
 		}
