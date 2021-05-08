@@ -2,10 +2,11 @@ import _import.Import;
 import org.jetbrains.annotations.NotNull;
 import reactor.Action;
 import reactor.Reactor;
-import reactor.Time;
+import reactor.Timestamp;
 import target.Target;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Optional;
@@ -35,7 +36,7 @@ public record Program(HashSet<Target> targets, HashSet<Import> imports,
 		Action.TIME_PRECISION = targetIt.next().getPrecision();
 
 		while (targetIt.hasNext()) {
-			Time newPrecision = targetIt.next().getPrecision();
+			Timestamp newPrecision = targetIt.next().getPrecision();
 
 			if (newPrecision.compareTo(Action.TIME_PRECISION) < 0)
 				Action.TIME_PRECISION = newPrecision;
@@ -96,26 +97,20 @@ public record Program(HashSet<Target> targets, HashSet<Import> imports,
 			return new Program(targets, imports, reactors, mainReactor);
 		}
 
-		public Builder targets(@NotNull HashSet<Target> targets) {
-			this.targets = targets;
+		public Builder targets(Target... targets) {
+			this.targets.addAll(Arrays.stream(targets).toList());
 
 			return this;
 		}
 
-		public Builder addTarget(@NotNull Target target) {
-			targets.add(target);
+		public Builder imports(Import... imports) {
+			this.imports.addAll(Arrays.stream(imports).toList());
 
 			return this;
 		}
 
-		public Builder imports(@NotNull HashSet<Import> imports) {
-			this.imports = imports;
-
-			return this;
-		}
-
-		public Builder reactors(@NotNull HashSet<Reactor> reactors) {
-			this.reactors = reactors;
+		public Builder reactors(Reactor... reactors) {
+			this.reactors.addAll(Arrays.stream(reactors).toList());
 
 			return this;
 		}

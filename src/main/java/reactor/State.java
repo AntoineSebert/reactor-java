@@ -19,6 +19,7 @@ public class State<T> extends Declaration {
 
 		this.value = value;
 	}
+
 	public State(@NotNull String name, @NotNull Parameter<? extends T> param) {
 		this(name, param.value());
 	}
