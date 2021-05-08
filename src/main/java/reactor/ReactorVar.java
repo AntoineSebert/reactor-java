@@ -50,14 +50,19 @@ public class ReactorVar extends Reactor {
 			else if(decl instanceof Reactor)
 				containedReactors.add((Reactor) decl);
 
-		for (Reaction reaction : reactions) {
-			if (!inputs.containsAll(reaction.getUses()))
+		int limit = reactions.size();
+		for (int i = 0; i < limit; i++) {
+			if (!inputs.containsAll(reactions.get(i).getUses()))
 				throw new ExceptionInInitializerError(
-						"At least one unknown Input parameter(s) in Reaction Use list " + reaction.getUses());
+						"At least one unknown Input parameter(s) in Reaction Use list " + reactions.get(i).getUses());
 
-			reaction.self(this);
+			reactions.get(i).self(this);
 
-			this.reactions.add(reaction);
+			for (Trigger t : reactions.get(i).getTriggers()) {
+				pool.put(t, reactions.get(i));
+			}
+
+			this.reactions.add(reactions.get(i));
 		}
 	}
 
