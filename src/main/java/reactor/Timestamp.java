@@ -5,8 +5,8 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Objects;
 import java.util.Optional;
 
-public record Time(int time, @NotNull Optional<Unit> unit) implements Comparable<Time> {
-	public static final Time ZERO = new Time(0, Optional.empty());
+public record Timestamp(int time, @NotNull Optional<Unit> unit) implements Comparable<Timestamp> {
+	public static final Timestamp ZERO = new Timestamp(0, Optional.empty());
 
 	/**
 	 * @return -1 if this is less than other,  1 if this is greater than other, and zero if the two instances are
@@ -14,7 +14,7 @@ public record Time(int time, @NotNull Optional<Unit> unit) implements Comparable
 	 * equality; equals() should me used instead.
 	 */
 	@Override
-	public int compareTo(@NotNull Time o) {
+	public int compareTo(@NotNull Timestamp o) {
 		if (unit.isPresent() && o.unit.isPresent())
 			return unit.get() == o.unit.get()
 					? Integer.compare(time, o.time)
@@ -28,7 +28,7 @@ public record Time(int time, @NotNull Optional<Unit> unit) implements Comparable
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
 
-		return time == ((Time) o).time && unit.equals(((Time) o).unit);
+		return time == ((Timestamp) o).time && unit.equals(((Timestamp) o).unit);
 	}
 
 	@Override

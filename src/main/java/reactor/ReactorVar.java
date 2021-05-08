@@ -24,9 +24,9 @@ public class ReactorVar extends Reactor {
 		super(name);
 
 		for (Parameter<?> param : params)
-			if (param.value() instanceof Time time)
-				if (time.time() == 0 && time.unit().isEmpty())
-					throw new ExceptionInInitializerError("Non-zero time parameter for reactor had no time unit");
+			if (param.value() instanceof Timestamp timestamp)
+				if (timestamp.time() == 0 && timestamp.unit().isEmpty())
+					throw new ExceptionInInitializerError("Non-zero timestamp parameter for reactor had no timestamp unit");
 
 		this.params = params;
 

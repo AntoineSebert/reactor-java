@@ -7,14 +7,14 @@ import org.jetbrains.annotations.NotNull;
  * https://github.com/icyphy/lingua-franca/wiki/Language-Specification#timer-declaration
  */
 public class Timer extends Declaration implements Trigger {
-	private Time period = Time.ZERO;
-	private Time offset = Time.ZERO;
+	private Timestamp period = Timestamp.ZERO;
+	private Timestamp offset = Timestamp.ZERO;
 
 	public Timer(@NotNull String name) {
 		super(name);
 	}
 
-	public Timer(@NotNull String name, @NotNull Time period) {
+	public Timer(@NotNull String name, @NotNull Timestamp period) {
 		super(name);
 
 		this.period = period;
@@ -26,18 +26,18 @@ public class Timer extends Declaration implements Trigger {
 	 * @param offset offset
 	 * @throws ExceptionInInitializerError if the name is empty
 	 */
-	public Timer(@NotNull String name, @NotNull Time period, @NotNull Time offset) {
+	public Timer(@NotNull String name, @NotNull Timestamp period, @NotNull Timestamp offset) {
 		super(name);
 
 		this.period = period;
 		this.offset = offset;
 	}
 
-	public Time period() {
+	public Timestamp period() {
 		return period;
 	}
 
-	public Time offset() {
+	public Timestamp offset() {
 		return offset;
 	}
 }

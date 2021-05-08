@@ -7,18 +7,18 @@ import org.jetbrains.annotations.NotNull;
  * https://github.com/icyphy/lingua-franca/wiki/Language-Specification#action-declaration
  */
 public class Action<T> extends Declaration implements Trigger, Effect {
-	public static Time TIME_PRECISION;
+	public static Timestamp TIME_PRECISION;
 	private final Type type;
 	private Policy policy;
-	private Time minDelay;
-	private Comparable<Time> minSpacing;
+	private Timestamp minDelay;
+	private Comparable<Timestamp> minSpacing;
 
 	/**
 	 * @param name name
 	 * @param type type
 	 */
-	public Action(@NotNull String name, @NotNull Type type, @NotNull Policy policy, @NotNull Time minDelay,
-	              @NotNull Comparable<Time> minSpacing) {
+	public Action(@NotNull String name, @NotNull Type type, @NotNull Policy policy, @NotNull Timestamp minDelay,
+	              @NotNull Comparable<Timestamp> minSpacing) {
 		super(name);
 
 		if (minSpacing.compareTo(TIME_PRECISION) < 0)
@@ -48,14 +48,14 @@ public class Action<T> extends Declaration implements Trigger, Effect {
 	/**
 	 * @return the minimal delay
 	 */
-	public Time getMinDelay() {
+	public Timestamp getMinDelay() {
 		return minDelay;
 	}
 
 	/**
 	 * @return the minimal spacing
 	 */
-	public Comparable<Time> getMinSpacing() {
+	public Comparable<Timestamp> getMinSpacing() {
 		return minSpacing;
 	}
 
@@ -74,8 +74,8 @@ public class Action<T> extends Declaration implements Trigger, Effect {
 		private final String name;
 		private final Type type;
 		private Policy policy = Policy.defer;
-		private Time minDelay = Time.ZERO;
-		private Time minSpacing = Time.ZERO;
+		private Timestamp minDelay = Timestamp.ZERO;
+		private Timestamp minSpacing = Timestamp.ZERO;
 
 		public Builder(@NotNull String name, @NotNull Type type) {
 			this.name = name;
@@ -92,13 +92,13 @@ public class Action<T> extends Declaration implements Trigger, Effect {
 			return this;
 		}
 
-		public Builder minDelay(@NotNull Time minDelay) {
+		public Builder minDelay(@NotNull Timestamp minDelay) {
 			this.minDelay = minDelay;
 
 			return this;
 		}
 
-		public Builder minSpacing(@NotNull Time minSpacing) {
+		public Builder minSpacing(@NotNull Timestamp minSpacing) {
 			this.minSpacing = minSpacing;
 
 			return this;

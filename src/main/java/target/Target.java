@@ -2,7 +2,7 @@ package target;
 
 import org.jetbrains.annotations.NotNull;
 import reactor.Parameter;
-import reactor.Time;
+import reactor.Timestamp;
 import reactor.Unit;
 
 import java.lang.reflect.Type;
@@ -16,7 +16,7 @@ import java.util.Optional;
 public class Target {
 	private final String name;
 	private HashSet<Parameter<?>> params;
-	private Time precision;
+	private Timestamp precision;
 
 	enum Logging {
 		debug,
@@ -35,7 +35,7 @@ public class Target {
 		keepalive(Boolean.class),
 		logging(Logging.class),
 		no_compile(Boolean.class),
-		timeout(Time.class);
+		timeout(Timestamp.class);
 
 		private final Type type;
 
@@ -48,27 +48,27 @@ public class Target {
 		}
 	}
 
-	public static final Target Java = new Target("Java", new Time(1, Optional.of(Unit.nsec)), new HashSet<>(0));
+	public static final Target Java = new Target("Java", new Timestamp(1, Optional.of(Unit.nsec)), new HashSet<>(0));
 
 	/**
 	 * @param name      name
 	 * @param params    parameters
-	 * @param precision time precision, used in target.Target
+	 * @param precision timestamp precision, used in target.Target
 	 * @throws ExceptionInInitializerError if the name is empty or if the "timeout" parameter is present and invalid
 	 */
-	public Target(@NotNull String name, @NotNull Time precision, @NotNull HashSet<Parameter<?>> params) {
+	public Target(@NotNull String name, @NotNull Timestamp precision, @NotNull HashSet<Parameter<?>> params) {
 		if (name.isEmpty())
 			throw new ExceptionInInitializerError(getClass().getTypeName() + " name cannot be empty");
 
 		if (precision.unit().isEmpty())
-			throw new ExceptionInInitializerError("Time precision must have a unit");
+			throw new ExceptionInInitializerError("Timestamp precision must have a unit");
 
 		for (Parameter<?> param : params)
 			if ("timeout".equals(param.name())) {
-				Time timeout = (Time) param.value();
+				Timestamp timeout = (Timestamp) param.value();
 
 				if (timeout.time() == 0 || timeout.unit().isEmpty())
-					throw new ExceptionInInitializerError("Target parameter 'timeout' must be a non-zero time with unit");
+					throw new ExceptionInInitializerError("Target parameter 'timeout' must be a non-zero timestamp with unit");
 			}
 
 		this.name = name;
@@ -91,9 +91,9 @@ public class Target {
 	}
 
 	/**
-	 * @return the time precision
+	 * @return the timestamp precision
 	 */
-	public Time getPrecision() {
+	public Timestamp getPrecision() {
 		return precision;
 	}
 
@@ -140,7 +140,7 @@ public class Target {
 	public static class Builder {
 		private final String name;
 		private final HashSet<Parameter<?>> params = new HashSet<>(); // map<field, val>
-		private Time precision = Time.ZERO;
+		private Timestamp precision = Timestamp.ZERO;
 
 		public Builder(@NotNull String name) {
 			this.name = name;
@@ -156,7 +156,7 @@ public class Target {
 			return this;
 		}
 
-		public Builder precision(@NotNull Time precision) {
+		public Builder precision(@NotNull Timestamp precision) {
 			this.precision = precision;
 
 			return this;
