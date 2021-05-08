@@ -11,7 +11,7 @@ public class TestReactor {
 	public void testHelloWorld() {
 		assertDoesNotThrow(
 				() -> (new Program.Builder())
-					.addTarget(Target.Java)
+					.targets(Target.Java)
 					.mainReactor((new ReactorVar.Builder("Minimal"))
 							.addReaction((new Reaction.Builder())
 									.targetCode((reaction) -> {
