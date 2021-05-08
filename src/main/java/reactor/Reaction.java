@@ -18,13 +18,16 @@ public class Reaction {
 	private final HashSet<Input<?>> uses;
 	private final HashSet<Effect> effects;
 	private final Function<Reaction, Void> targetCode;
+	private final Deadline deadline;
 
 	public Reaction(@NotNull HashSet<Trigger> triggers, @NotNull HashSet<Input<?>> uses,
-	                @NotNull HashSet<Effect> effects, @NotNull Function<Reaction, Void> targetCode) {
+	                @NotNull HashSet<Effect> effects, @NotNull Function<Reaction, Void> targetCode,
+	                @NotNull Deadline deadline) {
 		this.triggers = triggers;
 		this.uses = uses;
 		this.effects = effects;
 		this.targetCode = targetCode;
+		this.deadline = deadline;
 	}
 
 	/**
@@ -88,9 +91,16 @@ public class Reaction {
 		private HashSet<Input<?>> uses = new HashSet<>();
 		private HashSet<Effect> effects = new HashSet<>();
 		private Function<Reaction, Void> targetCode = (reaction) -> null;
+		private Deadline deadline = new Deadline(Timestamp.ZERO, (reaction) -> null);
 
 		public Reaction build() {
-			return new Reaction(triggers, uses, effects, targetCode);
+			return new Reaction(triggers, uses, effects, targetCode, deadline);
+		}
+
+		public Builder deadline(@NotNull Deadline deadline) {
+			this.deadline = deadline;
+
+			return this;
 		}
 
 		public Builder triggers(@NotNull HashSet<Trigger> triggers) {
