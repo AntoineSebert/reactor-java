@@ -1,0 +1,21 @@
+target Java;
+
+reactor outputTest {
+    input x:int;
+    input y:int;
+    reaction (x,y) -> out {=
+        int result = 0;
+        if (x->is_present) result += x->value;
+        if (y->is_present) result += y->value;
+        SET(out, result);
+    =}
+}
+
+main reactor Minimal {
+    o = new outputTest();
+    reaction(startup) {=
+        SET(d.x, 1);
+        SET(d.y, 2);
+        printf("%d", d.out);
+    =}
+}
