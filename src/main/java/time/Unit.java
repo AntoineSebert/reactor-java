@@ -1,4 +1,4 @@
-package reactor;
+package time;
 
 /**
  * https://github.com/icyphy/lingua-franca/wiki/Language-Specification#parameter-declaration
