@@ -3,11 +3,11 @@ package target;
 import org.jetbrains.annotations.NotNull;
 import reactor.Parameter;
 import time.Timestamp;
-import time.Unit;
 
 import java.lang.reflect.Type;
 import java.util.HashSet;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Target specification class.
@@ -48,7 +48,11 @@ public class Target {
 		}
 	}
 
-	public static final Target Java = new Target("Java", new Timestamp(1, Optional.of(Unit.nsec)), new HashSet<>(0));
+	public static final Target Java = new Target(
+			"Java",
+			new Timestamp(1, Optional.of(TimeUnit.NANOSECONDS)),
+			new HashSet<>(0)
+	);
 
 	/**
 	 * @param name      name

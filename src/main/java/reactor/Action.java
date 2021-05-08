@@ -64,7 +64,7 @@ public class Action<T> extends Declaration implements Trigger, Effect {
 	@Override
 	public long timestamp() {
 		if(type == Type.logical)
-			return Time.logical() + Time.convert(minDelay); // TODO : minDelay + minDelay
+			return Time.logical(); // TODO : minDelay + minDelay
 		else
 			return Time.physical();  // TODO : minDelay + minDelay
 	}

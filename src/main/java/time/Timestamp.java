@@ -4,8 +4,9 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 
-public record Timestamp(int time, @NotNull Optional<Unit> unit) implements Comparable<Timestamp> {
+public record Timestamp(int time, @NotNull Optional<TimeUnit> unit) implements Comparable<Timestamp> {
 	public static final Timestamp ZERO = new Timestamp(0, Optional.empty());
 
 	/**
