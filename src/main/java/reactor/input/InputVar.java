@@ -7,7 +7,7 @@ import reactor.port.PortVar;
 import java.util.Optional;
 
 public class InputVar<T> extends Input<T> implements PortVar<T> {
-	private Optional<T> value;
+	private Optional<T> value = Optional.empty();
 	private ConnectionVar<T> connection;
 
 	/**

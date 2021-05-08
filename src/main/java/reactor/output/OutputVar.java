@@ -4,7 +4,10 @@ import org.jetbrains.annotations.NotNull;
 import reactor.connection.ConnectionVar;
 import reactor.port.PortVar;
 
+import java.util.Optional;
+
 public class OutputVar<T> extends Output<T> implements PortVar<T> {
+	private Optional<T> value = Optional.empty();
 	private ConnectionVar<T> connection;
 
 	/**
