@@ -2,7 +2,7 @@ import _import.Import;
 import org.jetbrains.annotations.NotNull;
 import reactor.Action;
 import reactor.Reactor;
-import reactor.Timestamp;
+import time.Timestamp;
 import target.Target;
 
 import java.io.IOException;

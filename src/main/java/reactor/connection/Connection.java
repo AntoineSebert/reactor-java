@@ -2,7 +2,7 @@ package reactor.connection;
 
 import org.jetbrains.annotations.NotNull;
 import reactor.Statement;
-import reactor.Timestamp;
+import time.Timestamp;
 import reactor.input.Input;
 import reactor.output.Output;
 

@@ -1,7 +1,7 @@
 package reactor.connection;
 
 import org.jetbrains.annotations.NotNull;
-import reactor.Timestamp;
+import time.Timestamp;
 import reactor.input.InputArr;
 import reactor.output.OutputArr;
 
