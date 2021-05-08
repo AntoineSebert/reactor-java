@@ -7,6 +7,6 @@ import reactor.output.Output;
 
 import java.util.Optional;
 
-public record ConnectionArr<T>(@NotNull InputArr<?> input, @NotNull Output<?> output, @NotNull Optional<Time> after,
+public record ConnectionArr<T>(@NotNull InputArr<?> input, @NotNull OutputArr<?> output, @NotNull Optional<Time> after,
                                boolean physical, boolean broadcast) {
 }
