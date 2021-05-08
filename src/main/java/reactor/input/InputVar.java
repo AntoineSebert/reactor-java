@@ -15,7 +15,7 @@ public class InputVar<T> extends Input<T> implements PortVar<T> {
 	 * @param mutable mutability
 	 * @throws ExceptionInInitializerError if the name is empty or the width is less than 1
 	 */
-	InputVar(@NotNull String name, @NotNull Optional<Boolean> mutable) {
+	public InputVar(@NotNull String name, @NotNull Optional<Boolean> mutable) {
 		super(name, mutable);
 	}
 
