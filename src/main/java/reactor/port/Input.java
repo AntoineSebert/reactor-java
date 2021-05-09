@@ -1,4 +1,4 @@
-package reactor;
+package reactor.port;
 
 import org.jetbrains.annotations.NotNull;
 import reactor.Connection;
@@ -41,11 +41,13 @@ public class Input<T> extends Declaration implements Port<T> {
 		return time;
 	}
 
+	@Override
 	public boolean isPresent() {
 		return value.isPresent();
 	}
 
-	public void set(T value) {
+	@Override
+	public void set(@NotNull T value) {
 		if (mutable) {
 			this.value = Optional.of(value);
 			time = Time.physical();
@@ -54,14 +56,17 @@ public class Input<T> extends Declaration implements Port<T> {
 		}
 	}
 
-	public void connect(Connection<T> connection) {
+	@Override
+	public void connect(@NotNull Connection<T> connection) {
 		this.connection = connection;
 	}
 
+	@Override
 	public Connection<T> getConnection() {
 		return connection;
 	}
 
+	@Override
 	public T value() {
 		return value.orElse(null);
 	}
