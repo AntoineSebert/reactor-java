@@ -1,7 +1,7 @@
 package reactor;
 
 import org.jetbrains.annotations.NotNull;
-import reactor.input.Input;
+import reactor.port.Input;
 import time.Timestamp;
 
 import java.util.HashSet;
@@ -19,7 +19,7 @@ public class Reaction {
 	private final HashSet<Effect> effects;
 	private final Function<Reaction, Void> targetCode;
 	private final Deadline deadline;
-
+	
 	public Reaction(@NotNull HashSet<Trigger> triggers, @NotNull HashSet<Input<?>> uses,
 	                @NotNull HashSet<Effect> effects, @NotNull Function<Reaction, Void> targetCode,
 	                @NotNull Deadline deadline) {
@@ -71,6 +71,13 @@ public class Reaction {
 	 */
 	public void run() {
 		targetCode.apply(this);
+
+		// TODO : check
+			// call deadline handler
+	}
+
+	public Deadline deadline() {
+		return deadline;
 	}
 
 	@Override

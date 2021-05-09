@@ -31,7 +31,7 @@ public class Time {
 
 	public static boolean has_passed(long old, Timestamp time) {
 		if (time.unit().isEmpty())
-			throw new RuntimeException("Cannot determine deadline state if provided time has no time unit.");
+			throw new RuntimeException("Cannot determine deadline state if provided timespan has no time unit.");
 
 		return old + TimeUnit.NANOSECONDS.convert(time.time(), time.unit().get()) < physical();
 	}

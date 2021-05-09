@@ -2,26 +2,26 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 import org.junit.jupiter.api.Test;
 import reactor.Reaction;
-import reactor.ReactorVar;
+import reactor.Reactor;
 import reactor.Trigger;
 import target.Target;
-import reactor.input.InputVar;
-import reactor.output.OutputVar;
+import reactor.port.Input;
+import reactor.port.Output;
 
 import java.util.Optional;
 
 public class outputTest {
-	InputVar<Integer> x = new InputVar<Integer>("x", Optional.of(true));
-	InputVar<Integer> y = new InputVar<Integer>("y", Optional.of(true));
-	OutputVar<Integer> out = new OutputVar<Integer>("o");
+	Input<Integer> x = new Input<>("x", Optional.of(true));
+	Input<Integer> y = new Input<>("y", Optional.of(true));
+	Output<Integer> out = new Output<>("o");
 	@Test
 	public void testHelloWorld() {
 
 		assertDoesNotThrow(
 				() -> (new Program.Builder())
 						.targets(Target.Java)
-						.mainReactor((new ReactorVar.Builder("Minimal"))
-								.addReaction((new Reaction.Builder())
+						.mainReactor((new Reactor.Builder("Minimal"))
+								.reactions((new Reaction.Builder())
 										.targetCode((reaction) -> {
 											x.set(1);
 											y.set(2);
@@ -32,9 +32,9 @@ public class outputTest {
 										.addTrigger(new Trigger.STARTUP())
 										.build()
 								).build())
-						.reactors((new ReactorVar.Builder("outputTest"))
+						.reactors((new Reactor.Builder("outputTest"))
 								.declarations(x, y, out)
-								.addReaction((new Reaction.Builder())
+								.reactions((new Reaction.Builder())
 										.targetCode((reaction) -> {
 											int result = 0;
 											if (x.isPresent()) result += x.value();

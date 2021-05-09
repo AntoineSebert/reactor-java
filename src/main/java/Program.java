@@ -5,19 +5,21 @@ import reactor.Reactor;
 import time.Timestamp;
 import target.Target;
 
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Optional;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * program := target+, import*, reactor-block+
  * https://github.com/icyphy/lingua-franca/wiki/Language-Specification
- * TODO : add toLF() to everything, to check if source is preserved
  */
 public record Program(HashSet<Target> targets, HashSet<Import> imports,
                       HashSet<Reactor> reactors, Optional<Reactor> mainReactor) {
+
+	private static ExecutorService reaction_executor;
 	/**
 	 * @param targets     targets
 	 * @param imports     imports
@@ -42,10 +44,13 @@ public record Program(HashSet<Target> targets, HashSet<Import> imports,
 				Action.TIME_PRECISION = newPrecision;
 		}
 
+		reaction_executor = Executors.newFixedThreadPool(1);
+
 		this.targets = targets;
 		this.imports = imports;
 		this.reactors = reactors;
 		this.mainReactor = mainReactor;
+
 	}
 
 	/**
@@ -76,15 +81,14 @@ public record Program(HashSet<Target> targets, HashSet<Import> imports,
 		return mainReactor;
 	}
 
-	/**
-	 * Runs the program.
-	 */
-	public void run() throws IOException {
-		if (mainReactor.isPresent())
-			mainReactor.get().run();
 
-		for (Reactor reactor : reactors)
+	public void run() {
+		if (mainReactor.isPresent()) {
+			mainReactor.get().run();
+		}
+		for (Reactor reactor : reactors) {
 			reactor.run();
+		}
 	}
 
 	public static class Builder {
