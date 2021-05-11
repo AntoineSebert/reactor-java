@@ -11,7 +11,7 @@ import reactor.Trigger;
 public class Timer extends Declaration implements Trigger {
 	private Timestamp period = Timestamp.ZERO;
 	private Timestamp offset = Timestamp.ZERO;
-	private long time;
+	private long time = Time.logical();
 
 	public Timer(@NotNull String name) {
 		super(name);
@@ -46,7 +46,6 @@ public class Timer extends Declaration implements Trigger {
 
 	@Override
 	public long timestamp() {
-		// if start delay is not zero
-		return Time.logical(); // TODO
+		return time;
 	}
 }
