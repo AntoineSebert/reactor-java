@@ -1,3 +1,5 @@
+package program;
+
 import _import.Import;
 import org.jetbrains.annotations.NotNull;
 import reactor.Action;
@@ -29,10 +31,10 @@ public record Program(HashSet<Target> targets, HashSet<Import> imports,
 	public Program(@NotNull HashSet<Target> targets, @NotNull HashSet<Import> imports,
 	               @NotNull HashSet<Reactor> reactors, @NotNull Optional<Reactor> mainReactor) {
 		if (targets.isEmpty())
-			throw new ExceptionInInitializerError("Program targets cannot be empty");
+			throw new ExceptionInInitializerError("program.Program targets cannot be empty");
 
 		if (reactors.isEmpty() && mainReactor.isEmpty())
-			throw new ExceptionInInitializerError("Program must contain at least one reactor");
+			throw new ExceptionInInitializerError("program.Program must contain at least one reactor");
 
 		Iterator<Target> targetIt = targets.iterator();
 		Action.TIME_PRECISION = targetIt.next().getPrecision();
@@ -50,7 +52,6 @@ public record Program(HashSet<Target> targets, HashSet<Import> imports,
 		this.imports = imports;
 		this.reactors = reactors;
 		this.mainReactor = mainReactor;
-
 	}
 
 	/**
@@ -83,18 +84,16 @@ public record Program(HashSet<Target> targets, HashSet<Import> imports,
 
 
 	public void run() {
-		if (mainReactor.isPresent()) {
-			mainReactor.get().run();
-		}
-		for (Reactor reactor : reactors) {
+		mainReactor.ifPresent(Reactor::run);
+
+		for (Reactor reactor : reactors)
 			reactor.run();
-		}
 	}
 
 	public static class Builder {
-		private HashSet<Target> targets = new HashSet<>();
-		private HashSet<Import> imports = new HashSet<>();
-		private HashSet<Reactor> reactors = new HashSet<>();
+		private final HashSet<Target> targets = new HashSet<>();
+		private final HashSet<Import> imports = new HashSet<>();
+		private final HashSet<Reactor> reactors = new HashSet<>();
 		private Optional<Reactor> mainReactor = Optional.empty();
 
 		public Program build() {
