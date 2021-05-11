@@ -6,7 +6,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
-public record Timestamp(int time, @NotNull Optional<TimeUnit> unit) implements Comparable<Timestamp> {
+public record Timestamp(long time, @NotNull Optional<TimeUnit> unit) implements Comparable<Timestamp> {
 	public static final Timestamp ZERO = new Timestamp(0, Optional.empty());
 
 	/**
@@ -18,10 +18,10 @@ public record Timestamp(int time, @NotNull Optional<TimeUnit> unit) implements C
 	public int compareTo(@NotNull Timestamp o) {
 		if (unit.isPresent() && o.unit.isPresent())
 			return unit.get() == o.unit.get()
-					? Integer.compare(time, o.time)
+					? Long.compare(time, o.time)
 					: Integer.compare(unit.get().ordinal(), o.unit.get().ordinal());
 		else
-			return unit.isEmpty() && o.unit.isEmpty() ? Integer.compare(time, o.time) : 0;
+			return unit.isEmpty() && o.unit.isEmpty() ? Long.compare(time, o.time) : 0;
 	}
 
 	@Override
