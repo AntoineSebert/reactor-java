@@ -4,6 +4,7 @@ import org.jetbrains.annotations.NotNull;
 import reactor.port.Input;
 import time.Timestamp;
 
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.function.Function;
@@ -110,26 +111,20 @@ public class Reaction {
 			return this;
 		}
 
-		public Builder triggers(@NotNull HashSet<Trigger> triggers) {
-			this.triggers = triggers;
+		public Builder triggers(Trigger... triggers) {
+			this.triggers.addAll(Arrays.asList(triggers));
 
 			return this;
 		}
 
-		public Builder addTrigger(@NotNull Trigger trigger) {
-			triggers.add(trigger);
+		public Builder uses(Input<?>... uses) {
+			this.uses.addAll(Arrays.asList(uses));
 
 			return this;
 		}
 
-		public Builder uses(@NotNull HashSet<Input<?>> uses) {
-			this.uses = uses;
-
-			return this;
-		}
-
-		public Builder effects(@NotNull HashSet<Effect> effects) {
-			this.effects = effects;
+		public Builder effects(Effect... effects) {
+			this.effects.addAll(Arrays.asList(effects));
 
 			return this;
 		}
