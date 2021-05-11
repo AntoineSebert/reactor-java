@@ -101,34 +101,6 @@ public class Target {
 		return precision;
 	}
 
-	/**
-	 * @return a string representation in Lingua Franca
-	 */
-	public String toLF() {
-		StringBuilder builder = new StringBuilder();
-		builder.append("target ").append(name);
-
-		if (!params.isEmpty()) {
-			builder.append(" {\n");
-
-			for (Parameter<?> param : params)
-				builder.append("\t").append(param.name()).append(": ").append(param.value()).append(",\n");
-
-			builder.append("}");
-		}
-
-		builder.append(";");
-
-		return builder.toString();
-	}
-
-	/**
-	 * @return a string representation in Java
-	 */
-	public String toJava() {
-		return "";
-	}
-
 	@Override
 	public int hashCode() {
 		return name.hashCode();
