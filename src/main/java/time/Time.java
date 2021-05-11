@@ -1,6 +1,5 @@
 package time;
 
-import java.lang.Math;
 import java.util.concurrent.TimeUnit;
 
 public class Time {
