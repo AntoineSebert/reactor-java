@@ -1,10 +1,11 @@
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-
 import org.junit.jupiter.api.Test;
+import program.Program;
 import reactor.Reaction;
 import reactor.Reactor;
 import reactor.Trigger;
 import target.Target;
+
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 public class TestReactor {
 	@Test
@@ -19,7 +20,7 @@ public class TestReactor {
 
 										return null;
 									})
-									.addTrigger(new Trigger.STARTUP())
+									.triggers(new Trigger.STARTUP())
 									.build()
 							).build())
 					.build()

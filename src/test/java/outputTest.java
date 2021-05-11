@@ -1,14 +1,15 @@
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-
 import org.junit.jupiter.api.Test;
+import program.Program;
 import reactor.Reaction;
 import reactor.Reactor;
 import reactor.Trigger;
-import target.Target;
 import reactor.port.Input;
 import reactor.port.Output;
+import target.Target;
 
 import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 public class outputTest {
 	Input<Integer> x = new Input<>("x", Optional.of(true));
@@ -29,7 +30,7 @@ public class outputTest {
 
 											return null;
 										})
-										.addTrigger(new Trigger.STARTUP())
+										.triggers(new Trigger.STARTUP())
 										.build()
 								).build())
 						.reactors((new Reactor.Builder("outputTest"))
@@ -43,8 +44,7 @@ public class outputTest {
 
 											return null;
 										})
-										.addTrigger(x)
-										.addTrigger(y)
+										.triggers(x, y)
 										.build()
 								).build()
 						).build()
