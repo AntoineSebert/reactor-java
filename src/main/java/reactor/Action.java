@@ -14,6 +14,7 @@ public class Action<T> extends Declaration implements Trigger, Effect {
 	private Policy policy;
 	private Timestamp minDelay;
 	private Comparable<Timestamp> minSpacing;
+	private long time, last;
 
 	/**
 	 * @param name name
@@ -31,6 +32,7 @@ public class Action<T> extends Declaration implements Trigger, Effect {
 		this.policy = policy;
 		this.minDelay = minDelay;
 		this.minSpacing = minSpacing;
+		time = type == Type.logical ? Time.logical() + minDelay.time() : Time.physical();
 	}
 
 	/**
@@ -63,10 +65,15 @@ public class Action<T> extends Declaration implements Trigger, Effect {
 
 	@Override
 	public long timestamp() {
-		if(type == Type.logical)
-			return Time.logical(); // TODO : minDelay + minDelay
-		else
-			return Time.physical();  // TODO : minDelay + minDelay
+		return time;
+	}
+
+	public long getLast() {
+		return last;
+	}
+
+	public void setLast(long timestamp) {
+		last = timestamp;
 	}
 
 	public enum Type {

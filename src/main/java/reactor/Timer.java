@@ -1,11 +1,11 @@
-package time;
+package reactor;
 
 import org.jetbrains.annotations.NotNull;
-import reactor.Declaration;
-import reactor.Trigger;
+import time.Time;
+import time.Timestamp;
 
 /**
- * time.Timer specification class.
+ * reactor.Timer specification class.
  * https://github.com/icyphy/lingua-franca/wiki/Language-Specification#timer-declaration
  */
 public class Timer extends Declaration implements Trigger {

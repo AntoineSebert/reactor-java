@@ -48,7 +48,7 @@ public class Output<T> extends Declaration implements Port<T> {
 
 	@Override
 	public long timestamp() {
-		return 0;
+		return time;
 	}
 
 	@Override
