@@ -88,7 +88,7 @@ public record Program(HashSet<Target> targets, HashSet<Import> imports,
 			Object o = target.get("threads").isPresent() ? target.get("threads").get() : 1;
 			int number_of_threads = ((int) o);
 			Scheduler.createExecutorService(number_of_threads);
-					mainReactor.ifPresent(Reactor::run);
+			mainReactor.ifPresent(Reactor::run);
 
 			for (Reactor reactor : reactors)
 				reactor.run();

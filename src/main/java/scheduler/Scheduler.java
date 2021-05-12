@@ -18,6 +18,7 @@ public class Scheduler {
                 throw new RuntimeException("Cannot re-instantiate executor service");
             }
             executorService = Executors.newFixedThreadPool(number_of_threads);
+
     }
 
     public static void resetExecutorService() {
@@ -31,4 +32,5 @@ public class Scheduler {
     public static void addReactionTask(Reaction reaction) {
         executorService.execute(reaction);
     }
+
 }

@@ -3,6 +3,8 @@ package reactor.port;
 import org.jetbrains.annotations.NotNull;
 import reactor.Connection;
 import reactor.Declaration;
+import reactor.Trigger;
+import reactor.TriggerObserver;
 import reactor.port.Port;
 import time.Time;
 
@@ -51,9 +53,11 @@ public class Input<T> extends Declaration implements Port<T> {
 		if (mutable) {
 			this.value = Optional.of(value);
 			time = Time.physical();
+			TriggerObserver.update(this);
 		} else {
 			throw new RuntimeException("Cannot modify an immutable type");
 		}
+
 	}
 
 	@Override
@@ -70,4 +74,5 @@ public class Input<T> extends Declaration implements Port<T> {
 	public T value() {
 		return value.orElse(null);
 	}
+
 }
