@@ -3,7 +3,6 @@ package reactor.port;
 import org.jetbrains.annotations.NotNull;
 import reactor.Connection;
 import reactor.Declaration;
-import reactor.port.Port;
 import time.Time;
 
 import java.util.Optional;
@@ -50,10 +49,14 @@ public class Input<T> extends Declaration implements Port<T> {
 	public void set(@NotNull T value) {
 		if (mutable) {
 			this.value = Optional.of(value);
-			time = Time.physical();
-		} else {
+			time = Time.logical(); // not sure if physical or logical
+		} else
 			throw new RuntimeException("Cannot modify an immutable type");
-		}
+	}
+
+	public void set(@NotNull T value, long msg_time) {
+		this.value = Optional.of(value);
+		time = msg_time;
 	}
 
 	@Override
