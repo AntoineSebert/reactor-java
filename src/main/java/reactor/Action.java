@@ -1,27 +1,27 @@
 package reactor;
 
 import org.jetbrains.annotations.NotNull;
-import time.Timestamp;
-import time.Time;
+
+import java.time.Duration;
 
 /**
  * Action specification class.
  * https://github.com/icyphy/lingua-franca/wiki/Language-Specification#action-declaration
  */
 public class Action<T> extends Declaration implements Trigger, Effect {
-	public static Timestamp TIME_PRECISION;
+	public static Duration TIME_PRECISION;
 	private final Type type;
 	private Policy policy;
-	private Timestamp minDelay;
-	private Comparable<Timestamp> minSpacing;
+	private Duration minDelay;
+	private Duration minSpacing;
 	private long time, last;
 
 	/**
 	 * @param name name
 	 * @param type type
 	 */
-	public Action(@NotNull String name, @NotNull Type type, @NotNull Policy policy, @NotNull Timestamp minDelay,
-	              @NotNull Comparable<Timestamp> minSpacing) {
+	public Action(@NotNull String name, @NotNull Type type, @NotNull Policy policy, @NotNull Duration minDelay,
+	              @NotNull Duration minSpacing) {
 		super(name);
 
 		if (minSpacing.compareTo(TIME_PRECISION) < 0)
@@ -32,7 +32,7 @@ public class Action<T> extends Declaration implements Trigger, Effect {
 		this.policy = policy;
 		this.minDelay = minDelay;
 		this.minSpacing = minSpacing;
-		time = type == Type.logical ? Time.logical() + minDelay.time() : Time.physical();
+		time = type == Type.logical ? Time.logical() + minDelay.toNanos() : Time.physical();
 	}
 
 	/**
@@ -52,14 +52,14 @@ public class Action<T> extends Declaration implements Trigger, Effect {
 	/**
 	 * @return the minimal delay
 	 */
-	public Timestamp getMinDelay() {
+	public Duration getMinDelay() {
 		return minDelay;
 	}
 
 	/**
 	 * @return the minimal spacing
 	 */
-	public Comparable<Timestamp> getMinSpacing() {
+	public Duration getMinSpacing() {
 		return minSpacing;
 	}
 
@@ -91,8 +91,8 @@ public class Action<T> extends Declaration implements Trigger, Effect {
 		private final String name;
 		private final Type type;
 		private Policy policy = Policy.defer;
-		private Timestamp minDelay = Timestamp.ZERO;
-		private Timestamp minSpacing = Timestamp.ZERO;
+		private Duration minDelay = Duration.ZERO;
+		private Duration minSpacing = Duration.ZERO;
 
 		public Builder(@NotNull String name, @NotNull Type type) {
 			this.name = name;
@@ -109,13 +109,13 @@ public class Action<T> extends Declaration implements Trigger, Effect {
 			return this;
 		}
 
-		public Builder minDelay(@NotNull Timestamp minDelay) {
+		public Builder minDelay(@NotNull Duration minDelay) {
 			this.minDelay = minDelay;
 
 			return this;
 		}
 
-		public Builder minSpacing(@NotNull Timestamp minSpacing) {
+		public Builder minSpacing(@NotNull Duration minSpacing) {
 			this.minSpacing = minSpacing;
 
 			return this;

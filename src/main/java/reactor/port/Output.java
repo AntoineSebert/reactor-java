@@ -3,7 +3,7 @@ package reactor.port;
 import org.jetbrains.annotations.NotNull;
 import reactor.Connection;
 import reactor.Declaration;
-import time.Time;
+import reactor.Time;
 
 import java.util.Optional;
 
@@ -28,7 +28,8 @@ public class Output<T> extends Declaration implements Port<T> {
 	public void set(@NotNull T value) {
 		time = Time.logical();
 		//
-		connection.set(value);
+		if (connection != null)
+			connection.set(value);
 	}
 
 	@Override

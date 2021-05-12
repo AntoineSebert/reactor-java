@@ -2,8 +2,8 @@ package reactor;
 
 import org.jetbrains.annotations.NotNull;
 import reactor.port.Input;
-import time.Timestamp;
 
+import java.time.Duration;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Objects;
@@ -97,7 +97,7 @@ public class Reaction implements Runnable {
 		private HashSet<Input<?>> uses = new HashSet<>();
 		private HashSet<Effect> effects = new HashSet<>();
 		private Function<Reaction, Void> targetCode = (reaction) -> null;
-		private Deadline deadline = new Deadline(Timestamp.ZERO, (reaction) -> null);
+		private Deadline deadline = new Deadline(Duration.ZERO, (reaction) -> null);
 
 		public Reaction build() {
 			return new Reaction(triggers, uses, effects, targetCode, deadline);

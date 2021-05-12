@@ -3,7 +3,6 @@ package reactor;
 import org.jetbrains.annotations.NotNull;
 import reactor.port.Input;
 import reactor.port.Output;
-import time.Timestamp;
 
 import java.io.IOException;
 import java.util.*;
@@ -30,13 +29,7 @@ public class Reactor extends Declaration implements Runnable {
 	               @NotNull HashSet<Parameter<?>> params, @NotNull Iterable<? extends Declaration> declarations) {
 		super(name);
 
-		for (Parameter<?> param : params)
-			if (param.value() instanceof Timestamp timestamp)
-				if (timestamp.time() == 0 && timestamp.unit().isEmpty())
-					throw new ExceptionInInitializerError("Non-zero timestamp parameter for reactor had no timestamp unit");
-
 		this.params = params;
-
 		this.preamble = preamble;
 
 		for (Declaration decl : declarations)

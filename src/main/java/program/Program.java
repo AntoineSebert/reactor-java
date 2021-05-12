@@ -4,14 +4,14 @@ import _import.Import;
 import org.jetbrains.annotations.NotNull;
 import reactor.Action;
 import reactor.Reactor;
-import time.Timestamp;
+import scheduler.Scheduler;
 import target.Target;
 
+import java.time.Duration;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Optional;
-import scheduler.Scheduler;
 
 /**
  * program := target+, import*, reactor-block+
@@ -38,7 +38,7 @@ public record Program(HashSet<Target> targets, HashSet<Import> imports,
 		Action.TIME_PRECISION = targetIt.next().getPrecision();
 
 		while (targetIt.hasNext()) {
-			Timestamp newPrecision = targetIt.next().getPrecision();
+			Duration newPrecision = targetIt.next().getPrecision();
 
 			if (newPrecision.compareTo(Action.TIME_PRECISION) < 0)
 				Action.TIME_PRECISION = newPrecision;

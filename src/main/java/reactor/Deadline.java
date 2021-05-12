@@ -1,9 +1,9 @@
 package reactor;
 
 import org.jetbrains.annotations.NotNull;
-import time.Timestamp;
 
+import java.time.Duration;
 import java.util.function.Function;
 
-public record Deadline(@NotNull Timestamp deadline, Function<Reaction, Void> handler) {
+public record Deadline(@NotNull Duration deadline, Function<Reaction, Void> handler) {
 }

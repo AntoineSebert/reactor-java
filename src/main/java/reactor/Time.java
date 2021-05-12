@@ -1,9 +1,9 @@
-package time;
+package reactor;
 
-import java.util.concurrent.TimeUnit;
+import java.time.Duration;
 
 public class Time {
-	static long logical; // 0
+	static long logical;
 
 	public static long physical() {
 		return System.nanoTime();
@@ -28,10 +28,7 @@ public class Time {
 		return diff;
 	}
 
-	public static boolean has_passed(long old, Timestamp time) {
-		if (time.unit().isEmpty())
-			throw new RuntimeException("Cannot determine deadline state if provided timespan has no time unit.");
-
-		return old + TimeUnit.NANOSECONDS.convert(time.time(), time.unit().get()) < physical();
+	public static boolean has_passed(long old, Duration time) {
+		return time.plus(Duration.ofNanos(old)).toNanos() < physical();
 	}
 }
