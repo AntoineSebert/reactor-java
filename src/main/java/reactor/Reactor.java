@@ -145,7 +145,9 @@ public class Reactor extends Declaration implements Runnable {
 		init();
 
 		for (Reaction reaction : reactions)
-			reaction.run();
+			for (Trigger trigger : reaction.getTriggers())
+				if (trigger instanceof Trigger.STARTUP)
+					reaction.run();
 	}
 
 	public static class Builder {

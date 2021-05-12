@@ -16,7 +16,7 @@ public class outputTest {
 	Input<Integer> y = new Input<>("y", Optional.of(true));
 	Output<Integer> out = new Output<>("o");
 	@Test
-	public void testHelloWorld() {
+	public void testOutputTest() {
 
 		assertDoesNotThrow(
 				() -> (new Program.Builder())
@@ -40,6 +40,7 @@ public class outputTest {
 											int result = 0;
 											if (x.isPresent()) result += x.value();
 											if (y.isPresent()) result += y.value();
+											System.out.println("here");
 											out.set(result);
 
 											return null;

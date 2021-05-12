@@ -29,6 +29,8 @@ public class Scheduler {
     }
 
     public static void addReactionTask(Reaction reaction) {
+
+        System.out.println("got reaction");
         executorService.execute(reaction);
     }
 }
