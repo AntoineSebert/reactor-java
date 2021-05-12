@@ -20,6 +20,10 @@ public class Scheduler {
             executorService = Executors.newFixedThreadPool(number_of_threads);
     }
 
+    public static void resetExecutorService() {
+        executorService = null;
+    }
+
     public static ExecutorService getScheduler() {
         return executorService;
     }

@@ -11,8 +11,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Optional;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import scheduler.Scheduler;
 
 /**
  * program := target+, import*, reactor-block+
@@ -21,7 +20,6 @@ import java.util.concurrent.Executors;
 public record Program(HashSet<Target> targets, HashSet<Import> imports,
                       HashSet<Reactor> reactors, Optional<Reactor> mainReactor) {
 
-	private static ExecutorService reaction_executor;
 	/**
 	 * @param targets     targets
 	 * @param imports     imports
@@ -44,9 +42,10 @@ public record Program(HashSet<Target> targets, HashSet<Import> imports,
 
 			if (newPrecision.compareTo(Action.TIME_PRECISION) < 0)
 				Action.TIME_PRECISION = newPrecision;
+
 		}
 
-		reaction_executor = Executors.newFixedThreadPool(1);
+
 
 		this.targets = targets;
 		this.imports = imports;
@@ -84,10 +83,18 @@ public record Program(HashSet<Target> targets, HashSet<Import> imports,
 
 
 	public void run() {
-		mainReactor.ifPresent(Reactor::run);
 
-		for (Reactor reactor : reactors)
-			reactor.run();
+		for (Target target : targets) {
+			Object o = target.get("threads").isPresent() ? target.get("threads").get() : 1;
+			int number_of_threads = ((int) o);
+			Scheduler.createExecutorService(number_of_threads);
+					mainReactor.ifPresent(Reactor::run);
+
+			for (Reactor reactor : reactors)
+				reactor.run();
+
+		}
+
 	}
 
 	public static class Builder {
