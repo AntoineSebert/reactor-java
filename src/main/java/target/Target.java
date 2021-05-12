@@ -106,6 +106,10 @@ public class Target {
 		return Optional.of(params.getOrDefault(name, Optional.empty()));
 	}
 
+	public void setParams(@NotNull Map<String, Object> params) {
+		this.params.putAll(params);
+	}
+
 	@Override
 	public int hashCode() {
 		return name.hashCode();
