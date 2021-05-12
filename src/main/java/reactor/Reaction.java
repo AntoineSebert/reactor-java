@@ -13,7 +13,7 @@ import java.util.function.Function;
  * Reaction specification class.
  * https://github.com/icyphy/lingua-franca/wiki/Language-Specification#reaction-declaration
  */
-public class Reaction {
+public class Reaction implements Runnable {
 	private Reactor self;
 	private final HashSet<Trigger> triggers ;
 	private final HashSet<Input<?>> uses;
@@ -70,11 +70,9 @@ public class Reaction {
 	/**
 	 * Runs the target code.
 	 */
+	@Override
 	public void run() {
 		targetCode.apply(this);
-
-		// TODO : check
-			// call deadline handler
 	}
 
 	public Deadline deadline() {
