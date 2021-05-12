@@ -12,20 +12,23 @@ import java.util.Optional;
  * https://github.com/icyphy/lingua-franca/wiki/Language-Specification#input-declaration
  */
 public class Input<T> extends Declaration implements Port<T> {
-	protected final boolean mutable;
+	protected boolean mutable;
 	protected long time;
 	private Optional<T> value = Optional.empty();
 	private Connection<T> connection;
 
+	public Input(@NotNull String name) {
+		super(name);
+	}
 	/**
 	 * @param name    name
 	 * @param mutable mutability
 	 * @throws ExceptionInInitializerError if the name is empty or the width is less than 1
 	 */
-	public Input(@NotNull String name, @NotNull Optional<Boolean> mutable) {
+	public Input(@NotNull String name, boolean mutable) {
 		super(name);
 
-		this.mutable = mutable.orElse(Boolean.FALSE);
+		this.mutable = mutable;
 	}
 
 	/**

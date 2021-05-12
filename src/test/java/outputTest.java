@@ -7,13 +7,11 @@ import reactor.port.Input;
 import reactor.port.Output;
 import target.Target;
 
-import java.util.Optional;
-
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 public class outputTest {
-	Input<Integer> x = new Input<>("x", Optional.of(true));
-	Input<Integer> y = new Input<>("y", Optional.of(true));
+	Input<Integer> x = new Input<>("x", true);
+	Input<Integer> y = new Input<>("y", true);
 	Output<Integer> out = new Output<>("o");
 	@Test
 	public void testHelloWorld() {
