@@ -1,11 +1,11 @@
 package target;
 
 import org.jetbrains.annotations.NotNull;
-import reactor.Parameter;
 import time.Timestamp;
 
 import java.lang.reflect.Type;
-import java.util.HashSet;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
@@ -15,7 +15,7 @@ import java.util.concurrent.TimeUnit;
  */
 public class Target {
 	private final String name;
-	private HashSet<Parameter<?>> params;
+	private HashMap<String, Object> params;
 	private Timestamp precision;
 
 	enum Logging {
@@ -35,6 +35,7 @@ public class Target {
 		keepalive(Boolean.class),
 		logging(Logging.class),
 		no_compile(Boolean.class),
+		threads(Integer.class),
 		timeout(Timestamp.class);
 
 		private final Type type;
@@ -51,7 +52,10 @@ public class Target {
 	public static final Target Java = new Target(
 			"Java",
 			new Timestamp(1, Optional.of(TimeUnit.NANOSECONDS)),
-			new HashSet<>(0)
+			new HashMap<>(1) {{
+				put("default", TimeUnit.NANOSECONDS);
+				put("threads", 1);
+			}}
 	);
 
 	/**
@@ -60,16 +64,16 @@ public class Target {
 	 * @param precision timestamp precision, used in target.Target
 	 * @throws ExceptionInInitializerError if the name is empty or if the "timeout" parameter is present and invalid
 	 */
-	public Target(@NotNull String name, @NotNull Timestamp precision, @NotNull HashSet<Parameter<?>> params) {
+	public Target(@NotNull String name, @NotNull Timestamp precision, @NotNull HashMap<String, Object> params) {
 		if (name.isEmpty())
 			throw new ExceptionInInitializerError(getClass().getTypeName() + " name cannot be empty");
 
 		if (precision.unit().isEmpty())
 			throw new ExceptionInInitializerError("Timestamp precision must have a unit");
 
-		for (Parameter<?> param : params)
-			if ("timeout".equals(param.name())) {
-				Timestamp timeout = (Timestamp) param.value();
+		for (Map.Entry<String, Object> param : params.entrySet())
+			if ("timeout".equals(param.getKey())) {
+				Timestamp timeout = (Timestamp) param.getValue();
 
 				if (timeout.time() == 0 || timeout.unit().isEmpty())
 					throw new ExceptionInInitializerError("Target parameter 'timeout' must be a non-zero timestamp with unit");
@@ -90,7 +94,7 @@ public class Target {
 	/**
 	 * @return the parameters
 	 */
-	public HashSet<Parameter<?>> getParams() {
+	public HashMap<String, Object> getParams() {
 		return params;
 	}
 
@@ -99,6 +103,10 @@ public class Target {
 	 */
 	public Timestamp getPrecision() {
 		return precision;
+	}
+
+	public Optional<Object> get(@NotNull String name) {
+		return Optional.of(params.getOrDefault(name, Optional.empty()));
 	}
 
 	@Override
@@ -115,7 +123,7 @@ public class Target {
 
 	public static class Builder {
 		private final String name;
-		private final HashSet<Parameter<?>> params = new HashSet<>(); // map<field, val>
+		private final HashMap<String, Object> params = new HashMap<>(); // map<field, val>
 		private Timestamp precision = Timestamp.ZERO;
 
 		public Builder(@NotNull String name) {
@@ -127,7 +135,7 @@ public class Target {
 		}
 
 		public <T> Builder param(@NotNull String param, @NotNull T value) {
-			params.add(new Parameter<>(param, value));
+			params.put(param, value);
 
 			return this;
 		}
