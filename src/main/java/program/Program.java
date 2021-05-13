@@ -8,10 +8,7 @@ import scheduler.Scheduler;
 import target.Target;
 
 import java.time.Duration;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * program := target+, import*, reactor-block+
@@ -33,6 +30,19 @@ public record Program(HashSet<Target> targets, HashSet<Import> imports,
 
 		if (reactors.isEmpty() && mainReactor.isEmpty())
 			throw new ExceptionInInitializerError("program.Program must contain at least one reactor");
+
+		//
+		Collection<Reactor> importedReactors = new HashSet<>();
+		for (Import _import : imports)
+			importedReactors.addAll(_import.getReactors());
+
+		Collection<Reactor> globalreactors = new HashSet<>();
+		globalreactors.addAll(importedReactors);
+		globalreactors.addAll(reactors);
+
+		for (Reactor c_reactor : reactors)
+			c_reactor.setContextReactors(globalreactors);
+		//
 
 		Iterator<Target> targetIt = targets.iterator();
 		Action.TIME_PRECISION = targetIt.next().getPrecision();

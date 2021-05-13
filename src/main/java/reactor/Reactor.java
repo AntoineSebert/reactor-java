@@ -18,15 +18,16 @@ public class Reactor extends Declaration implements Runnable {
 	protected final HashSet<Action<?>> actions = new HashSet<>();
 	protected ArrayList<Reaction> reactions = new ArrayList<>();
 	protected final HashSet<Reactor> containedReactors = new HashSet<>();
+	protected HashSet<Reactor> contextReactors = new HashSet<>();
+	private final HashSet<Statement> statements = new HashSet<>();
 
 	protected Map<Trigger, Reaction> pool = new HashMap<>();
-
 	protected Queue<Reaction> exec_q = new LinkedList<>();
-
 	AtomicBoolean in_exec_q = new AtomicBoolean(false);
 
 	public Reactor(@NotNull String name, @NotNull String preamble, @NotNull ArrayList<? extends Reaction> reactions,
-	               @NotNull HashSet<Parameter<?>> params, @NotNull Iterable<? extends Declaration> declarations) {
+	               @NotNull HashSet<Parameter<?>> params, @NotNull Iterable<? extends Declaration> declarations,
+	               @NotNull Iterable<? extends Statement> statements) {
 		super(name);
 
 		this.params = params;
@@ -60,6 +61,31 @@ public class Reactor extends Declaration implements Runnable {
 
 			this.reactions.add(reactions.get(i));
 		}
+
+		for (Statement statement : statements)
+			if(statement instanceof Instantiation instance) {
+				boolean found = false;
+
+				for (Reactor reactor : containedReactors)
+					if (reactor.name.equals(instance.var_name())) {
+						found = true;
+						break;
+					}
+
+				if (!found)
+					for (Reactor reactor : contextReactors)
+						if (reactor.name.equals(instance.var_name())) {
+							found = true;
+							break;
+						}
+
+				if (found)
+					this.statements.add(statement);
+				else
+					throw new ExceptionInInitializerError(
+							"Could not find reactor " + instance.reactor_name() + " for instantiation of " + instance.var_name());
+			} else
+				this.statements.add(statement);
 	}
 
 	/**
@@ -125,6 +151,19 @@ public class Reactor extends Declaration implements Runnable {
 		return params;
 	}
 
+	/**
+	 * @return the statements
+	 */
+	public HashSet<Statement> getStatements() {
+		return statements;
+	}
+
+	public void setContextReactors(@NotNull Iterable<? extends Reactor> contextReactors) {
+		for (Reactor reactor : contextReactors)
+			if (!(reactor == this))
+				this.contextReactors.add(reactor);
+	}
+
 	protected void init() {
 		try {
 			if (!preamble.isEmpty())
@@ -146,6 +185,7 @@ public class Reactor extends Declaration implements Runnable {
 		protected final HashSet<Parameter<?>> params = new HashSet<>();
 		protected String preamble = "";
 		protected HashSet<Declaration> declarations = new HashSet<>();
+		protected HashSet<Statement> statements = new HashSet<>();
 		protected ArrayList<Reaction> reactions = new ArrayList<>();
 
 		public Builder(@NotNull String name) {
@@ -176,6 +216,12 @@ public class Reactor extends Declaration implements Runnable {
 			return this;
 		}
 
+		public Builder statements(Statement... statements) {
+			this.statements = new HashSet<>(Arrays.stream(statements).toList());
+
+			return this;
+		}
+
 		public Builder reactions(Reaction... reactions) {
 			this.reactions = new ArrayList<>(Arrays.stream(reactions).toList());
 
@@ -183,7 +229,7 @@ public class Reactor extends Declaration implements Runnable {
 		}
 
 		public Reactor build() {
-			return new Reactor(name, preamble, reactions, params, declarations);
+			return new Reactor(name, preamble, reactions, params, declarations, statements);
 		}
 	}
 }
