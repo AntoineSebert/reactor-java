@@ -1,7 +1,7 @@
 package reactor;
 
 public abstract class Declaration {
-	private String name;
+	protected String name;
 
 	protected Declaration(String name) {
 		if (name.isEmpty())
