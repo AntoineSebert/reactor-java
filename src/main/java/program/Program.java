@@ -4,14 +4,11 @@ import _import.Import;
 import org.jetbrains.annotations.NotNull;
 import reactor.Action;
 import reactor.Reactor;
-import time.Timestamp;
+import scheduler.Scheduler;
 import target.Target;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Optional;
-import scheduler.Scheduler;
+import java.time.Duration;
+import java.util.*;
 
 /**
  * program := target+, import*, reactor-block+
@@ -19,7 +16,6 @@ import scheduler.Scheduler;
  */
 public record Program(HashSet<Target> targets, HashSet<Import> imports,
                       HashSet<Reactor> reactors, Optional<Reactor> mainReactor) {
-
 	/**
 	 * @param targets     targets
 	 * @param imports     imports
@@ -34,23 +30,33 @@ public record Program(HashSet<Target> targets, HashSet<Import> imports,
 		if (reactors.isEmpty() && mainReactor.isEmpty())
 			throw new ExceptionInInitializerError("program.Program must contain at least one reactor");
 
-		Iterator<Target> targetIt = targets.iterator();
-		Action.TIME_PRECISION = targetIt.next().getPrecision();
-
-		while (targetIt.hasNext()) {
-			Timestamp newPrecision = targetIt.next().getPrecision();
-
-			if (newPrecision.compareTo(Action.TIME_PRECISION) < 0)
-				Action.TIME_PRECISION = newPrecision;
-
-		}
-
-
-
 		this.targets = targets;
 		this.imports = imports;
 		this.reactors = reactors;
 		this.mainReactor = mainReactor;
+
+		HashMap<String, Reactor> importedReactors = new HashMap<>();
+		for (Import _import : imports)
+			importedReactors.putAll(_import.getReactors());
+
+		Map<String, Reactor> globalReactors = new HashMap<>(importedReactors);
+		for(Reactor r : reactors)
+			globalReactors.put(r.name(), r);
+
+		for (Reactor c_reactor : reactors)
+			System.out.println(c_reactor.name());
+
+		mainReactor.ifPresent(reactor -> reactor.setContextReactors(globalReactors));
+
+		Iterator<Target> targetIt = targets.iterator();
+		Action.TIME_PRECISION = targetIt.next().getPrecision();
+
+		while (targetIt.hasNext()) {
+			Duration newPrecision = targetIt.next().getPrecision();
+
+			if (newPrecision.compareTo(Action.TIME_PRECISION) < 0)
+				Action.TIME_PRECISION = newPrecision;
+		}
 	}
 
 	/**
@@ -83,7 +89,7 @@ public record Program(HashSet<Target> targets, HashSet<Import> imports,
 
 
 	public void run() {
-
+		System.out.println("test");
 		for (Target target : targets) {
 			Object o = target.get("threads").isPresent() ? target.get("threads").get() : 10;
 			int number_of_threads = ((int) o);

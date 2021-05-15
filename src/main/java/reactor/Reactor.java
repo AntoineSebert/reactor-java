@@ -3,8 +3,6 @@ package reactor;
 import org.jetbrains.annotations.NotNull;
 import reactor.port.Input;
 import reactor.port.Output;
-import scheduler.Scheduler;
-import time.Timestamp;
 
 import java.io.IOException;
 import java.util.*;
@@ -20,18 +18,19 @@ public class Reactor extends Declaration implements Runnable {
 	protected final HashSet<Action<?>> actions = new HashSet<>();
 	protected ArrayList<Reaction> reactions = new ArrayList<>();
 	protected final HashSet<Reactor> containedReactors = new HashSet<>();
+	protected HashMap<String, Reactor> contextReactors = new HashMap<>();
+	private final HashSet<Statement> statements = new HashSet<>();
+
+	protected Map<Trigger, Reaction> pool = new HashMap<>();
+	protected Queue<Reaction> exec_q = new LinkedList<>();
+	AtomicBoolean in_exec_q = new AtomicBoolean(false);
 
 	public Reactor(@NotNull String name, @NotNull String preamble, @NotNull ArrayList<? extends Reaction> reactions,
-	               @NotNull HashSet<Parameter<?>> params, @NotNull Iterable<? extends Declaration> declarations) {
+	               @NotNull HashSet<Parameter<?>> params, @NotNull Iterable<? extends Declaration> declarations,
+	               @NotNull Iterable<? extends Statement> statements) {
 		super(name);
 
-		for (Parameter<?> param : params)
-			if (param.value() instanceof Timestamp timestamp)
-				if (timestamp.time() == 0 && timestamp.unit().isEmpty())
-					throw new ExceptionInInitializerError("Non-zero timestamp parameter for reactor had no timestamp unit");
-
 		this.params = params;
-
 		this.preamble = preamble;
 
 		for (Declaration decl : declarations)
@@ -62,6 +61,9 @@ public class Reactor extends Declaration implements Runnable {
 
 			this.reactions.add(reactions.get(i));
 		}
+
+		for (Statement statement : statements)
+			this.statements.add(statement);
 	}
 
 	/**
@@ -127,7 +129,36 @@ public class Reactor extends Declaration implements Runnable {
 		return params;
 	}
 
+	/**
+	 * @return the statements
+	 */
+	public HashSet<Statement> getStatements() {
+		return statements;
+	}
+
+	public void setContextReactors(@NotNull Map<String, ? extends Reactor> contextReactors) {
+		for (Map.Entry<String, ? extends Reactor> entry : contextReactors.entrySet())
+			if (entry.getValue() != this)
+				this.contextReactors.put(entry.getKey(), entry.getValue());
+	}
+
 	protected void init() {
+		// lazy initialization
+		for (Statement statement : statements)
+			if(statement instanceof Instantiation instance) {
+				boolean found = false;
+
+				for (Reactor reactor : containedReactors)
+					if (reactor.name.equals(instance.var_name())) {
+						found = true;
+						break;
+					}
+
+				if (!found && !contextReactors.containsKey(instance.reactor_name()))
+					throw new ExceptionInInitializerError(
+							"Could not find reactor '" + instance.reactor_name() + "' for instantiation of '" + instance.var_name() + "'");
+			}
+
 		try {
 			if (!preamble.isEmpty())
 				Runtime.getRuntime().exec(preamble);
@@ -138,6 +169,8 @@ public class Reactor extends Declaration implements Runnable {
 
 	public void run() {
 		init();
+
+		// run reactor instances
 
 		for (Reaction reaction : reactions)
 			for (Trigger trigger : reaction.getTriggers())
@@ -150,6 +183,7 @@ public class Reactor extends Declaration implements Runnable {
 		protected final HashSet<Parameter<?>> params = new HashSet<>();
 		protected String preamble = "";
 		protected HashSet<Declaration> declarations = new HashSet<>();
+		protected HashSet<Statement> statements = new HashSet<>();
 		protected ArrayList<Reaction> reactions = new ArrayList<>();
 
 		public Builder(@NotNull String name) {
@@ -180,6 +214,12 @@ public class Reactor extends Declaration implements Runnable {
 			return this;
 		}
 
+		public Builder statements(Statement... statements) {
+			this.statements = new HashSet<>(Arrays.stream(statements).toList());
+
+			return this;
+		}
+
 		public Builder reactions(Reaction... reactions) {
 			this.reactions = new ArrayList<>(Arrays.stream(reactions).toList());
 
@@ -187,7 +227,7 @@ public class Reactor extends Declaration implements Runnable {
 		}
 
 		public Reactor build() {
-			return new Reactor(name, preamble, reactions, params, declarations);
+			return new Reactor(name, preamble, reactions, params, declarations, statements);
 		}
 	}
 }
