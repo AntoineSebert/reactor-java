@@ -56,7 +56,7 @@ public class Reactor extends Declaration implements Runnable {
 			reactions.get(i).self(this);
 
 			for (Trigger t : reactions.get(i).getTriggers()) {
-				pool.put(t, reactions.get(i));
+				TriggerObserver.addReactionMapEntry(t, reactions.get(i));
 			}
 
 			this.reactions.add(reactions.get(i));
@@ -173,7 +173,9 @@ public class Reactor extends Declaration implements Runnable {
 		// run reactor instances
 
 		for (Reaction reaction : reactions)
-			reaction.run();
+			for (Trigger trigger : reaction.getTriggers())
+				if (trigger instanceof Trigger.STARTUP)
+					Scheduler.addReactionTask(reaction);
 	}
 
 	public static class Builder {

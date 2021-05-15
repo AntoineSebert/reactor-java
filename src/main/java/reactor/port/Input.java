@@ -76,4 +76,5 @@ public class Input<T> extends Declaration implements Port<T> {
 	public T value() {
 		return value.orElse(null);
 	}
+
 }
