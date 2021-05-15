@@ -15,9 +15,8 @@ public class Scheduler {
 
     public static void createExecutorService(int number_of_threads) throws RuntimeException {
             if (executorService != null) {
-                throw new RuntimeException("Cannot re-instantiate executor service");
+                executorService = (ThreadPoolExecutor) Executors.newFixedThreadPool(number_of_threads);
             }
-            executorService = (ThreadPoolExecutor) Executors.newFixedThreadPool(number_of_threads);
 
     }
 
