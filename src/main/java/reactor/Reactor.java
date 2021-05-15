@@ -18,7 +18,7 @@ public class Reactor extends Declaration implements Runnable {
 	protected final HashSet<Action<?>> actions = new HashSet<>();
 	protected ArrayList<Reaction> reactions = new ArrayList<>();
 	protected final HashSet<Reactor> containedReactors = new HashSet<>();
-	protected HashSet<Reactor> contextReactors = new HashSet<>();
+	protected HashMap<String, Reactor> contextReactors = new HashMap<>();
 	private final HashSet<Statement> statements = new HashSet<>();
 
 	protected Map<Trigger, Reaction> pool = new HashMap<>();
@@ -63,29 +63,7 @@ public class Reactor extends Declaration implements Runnable {
 		}
 
 		for (Statement statement : statements)
-			if(statement instanceof Instantiation instance) {
-				boolean found = false;
-
-				for (Reactor reactor : containedReactors)
-					if (reactor.name.equals(instance.var_name())) {
-						found = true;
-						break;
-					}
-
-				if (!found)
-					for (Reactor reactor : contextReactors)
-						if (reactor.name.equals(instance.var_name())) {
-							found = true;
-							break;
-						}
-
-				if (found)
-					this.statements.add(statement);
-				else
-					throw new ExceptionInInitializerError(
-							"Could not find reactor " + instance.reactor_name() + " for instantiation of " + instance.var_name());
-			} else
-				this.statements.add(statement);
+			this.statements.add(statement);
 	}
 
 	/**
@@ -159,12 +137,28 @@ public class Reactor extends Declaration implements Runnable {
 	}
 
 	public void setContextReactors(@NotNull Map<String, ? extends Reactor> contextReactors) {
-		for (Reactor reactor : contextReactors.values())
-			if (reactor != this)
-				this.contextReactors.add(reactor);
+		for (Map.Entry<String, ? extends Reactor> entry : contextReactors.entrySet())
+			if (entry.getValue() != this)
+				this.contextReactors.put(entry.getKey(), entry.getValue());
 	}
 
 	protected void init() {
+		// lazy initialization
+		for (Statement statement : statements)
+			if(statement instanceof Instantiation instance) {
+				boolean found = false;
+
+				for (Reactor reactor : containedReactors)
+					if (reactor.name.equals(instance.var_name())) {
+						found = true;
+						break;
+					}
+
+				if (!found && !contextReactors.containsKey(instance.reactor_name()))
+					throw new ExceptionInInitializerError(
+							"Could not find reactor '" + instance.reactor_name() + "' for instantiation of '" + instance.var_name() + "'");
+			}
+
 		try {
 			if (!preamble.isEmpty())
 				Runtime.getRuntime().exec(preamble);
@@ -175,6 +169,8 @@ public class Reactor extends Declaration implements Runnable {
 
 	public void run() {
 		init();
+
+		// run reactor instances
 
 		for (Reaction reaction : reactions)
 			reaction.run();

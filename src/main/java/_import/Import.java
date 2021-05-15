@@ -21,13 +21,13 @@ public class Import {
 	}
 
 	public Import(@NotNull Program program) {
+		this(program, new HashMap<>());
+
 		if (program.getReactors().isEmpty())
 			throw new ExceptionInInitializerError("No reactors to import");
 	}
 
 	public Import(@NotNull Program program, @NotNull Map<String/*name*/, String/*alias*/> aliasing) {
-		this(program);
-
 		if (aliasing.isEmpty())
 			for (Reactor r : program.getReactors())
 				reactors.put(r.name(), r);

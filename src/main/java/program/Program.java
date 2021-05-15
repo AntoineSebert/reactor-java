@@ -16,7 +16,6 @@ import java.util.*;
  */
 public record Program(HashSet<Target> targets, HashSet<Import> imports,
                       HashSet<Reactor> reactors, Optional<Reactor> mainReactor) {
-
 	/**
 	 * @param targets     targets
 	 * @param imports     imports
@@ -36,19 +35,18 @@ public record Program(HashSet<Target> targets, HashSet<Import> imports,
 		this.reactors = reactors;
 		this.mainReactor = mainReactor;
 
-		HashMap<String, Reactor> importedReactors =  new HashMap<>();
+		HashMap<String, Reactor> importedReactors = new HashMap<>();
 		for (Import _import : imports)
 			importedReactors.putAll(_import.getReactors());
 
-		for(Reactor r : importedReactors.values())
-			System.out.println(r.name());
-
-		HashMap<String, Reactor> globalreactors = new HashMap<>(importedReactors);
+		Map<String, Reactor> globalReactors = new HashMap<>(importedReactors);
 		for(Reactor r : reactors)
-			globalreactors.put(r.name(), r);
+			globalReactors.put(r.name(), r);
 
 		for (Reactor c_reactor : reactors)
-			c_reactor.setContextReactors(globalreactors);
+			System.out.println(c_reactor.name());
+
+		mainReactor.ifPresent(reactor -> reactor.setContextReactors(globalReactors));
 
 		Iterator<Target> targetIt = targets.iterator();
 		Action.TIME_PRECISION = targetIt.next().getPrecision();
@@ -91,7 +89,7 @@ public record Program(HashSet<Target> targets, HashSet<Import> imports,
 
 
 	public void run() {
-
+		System.out.println("test");
 		for (Target target : targets) {
 			Object o = target.get("threads").isPresent() ? target.get("threads").get() : 1;
 			int number_of_threads = ((int) o);
