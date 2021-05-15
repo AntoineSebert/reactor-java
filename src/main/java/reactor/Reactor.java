@@ -158,9 +158,9 @@ public class Reactor extends Declaration implements Runnable {
 		return statements;
 	}
 
-	public void setContextReactors(@NotNull Iterable<? extends Reactor> contextReactors) {
-		for (Reactor reactor : contextReactors)
-			if (!(reactor == this))
+	public void setContextReactors(@NotNull Map<String, ? extends Reactor> contextReactors) {
+		for (Reactor reactor : contextReactors.values())
+			if (reactor != this)
 				this.contextReactors.add(reactor);
 	}
 

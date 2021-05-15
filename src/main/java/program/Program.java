@@ -31,18 +31,24 @@ public record Program(HashSet<Target> targets, HashSet<Import> imports,
 		if (reactors.isEmpty() && mainReactor.isEmpty())
 			throw new ExceptionInInitializerError("program.Program must contain at least one reactor");
 
-		//
-		Collection<Reactor> importedReactors = new HashSet<>();
-		for (Import _import : imports)
-			importedReactors.addAll(_import.getReactors());
+		this.targets = targets;
+		this.imports = imports;
+		this.reactors = reactors;
+		this.mainReactor = mainReactor;
 
-		Collection<Reactor> globalreactors = new HashSet<>();
-		globalreactors.addAll(importedReactors);
-		globalreactors.addAll(reactors);
+		HashMap<String, Reactor> importedReactors =  new HashMap<>();
+		for (Import _import : imports)
+			importedReactors.putAll(_import.getReactors());
+
+		for(Reactor r : importedReactors.values())
+			System.out.println(r.name());
+
+		HashMap<String, Reactor> globalreactors = new HashMap<>(importedReactors);
+		for(Reactor r : reactors)
+			globalreactors.put(r.name(), r);
 
 		for (Reactor c_reactor : reactors)
 			c_reactor.setContextReactors(globalreactors);
-		//
 
 		Iterator<Target> targetIt = targets.iterator();
 		Action.TIME_PRECISION = targetIt.next().getPrecision();
@@ -52,15 +58,7 @@ public record Program(HashSet<Target> targets, HashSet<Import> imports,
 
 			if (newPrecision.compareTo(Action.TIME_PRECISION) < 0)
 				Action.TIME_PRECISION = newPrecision;
-
 		}
-
-
-
-		this.targets = targets;
-		this.imports = imports;
-		this.reactors = reactors;
-		this.mainReactor = mainReactor;
 	}
 
 	/**
