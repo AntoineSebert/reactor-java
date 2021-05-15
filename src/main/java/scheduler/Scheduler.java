@@ -14,7 +14,7 @@ public class Scheduler {
     }
 
     public static void createExecutorService(int number_of_threads) throws RuntimeException {
-            if (executorService != null) {
+            if (executorService == null) {
                 executorService = (ThreadPoolExecutor) Executors.newFixedThreadPool(number_of_threads);
             }
 
