@@ -3,6 +3,7 @@ package reactor;
 import org.jetbrains.annotations.NotNull;
 import reactor.port.Input;
 import reactor.port.Output;
+import scheduler.Scheduler;
 import time.Timestamp;
 
 import java.io.IOException;
@@ -19,12 +20,6 @@ public class Reactor extends Declaration implements Runnable {
 	protected final HashSet<Action<?>> actions = new HashSet<>();
 	protected ArrayList<Reaction> reactions = new ArrayList<>();
 	protected final HashSet<Reactor> containedReactors = new HashSet<>();
-
-	protected Map<Trigger, Reaction> pool = new HashMap<>();
-
-	protected Queue<Reaction> exec_q = new LinkedList<>();
-
-	AtomicBoolean in_exec_q = new AtomicBoolean(false);
 
 	public Reactor(@NotNull String name, @NotNull String preamble, @NotNull ArrayList<? extends Reaction> reactions,
 	               @NotNull HashSet<Parameter<?>> params, @NotNull Iterable<? extends Declaration> declarations) {
@@ -62,7 +57,7 @@ public class Reactor extends Declaration implements Runnable {
 			reactions.get(i).self(this);
 
 			for (Trigger t : reactions.get(i).getTriggers()) {
-				pool.put(t, reactions.get(i));
+				TriggerObserver.addReactionMapEntry(t, reactions.get(i));
 			}
 
 			this.reactions.add(reactions.get(i));
@@ -145,7 +140,9 @@ public class Reactor extends Declaration implements Runnable {
 		init();
 
 		for (Reaction reaction : reactions)
-			reaction.run();
+			for (Trigger trigger : reaction.getTriggers())
+				if (trigger instanceof Trigger.STARTUP)
+					Scheduler.addReactionTask(reaction);
 	}
 
 	public static class Builder {

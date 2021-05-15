@@ -1,13 +1,13 @@
 package scheduler;
 
+import org.jetbrains.annotations.NotNull;
 import reactor.Reaction;
 
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.util.concurrent.*;
 
 public class Scheduler {
 
-    private static ExecutorService executorService = null;
+    private static ThreadPoolExecutor executorService = null;
 
     private Scheduler() {
 
@@ -17,7 +17,7 @@ public class Scheduler {
             if (executorService != null) {
                 throw new RuntimeException("Cannot re-instantiate executor service");
             }
-            executorService = Executors.newFixedThreadPool(number_of_threads);
+            executorService = (ThreadPoolExecutor) Executors.newFixedThreadPool(number_of_threads);
 
     }
 
@@ -29,8 +29,22 @@ public class Scheduler {
         return executorService;
     }
 
-    public static void addReactionTask(Reaction reaction) {
-        executorService.execute(reaction);
+    public static void addReactionTask(@NotNull Reaction reaction) {
+        executorService.submit(reaction);
+    }
+
+    public static boolean inQueue (Reaction reaction) {
+        BlockingQueue<Runnable> queue = executorService.getQueue();
+        for (Runnable runnable : queue) {
+                if(runnable.toString().contains(reaction.toString()))
+                    return true;
+
+        }
+        return false;
+    }
+
+    public static boolean isEmpty() {
+         return executorService.getActiveCount() == 0;
     }
 
 }

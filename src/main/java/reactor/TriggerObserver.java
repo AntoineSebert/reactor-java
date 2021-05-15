@@ -12,7 +12,12 @@ public class TriggerObserver  {
 
 
     public static void update(Trigger trigger) {
-        if (reactionMap.get(trigger) != null)
-            Scheduler.addReactionTask(reactionMap.get(trigger));
+        Reaction reaction = reactionMap.get(trigger);
+        if (reaction != null && !Scheduler.inQueue(reaction))
+            Scheduler.addReactionTask(reaction);
+    }
+
+    public static void addReactionMapEntry(Trigger trigger, Reaction reaction) {
+        reactionMap.put(trigger,reaction);
     }
 }
