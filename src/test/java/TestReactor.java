@@ -14,7 +14,7 @@ public class TestReactor {
 	@Test
 	@DisplayName("HelloWorld")
 	public void testHelloWorld() {
-		System.out.println("testHelloWorld");
+		System.out.println("[testHelloWorld]");
 		assertDoesNotThrow(() -> (new Program.Builder())
 				.targets(Target.Java)
 				.mainReactor((new Reactor.Builder("Minimal"))
@@ -32,9 +32,9 @@ public class TestReactor {
 	}
 
 	@Test
-	@DisplayName("testGain")
+	@DisplayName("Gain")
 	public void testGain() {
-		System.out.println("testHelloWorld");
+		System.out.println("[testHelloWorld]");
 		assertDoesNotThrow(() -> (new Program.Builder())
 				.targets(Target.Java)
 				.mainReactor((new Reactor.Builder("TwoHelloWorlds"))
@@ -45,7 +45,7 @@ public class TestReactor {
 	@Test
 	@DisplayName("Import")
 	public void testImport() {
-		System.out.println("testImport");
+		System.out.println("[testImport]");
 		Program hello_world = (new Program.Builder())
 				.targets(Target.Java)
 				.reactors((new Reactor.Builder("HelloWorld"))

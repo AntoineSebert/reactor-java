@@ -43,9 +43,6 @@ public record Program(HashSet<Target> targets, HashSet<Import> imports,
 		for(Reactor r : reactors)
 			globalReactors.put(r.name(), r);
 
-		for (Reactor c_reactor : reactors)
-			System.out.println(c_reactor.name());
-
 		mainReactor.ifPresent(reactor -> reactor.setContextReactors(globalReactors));
 
 		Iterator<Target> targetIt = targets.iterator();
@@ -89,11 +86,10 @@ public record Program(HashSet<Target> targets, HashSet<Import> imports,
 
 
 	public void run() {
-		System.out.println("test");
+
 		for (Target target : targets) {
 			Object o = target.get("threads").isPresent() ? target.get("threads").get() : 10;
-			int number_of_threads = ((int) o);
-			number_of_threads = 10;
+			int number_of_threads = 10;
 			Scheduler.createExecutorService(number_of_threads);
 			mainReactor.ifPresent(Reactor::run);
 

@@ -144,21 +144,26 @@ public class Reactor extends Declaration implements Runnable {
 	}
 
 	protected void init() {
-		// lazy initialization
-		for (Statement statement : statements)
-			if(statement instanceof Instantiation instance) {
-				boolean found = false;
+		List<Instantiation> toResolve = statements.stream()
+				.filter(s -> s instanceof Instantiation)
+				.map(s -> (Instantiation) s)
+				.filter(i -> i.reactor().isEmpty())
+				.toList();
 
-				for (Reactor reactor : containedReactors)
-					if (reactor.name.equals(instance.var_name())) {
-						found = true;
-						break;
-					}
+		for (Instantiation instance : toResolve) {
+			for (Reactor reactor : containedReactors)
+				if (reactor.name.equals(instance.name())) {
+					instance.setReactor(reactor);
+					break;
+				}
 
-				if (!found && !contextReactors.containsKey(instance.reactor_name()))
+			if(instance.reactor().isEmpty())
+				if(contextReactors.containsKey(instance.reactor_name()))
+					instance.setReactor(contextReactors.get(instance.reactor_name()));
+				else
 					throw new ExceptionInInitializerError(
-							"Could not find reactor '" + instance.reactor_name() + "' for instantiation of '" + instance.var_name() + "'");
-			}
+							"Could not find reactor '" + instance.reactor_name() + "' for instantiation of '" + instance.name() + "'");
+		}
 
 		try {
 			if (!preamble.isEmpty())
@@ -171,7 +176,12 @@ public class Reactor extends Declaration implements Runnable {
 	public void run() {
 		init();
 
-		// run reactor instances
+		for (Reactor reactor : containedReactors)
+			reactor.run();
+
+		for (Statement statement : statements)
+			if(statement instanceof Instantiation instance)
+				instance.reactor().ifPresent(Reactor::run);
 
 		for (Reaction reaction : reactions)
 			for (Trigger trigger : reaction.getTriggers())
