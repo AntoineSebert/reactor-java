@@ -16,7 +16,7 @@ import java.util.function.BiFunction;
  */
 public class Reaction implements Runnable {
 	private Reactor self;
-	private final HashSet<Trigger> triggers ;
+	private final HashSet<Trigger> triggers;
 	private final HashSet<Input<?>> uses;
 	private final HashSet<Effect> effects;
 	private final BiFunction<Reactor, Reaction, Void> targetCode;
@@ -62,6 +62,22 @@ public class Reaction implements Runnable {
 	 */
 	public BiFunction<Reactor, Reaction, Void> getTargetCode() {
 		return targetCode;
+	}
+
+	public Optional<Declaration> get(@NotNull String name) {
+		for (Trigger t : triggers)
+			if(((Declaration) t).name().equals(name))
+				return Optional.of((Declaration)t);
+
+		for (Input<?> t : uses)
+			if((t).name().equals(name))
+				return Optional.of(t);
+
+		for (Effect t : effects)
+			if(((Declaration) t).name().equals(name))
+				return Optional.of((Declaration)t);
+
+		return Optional.empty();
 	}
 
 	public void self(@NotNull Reactor self) {
