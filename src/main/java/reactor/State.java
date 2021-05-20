@@ -7,7 +7,7 @@ import org.jetbrains.annotations.NotNull;
  * https://github.com/icyphy/lingua-franca/wiki/Language-Specification#state-declaration
  */
 public class State<T> extends Declaration {
-	private final T value;
+	private T value;
 
 	/**
 	 * @param name  name
@@ -20,6 +20,12 @@ public class State<T> extends Declaration {
 		this.value = value;
 	}
 
+	public State(@NotNull String name) {
+		super(name);
+
+		value = (T) new Object();
+	}
+
 	public State(@NotNull String name, @NotNull Parameter<? extends T> param) {
 		this(name, param.value());
 	}
@@ -27,7 +33,11 @@ public class State<T> extends Declaration {
 	/**
 	 * @return the value
 	 */
-	public T getValue() {
+	public T get() {
 		return value;
+	}
+
+	public void set(T val) {
+		value = val;
 	}
 }
