@@ -15,7 +15,7 @@ public class InputTest {
 						.targets(Target.Java)
 						.mainReactor((new Reactor.Builder("Minimal"))
 								.reactions((new Reaction.Builder())
-										.targetCode(reaction -> {
+										.targetCode((self, reaction) -> {
 											System.out.println("Hello world.");
 
 											return null;

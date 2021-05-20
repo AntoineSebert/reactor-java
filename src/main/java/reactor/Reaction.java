@@ -7,7 +7,8 @@ import java.time.Duration;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Objects;
-import java.util.function.Function;
+import java.util.Optional;
+import java.util.function.BiFunction;
 
 /**
  * Reaction specification class.
@@ -18,11 +19,11 @@ public class Reaction implements Runnable {
 	private final HashSet<Trigger> triggers ;
 	private final HashSet<Input<?>> uses;
 	private final HashSet<Effect> effects;
-	private final Function<Reaction, Void> targetCode;
+	private final BiFunction<Reactor, Reaction, Void> targetCode;
 	private final Deadline deadline;
 	
 	public Reaction(@NotNull HashSet<Trigger> triggers, @NotNull HashSet<Input<?>> uses,
-	                @NotNull HashSet<Effect> effects, @NotNull Function<Reaction, Void> targetCode,
+	                @NotNull HashSet<Effect> effects, @NotNull BiFunction<Reactor, Reaction, Void> targetCode,
 	                @NotNull Deadline deadline) {
 		this.triggers = triggers;
 		this.uses = uses;
@@ -59,7 +60,7 @@ public class Reaction implements Runnable {
 	/**
 	 * @return the target code
 	 */
-	public Function<Reaction, Void> getTargetCode() {
+	public BiFunction<Reactor, Reaction, Void> getTargetCode() {
 		return targetCode;
 	}
 
@@ -72,7 +73,7 @@ public class Reaction implements Runnable {
 	 */
 	@Override
 	public void run() {
-		targetCode.apply(this);
+		targetCode.apply(self, this);
 	}
 
 	public Deadline deadline() {
@@ -96,7 +97,7 @@ public class Reaction implements Runnable {
 		private HashSet<Trigger> triggers = new HashSet<>();
 		private HashSet<Input<?>> uses = new HashSet<>();
 		private HashSet<Effect> effects = new HashSet<>();
-		private Function<Reaction, Void> targetCode = (reaction) -> null;
+		private BiFunction<Reactor, Reaction, Void> targetCode = (reactor, reaction) -> null;
 		private Deadline deadline = new Deadline(Duration.ZERO, (reaction) -> null);
 
 		public Reaction build() {
@@ -127,7 +128,7 @@ public class Reaction implements Runnable {
 			return this;
 		}
 
-		public Builder targetCode(@NotNull Function<Reaction, Void> targetCode) {
+		public Builder targetCode(@NotNull BiFunction<Reactor, Reaction, Void> targetCode) {
 			this.targetCode = targetCode;
 
 			return this;

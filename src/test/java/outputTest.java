@@ -21,7 +21,7 @@ public class outputTest {
 						.targets(Target.Java)
 						.mainReactor((new Reactor.Builder("Minimal"))
 								.reactions((new Reaction.Builder())
-										.targetCode((reaction) -> {
+										.targetCode((self, reaction) -> {
 											x.set(1);
 											y.set(2);
 											System.out.println(out.value());
@@ -34,7 +34,7 @@ public class outputTest {
 						.reactors((new Reactor.Builder("outputTest"))
 								.declarations(x, y, out)
 								.reactions((new Reaction.Builder())
-										.targetCode((reaction) -> {
+										.targetCode((self, reaction) -> {
 											int result = 0;
 											if (x.isPresent()) result += x.value();
 											if (y.isPresent()) result += y.value();

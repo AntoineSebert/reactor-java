@@ -19,7 +19,7 @@ public class TestReactor {
 				.targets(Target.Java)
 				.mainReactor((new Reactor.Builder("Minimal"))
 						.reactions((new Reaction.Builder())
-								.targetCode((reaction) -> {
+								.targetCode((reaction, self) -> {
 									System.out.println("Hello World.\n");
 
 									return null;
@@ -50,7 +50,7 @@ public class TestReactor {
 				.targets(Target.Java)
 				.reactors((new Reactor.Builder("HelloWorld"))
 						.reactions((new Reaction.Builder())
-								.targetCode((reaction) -> {
+								.targetCode((reaction, self) -> {
 									System.out.println("Hello World.\n");
 
 									return null;
