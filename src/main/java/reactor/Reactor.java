@@ -1,8 +1,6 @@
 package reactor;
 
 import org.jetbrains.annotations.NotNull;
-import reactor.port.Input;
-import reactor.port.Output;
 import scheduler.Scheduler;
 
 import java.io.IOException;
@@ -11,14 +9,9 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Reactor extends Declaration implements Runnable {
 	protected String preamble;
-	protected HashSet<Parameter<?>> params;
-	protected final HashSet<State<?>> states = new HashSet<>();
-	protected final HashSet<Input<?>> inputs = new HashSet<>();
-	protected final HashSet<Output<?>> outputs = new HashSet<>();
-	protected final HashSet<Timer> timers = new HashSet<>();
-	protected final HashSet<Action<?>> actions = new HashSet<>();
+	protected HashMap<String, Parameter<?>> params = new HashMap<String, Parameter<?>>();
+	private final HashMap<String, Declaration> declarations = new HashMap<>();
 	protected ArrayList<Reaction> reactions = new ArrayList<>();
-	protected final HashSet<Reactor> containedReactors = new HashSet<>();
 	protected HashMap<String, Reactor> contextReactors = new HashMap<>();
 	private final HashSet<Statement> statements = new HashSet<>();
 
@@ -27,33 +20,21 @@ public class Reactor extends Declaration implements Runnable {
 	AtomicBoolean in_exec_q = new AtomicBoolean(false);
 
 	public Reactor(@NotNull String name, @NotNull String preamble, @NotNull ArrayList<? extends Reaction> reactions,
-	               @NotNull HashSet<Parameter<?>> params, @NotNull Iterable<? extends Declaration> declarations,
+	               @NotNull Iterable<? extends Parameter<?>> params, @NotNull Iterable<? extends Declaration> declarations,
 	               @NotNull Iterable<? extends Statement> statements) {
 		super(name);
 
-		this.params = params;
+		for(Parameter<?> p : params)
+			this.params.put(p.name(), p);
+
 		this.preamble = preamble;
 
 		for (Declaration decl : declarations)
-			if(decl instanceof State)
-				states.add((State<?>) decl);
-			else if(decl instanceof Input)
-				inputs.add((Input<?>) decl);
-			else if(decl instanceof Output)
-				outputs.add((Output<?>) decl);
-			else if(decl instanceof Timer)
-				timers.add((Timer) decl);
-			else if(decl instanceof Action)
-				actions.add((Action<?>) decl);
-			else if(decl instanceof Reactor)
-				containedReactors.add((Reactor) decl);
+			this.declarations.put(decl.name(), decl);
 
+		// replace by better loop
 		int limit = reactions.size();
 		for (int i = 0; i < limit; i++) {
-			if (!inputs.containsAll(reactions.get(i).getUses()))
-				throw new ExceptionInInitializerError(
-						"At least one unknown Input parameter(s) in Reaction Use list " + reactions.get(i).getUses());
-
 			reactions.get(i).self(this);
 
 			for (Trigger t : reactions.get(i).getTriggers()) {
@@ -75,41 +56,6 @@ public class Reactor extends Declaration implements Runnable {
 	}
 
 	/**
-	 * @return the states
-	 */
-	public HashSet<State<?>> getStates() {
-		return states;
-	}
-
-	/**
-	 * @return the inputs
-	 */
-	public HashSet<Input<?>> getInputs() {
-		return inputs;
-	}
-
-	/**
-	 * @return the outputs
-	 */
-	public HashSet<Output<?>> getOutputs() {
-		return outputs;
-	}
-
-	/**
-	 * @return the timers
-	 */
-	public HashSet<Timer> getTimers() {
-		return timers;
-	}
-
-	/**
-	 * @return the actions
-	 */
-	public HashSet<Action<?>> getActions() {
-		return actions;
-	}
-
-	/**
 	 * @return the reactions
 	 */
 	public ArrayList<Reaction> getReactions() {
@@ -117,17 +63,18 @@ public class Reactor extends Declaration implements Runnable {
 	}
 
 	/**
-	 * @return the contained reactors
-	 */
-	public HashSet<Reactor> getContainedReactors() {
-		return containedReactors;
-	}
-
-	/**
 	 * @return the parameters
 	 */
-	public HashSet<Parameter<?>> getParams() {
+	public HashMap<String, Parameter<?>> getParams() {
 		return params;
+	}
+
+	public Optional<Declaration> get(@NotNull String name) {
+		return Optional.ofNullable(declarations.getOrDefault(name, null));
+	}
+
+	public Optional<Parameter<?>> param(@NotNull String name) {
+		return Optional.ofNullable(params.getOrDefault(name, null));
 	}
 
 	/**
@@ -151,11 +98,10 @@ public class Reactor extends Declaration implements Runnable {
 				.toList();
 
 		for (Instantiation instance : toResolve) {
-			for (Reactor reactor : containedReactors)
-				if (reactor.name.equals(instance.name())) {
-					instance.setReactor(reactor);
-					break;
-				}
+			if (declarations.containsKey(instance.name()) && declarations.get(instance.name()) instanceof Reactor reactor) {
+				instance.setReactor(reactor);
+				break;
+			}
 
 			if(instance.reactor().isEmpty())
 				if(contextReactors.containsKey(instance.reactor_name()))
@@ -176,8 +122,9 @@ public class Reactor extends Declaration implements Runnable {
 	public void run() {
 		init();
 
-		for (Reactor reactor : containedReactors)
-			reactor.run();
+		for (Declaration decl : declarations.values())
+			if (decl instanceof Reactor reactor)
+				reactor.run();
 
 		for (Statement statement : statements)
 			if(statement instanceof Instantiation instance)
