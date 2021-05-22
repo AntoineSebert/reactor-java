@@ -27,9 +27,9 @@ class Output<T> {
 	}
 }
 
-//class Reactor {}
+class Reactor {}
 
-public class Gain extends Object/*Reactor*/ {
+public class Gain extends Reactor {
 	Scale g = new Scale();
 	Test d = new Test();
 
@@ -43,7 +43,7 @@ public class Gain extends Object/*Reactor*/ {
 		return g.x;
 	}
 
-	private static class Scale extends Object/*Reactor*/ {
+	private static class Scale extends Reactor {
 		int scale = 2;
 		public Input<Integer> x = new Input<>();
 		Output<Integer> y = new Output<>();
@@ -61,7 +61,7 @@ public class Gain extends Object/*Reactor*/ {
 		}
 	}
 
-	private static class Test extends Object/*Reactor*/ {
+	private static class Test extends Reactor {
 		public Input<Integer> x = new Input<>();
 		private boolean received_value;
 
