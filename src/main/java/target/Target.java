@@ -55,6 +55,7 @@ public class Target {
 			new HashMap<>(1) {{
 				put("default", TimeUnit.NANOSECONDS);
 				put("threads", 1);
+				put("timeout", Duration.parse("PT10S"));
 			}}
 	);
 
