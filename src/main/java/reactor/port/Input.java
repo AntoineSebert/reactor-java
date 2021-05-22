@@ -58,8 +58,11 @@ public class Input<T> extends Declaration implements Port<T> {
 	}
 
 	public void set(@NotNull T value, long msg_time) {
-		this.value = Optional.of(value);
-		time = msg_time;
+		if (mutable) {
+			this.value = Optional.of(value);
+			time = msg_time;
+		} else
+			throw new RuntimeException("Cannot modify an immutable type");
 	}
 
 	@Override
