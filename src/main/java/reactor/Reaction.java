@@ -21,6 +21,7 @@ public class Reaction implements Runnable {
 	private final HashSet<Effect> effects;
 	private final BiFunction<Reactor, Reaction, Void> targetCode;
 	private final Optional<Deadline> deadline;
+	private long start;
 	
 	public Reaction(@NotNull HashSet<Trigger> triggers, @NotNull HashSet<Input<?>> uses,
 	                @NotNull HashSet<Effect> effects, @NotNull BiFunction<Reactor, Reaction, Void> targetCode,
@@ -89,6 +90,7 @@ public class Reaction implements Runnable {
 	 */
 	@Override
 	public void run() {
+		start = Time.physical();
 		targetCode.apply(self, this);
 	}
 
@@ -97,11 +99,11 @@ public class Reaction implements Runnable {
 	}
 
 	public boolean has_passed() {
-		if(deadline().isPresent())
+		if(deadline.isPresent())
 			if(deadline.get().deadline() != Duration.ZERO)
-				;// time + deadline != physical time
+				return Time.physical() < start + deadline.get().deadline().toNanos();
 
-			return false;
+		return false;
 	}
 
 	@Override
