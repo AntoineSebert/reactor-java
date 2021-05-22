@@ -7,7 +7,7 @@ import java.util.concurrent.*;
 
 public class Scheduler {
 
-    private static ThreadPoolExecutor executorService = null;
+    private static ScheduledThreadPoolExecutor executorService = null;
 
     private Scheduler() {
 
@@ -15,7 +15,7 @@ public class Scheduler {
 
     public static void createExecutorService(int number_of_threads) throws RuntimeException {
             if (executorService == null) {
-                executorService = (ThreadPoolExecutor) Executors.newFixedThreadPool(number_of_threads);
+                executorService = (ScheduledThreadPoolExecutor) Executors.newScheduledThreadPool(number_of_threads);
             }
 
     }
@@ -32,6 +32,14 @@ public class Scheduler {
         executorService.submit(reaction);
     }
 
+    public static void addScheduledReaction(@NotNull Reaction reaction,@NotNull int delay) {
+        executorService.schedule(reaction, delay, TimeUnit.NANOSECONDS);
+    }
+
+    public static void addRepeatingReaction(@NotNull Reaction reaction,@NotNull int period, @NotNull int delay) {
+        executorService.scheduleAtFixedRate(reaction, delay, period, TimeUnit.NANOSECONDS);
+    }
+
     public static boolean inQueue (Reaction reaction) {
         BlockingQueue<Runnable> queue = executorService.getQueue();
         for (Runnable runnable : queue) {
@@ -42,8 +50,14 @@ public class Scheduler {
         return false;
     }
 
+    public static void shutDown() {
+        executorService.shutdown();
+    }
+
     public static boolean isEmpty() {
          return executorService.getActiveCount() == 0;
     }
 
+
 }
+

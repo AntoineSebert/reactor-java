@@ -134,6 +134,22 @@ public class Reactor extends Declaration implements Runnable {
 			for (Trigger trigger : reaction.getTriggers())
 				if (trigger instanceof Trigger.STARTUP)
 					Scheduler.addReactionTask(reaction);
+				else if (trigger instanceof  Timer timer) {
+					if (timer.period().getNano() == 0)
+						Scheduler.addScheduledReaction(reaction, timer.offset().getNano());
+					else {
+						Scheduler.addRepeatingReaction(reaction, timer.offset().getNano(), timer.period().getNano());
+					}
+				}
+	}
+
+	public void before_shutdown() {
+		for (Reaction reaction : reactions) {
+			for (Trigger trigger : reaction.getTriggers()) {
+				if (trigger instanceof  Trigger.SHUTDOWN)
+					Scheduler.addReactionTask(reaction);
+			}
+		}
 	}
 
 	public static class Builder {

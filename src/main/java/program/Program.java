@@ -98,6 +98,13 @@ public record Program(HashSet<Target> targets, HashSet<Import> imports,
 
 			while (!Scheduler.isEmpty());
 
+			for (Reactor reactor : reactors)
+				reactor.before_shutdown();
+
+			while (!Scheduler.isEmpty());
+
+			Scheduler.shutDown();
+
 		}
 
 
