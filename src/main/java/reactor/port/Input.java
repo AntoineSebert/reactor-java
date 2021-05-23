@@ -48,21 +48,22 @@ public class Input<T> extends Declaration implements Port<T> {
 		return value.isPresent();
 	}
 
-	@Override
-	public void set(@NotNull T value) {
+	private void _set(@NotNull T value) {
 		if (mutable) {
 			this.value = Optional.of(value);
-			time = Time.logical(); // not sure if physical or logical
 		} else
 			throw new RuntimeException("Cannot modify an immutable type");
 	}
 
+	@Override
+	public void set(@NotNull T value) {
+		_set(value);
+		time = Time.logical(); // not sure if physical or logical
+	}
+
 	public void set(@NotNull T value, long msg_time) {
-		if (mutable) {
-			this.value = Optional.of(value);
-			time = msg_time;
-		} else
-			throw new RuntimeException("Cannot modify an immutable type");
+		_set(value);
+		time = msg_time;
 	}
 
 	@Override
@@ -79,5 +80,4 @@ public class Input<T> extends Declaration implements Port<T> {
 	public T value() {
 		return value.orElse(null);
 	}
-
 }
