@@ -1,6 +1,8 @@
 package reactor;
 
 import org.jetbrains.annotations.NotNull;
+import reactor.port.Input;
+import reactor.port.Output;
 import scheduler.Scheduler;
 
 import java.io.IOException;
@@ -11,10 +13,9 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Reactor extends Declaration implements Runnable {
 	protected String preamble;
-	protected HashMap<String, Parameter<?>> params = new HashMap<String, Parameter<?>>();
+	protected HashMap<String, Parameter<?>> params = new HashMap<>();
 	private final HashMap<String, Declaration> declarations = new HashMap<>();
 	protected ArrayList<Reaction> reactions = new ArrayList<>();
-	protected HashMap<String, Reactor> contextReactors = new HashMap<>();
 	private final HashSet<Statement> statements = new HashSet<>();
 
 	protected Map<Trigger, Reaction> pool = new HashMap<>();
@@ -71,8 +72,35 @@ public class Reactor extends Declaration implements Runnable {
 		return params;
 	}
 
-	public Optional<Declaration> get(@NotNull String name) {
-		return Optional.ofNullable(declarations.getOrDefault(name, null));
+	public Optional<? extends Declaration> get(@NotNull String name) {
+		if(declarations.containsKey(name))
+			return Optional.of(declarations.get(name));
+		else
+			for(Statement s : statements)
+				if(s instanceof Instantiation i && i.name.equals(name))
+					return i.reactor();
+
+		return Optional.empty();
+	}
+
+	public Optional<? extends Declaration> get(@NotNull String[] name) {
+		switch(name.length) {
+			case 0:
+				throw new RuntimeException("Cannot lookup empty name");
+			case 1:
+				return get(name[0]);
+			default:
+				var result = get(name[0]);
+
+				if(result.isPresent()) {
+					if(result.get() instanceof Reactor r)
+						return r.get(Arrays.copyOfRange(name, 1, name.length));
+					else
+						return result;
+				}
+				else
+					return Optional.empty();
+		}
 	}
 
 	public Optional<Parameter<?>> param(@NotNull String name) {
@@ -88,30 +116,52 @@ public class Reactor extends Declaration implements Runnable {
 
 	public void setContextReactors(@NotNull Map<String, ? extends Reactor> contextReactors) {
 		for (Map.Entry<String, ? extends Reactor> entry : contextReactors.entrySet())
-			if (entry.getValue() != this)
-				this.contextReactors.put(entry.getKey(), entry.getValue());
+			if (entry.getValue() != this && !declarations.containsKey(entry.getKey()))
+				declarations.put(entry.getKey(), entry.getValue());
 	}
 
-	protected void init() {
-		List<Instantiation> toResolve = statements.stream()
+	private void resolveStatements() {
+		List<Instantiation> instantiations = statements.stream()
 				.filter(s -> s instanceof Instantiation)
 				.map(s -> (Instantiation) s)
 				.filter(i -> i.reactor().isEmpty())
 				.toList();
 
-		for (Instantiation instance : toResolve) {
-			if (declarations.containsKey(instance.name()) && declarations.get(instance.name()) instanceof Reactor reactor) {
-				instance.setReactor(reactor);
-				break;
-			}
+		List<? extends Connection<?>> connections = statements.stream()
+				.filter(s -> s instanceof Connection<?>)
+				.map(s -> (Connection<?>) s)
+				.filter(c -> !c.isInitialized())
+				.toList();
 
-			if(instance.reactor().isEmpty())
-				if(contextReactors.containsKey(instance.reactor_name()))
-					instance.setReactor(contextReactors.get(instance.reactor_name()));
-				else
-					throw new ExceptionInInitializerError(
-							"Could not find reactor '" + instance.reactor_name() + "' for instantiation of '" + instance.name() + "'");
+		for (Instantiation instance : instantiations)
+			if (declarations.containsKey(instance.reactor_name()) && declarations.get(instance.reactor_name()) instanceof Reactor reactor)
+				instance.setReactor(reactor);
+			else
+				throw new ExceptionInInitializerError(
+						"Could not find reactor '" + instance.reactor_name() + "' for instantiation of '" + instance.name() + "'");
+
+		for (Connection<?> connection : connections) {
+			var input_result = get(connection.input_name[0]);
+
+			if(input_result.isPresent() && input_result.get() instanceof Input<?> input)
+				connection.input(input);
+			else
+				throw new ExceptionInInitializerError(
+						"Name '" + connection.input_name[0] + "' does not identify and Input");
+
+			var output_result = get(connection.output_name[0]);
+
+			if(output_result.isPresent() && output_result.get() instanceof Output<?> output)
+				connection.output(output);
+			else
+				throw new ExceptionInInitializerError(
+						"Name '" + connection.output_name[0] + "' does not identify and Output");
 		}
+	}
+
+	protected void init() {
+		// lazy initialization
+		resolveStatements();
 
 		try {
 			if (!preamble.isEmpty())
