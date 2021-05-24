@@ -27,7 +27,6 @@ public class Output<T> extends Declaration implements Port<T> {
 	@Override
 	public void set(@NotNull T value) {
 		time = Time.logical();
-
 		if (connection != null)
 			connection.set(value);
 	}

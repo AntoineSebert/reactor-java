@@ -11,7 +11,7 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 public class StartupShutDownTest {
     @Test
-    public void testOutputTest() {
+    public void testShutdownAndStartup() {
 
         assertDoesNotThrow(
                 () -> (new Program.Builder())
