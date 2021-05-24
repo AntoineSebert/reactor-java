@@ -56,6 +56,7 @@ public class Target {
 				put("default", TimeUnit.NANOSECONDS);
 				put("threads", 1);
 				put("timeout", Duration.parse("PT10S"));
+				put("keepalive", false);
 			}}
 	);
 
