@@ -4,7 +4,9 @@ import org.jetbrains.annotations.NotNull;
 import scheduler.Scheduler;
 
 import java.io.IOException;
+import java.time.temporal.TemporalUnit;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Reactor extends Declaration implements Runnable {
@@ -135,10 +137,10 @@ public class Reactor extends Declaration implements Runnable {
 				if (trigger instanceof Trigger.STARTUP)
 					Scheduler.addReactionTask(reaction);
 				else if (trigger instanceof  Timer timer) {
-					if (timer.period().getNano() == 0)
-						Scheduler.addScheduledReaction(reaction, timer.offset().getNano());
-					else {
-						Scheduler.addRepeatingReaction(reaction, timer.offset().getNano(), timer.period().getNano());
+					if (timer.period().isZero()) {
+						Scheduler.addScheduledReaction(reaction, timer.offset().toNanos());
+					} else {
+						Scheduler.addRepeatingReaction(reaction, timer.offset().toNanos(), timer.period().toNanos());
 					}
 				}
 	}

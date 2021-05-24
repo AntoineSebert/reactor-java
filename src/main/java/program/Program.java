@@ -9,6 +9,7 @@ import target.Target;
 
 import java.time.Duration;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 /**
  * program := target+, import*, reactor-block+
@@ -88,22 +89,31 @@ public record Program(HashSet<Target> targets, HashSet<Import> imports,
 	public void run() {
 
 		for (Target target : targets) {
-			Object o = target.get("threads").isPresent() ? target.get("threads").get() : 10;
-			int number_of_threads = 10;
+			Object o = target.get("threads").get();
+			int number_of_threads = (int)o;
 			Scheduler.createExecutorService(number_of_threads);
-			mainReactor.ifPresent(Reactor::run);
 
-			for (Reactor reactor : reactors)
-				reactor.run();
 
-			while (!Scheduler.isEmpty());
+			o = target.get("timeout").get();
+			Duration timeout = (Duration)o;
+
+			try {
+				mainReactor.ifPresent(Reactor::run);
+				for (Reactor reactor : reactors)
+					reactor.run();
+
+
+				Scheduler.awaitTermination(timeout.toNanos(), TimeUnit.NANOSECONDS);
+
+			} catch (InterruptedException e) {
+
+			}
 
 			for (Reactor reactor : reactors)
 				reactor.before_shutdown();
 
-			while (!Scheduler.isEmpty());
-
 			Scheduler.shutDown();
+			Scheduler.awaitTermination();
 
 		}
 

@@ -9,6 +9,8 @@ public class Scheduler {
 
     private static ScheduledThreadPoolExecutor executorService = null;
 
+    private static boolean timedTasks = false;
+
     private Scheduler() {
 
     }
@@ -32,11 +34,13 @@ public class Scheduler {
         executorService.submit(reaction);
     }
 
-    public static void addScheduledReaction(@NotNull Reaction reaction,@NotNull int delay) {
+    public static void addScheduledReaction(@NotNull Reaction reaction,@NotNull long delay) {
+        timedTasks = true;
         executorService.schedule(reaction, delay, TimeUnit.NANOSECONDS);
     }
 
-    public static void addRepeatingReaction(@NotNull Reaction reaction,@NotNull int period, @NotNull int delay) {
+    public static void addRepeatingReaction(@NotNull Reaction reaction,@NotNull long period, @NotNull long delay) {
+        timedTasks = true;
         executorService.scheduleAtFixedRate(reaction, delay, period, TimeUnit.NANOSECONDS);
     }
 
@@ -48,6 +52,17 @@ public class Scheduler {
 
         }
         return false;
+    }
+
+    public static void awaitTermination(long time, TimeUnit unit) throws InterruptedException {
+        if (timedTasks)
+            executorService.awaitTermination(time, unit);
+        else
+            while (!isEmpty());
+    }
+
+    public static void awaitTermination(){
+            while (!isEmpty());
     }
 
     public static void shutDown() {
