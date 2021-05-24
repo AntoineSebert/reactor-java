@@ -26,6 +26,10 @@ public class State<T> extends Declaration {
 		value = (T) new Object();
 	}
 
+	@Override
+	public void ToLF(int lvl) {
+	}
+
 	public State(@NotNull String name, @NotNull Parameter<? extends T> param) {
 		this(name, param.value());
 	}

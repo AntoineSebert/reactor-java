@@ -119,6 +119,24 @@ public record Program(HashSet<Target> targets, HashSet<Import> imports,
 
 	}
 
+	public void ToLF(){
+		for (Target target : targets) {
+			target.toLF(0);
+		}
+
+		for (Import _import : imports) {
+			_import.toLF(0);
+		}
+
+		for (Reactor reactor : reactors){
+			reactor.toLF(0);
+		}
+		if(mainReactor.isPresent()){
+			System.out.print("main ");
+			mainReactor.get().toLF(0);
+		}
+	}
+
 	public static class Builder {
 		private final HashSet<Target> targets = new HashSet<>();
 		private final HashSet<Import> imports = new HashSet<>();

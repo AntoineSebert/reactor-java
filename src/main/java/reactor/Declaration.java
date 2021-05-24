@@ -28,4 +28,6 @@ public abstract class Declaration {
 		if (o == null || getClass() != o.getClass()) return false;
 		return name.equals(((Declaration) o).name);
 	}
+
+	public abstract void ToLF(int lvl);
 }
