@@ -24,8 +24,6 @@ public class outputTest {
 										.targetCode((self, reaction) -> {
 											x.set(1);
 											y.set(2);
-											System.out.println(out.value());
-
 											return null;
 										})
 										.triggers(new Trigger.STARTUP())
@@ -33,13 +31,15 @@ public class outputTest {
 								).build())
 						.reactors((new Reactor.Builder("outputTest"))
 								.declarations(x, y, out)
+								.statements()
 								.reactions((new Reaction.Builder())
 										.targetCode((self, reaction) -> {
 											int result = 0;
 											if (x.isPresent()) result += x.value();
 											if (y.isPresent()) result += y.value();
-											System.out.println("here");
 											out.set(result);
+											System.out.println(result);
+											System.out.println(out.value());
 
 											return null;
 										})
