@@ -1,11 +1,9 @@
 package reactor;
 
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.Map;
-import java.util.Queue;
-
 import scheduler.Scheduler;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class TriggerObserver  {
     private static Map<Trigger, Reaction> reactionMap = new HashMap<>();
@@ -13,8 +11,10 @@ public class TriggerObserver  {
 
     public static void update(Trigger trigger) {
         Reaction reaction = reactionMap.get(trigger);
-        if (reaction != null && !Scheduler.inQueue(reaction))
+        if (reaction != null && !Scheduler.inQueue(reaction)) {
+            reaction.timestamp(trigger.timestamp());
             Scheduler.addReactionTask(reaction);
+        }
     }
 
     public static void addReactionMapEntry(Trigger trigger, Reaction reaction) {

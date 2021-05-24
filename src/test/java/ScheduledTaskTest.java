@@ -3,7 +3,6 @@ import program.Program;
 import reactor.Reaction;
 import reactor.Reactor;
 import reactor.Timer;
-import reactor.Trigger;
 import target.Target;
 
 import java.time.Duration;
@@ -23,7 +22,7 @@ public class ScheduledTaskTest {
 
                                             return null;
                                         })
-                                        .triggers(new Trigger.STARTUP())
+                                        .triggers("STARTUP")
                                         .build()
                                 ).build())
                         .reactors((new Reactor.Builder("startupTest"))
@@ -34,7 +33,7 @@ public class ScheduledTaskTest {
 
                                                     return null;
                                                 })
-                                                .triggers(t)
+                                                .triggers("t")
                                                 .build()
                                         ).build())
                         .build()

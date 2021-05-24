@@ -2,7 +2,6 @@ import org.junit.jupiter.api.Test;
 import program.Program;
 import reactor.Reaction;
 import reactor.Reactor;
-import reactor.Trigger;
 import target.Target;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
@@ -20,7 +19,7 @@ public class InputTest {
 
 											return null;
 										})
-										.triggers(new Trigger.STARTUP())
+										.triggers("STARTUP")
 										.build()
 								).build()
 						)
