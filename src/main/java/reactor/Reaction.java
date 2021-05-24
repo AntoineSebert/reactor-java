@@ -20,11 +20,12 @@ public class Reaction implements Runnable {
 	private final HashSet<Input<?>> uses;
 	private final HashSet<Effect> effects;
 	private final BiFunction<Reactor, Reaction, Void> targetCode;
-	private final Deadline deadline;
+	private final Optional<Deadline> deadline;
+	private long start;
 	
 	public Reaction(@NotNull HashSet<Trigger> triggers, @NotNull HashSet<Input<?>> uses,
 	                @NotNull HashSet<Effect> effects, @NotNull BiFunction<Reactor, Reaction, Void> targetCode,
-	                @NotNull Deadline deadline) {
+	                @NotNull Optional<Deadline> deadline) {
 		this.triggers = triggers;
 		this.uses = uses;
 		this.effects = effects;
@@ -89,11 +90,20 @@ public class Reaction implements Runnable {
 	 */
 	@Override
 	public void run() {
+		start = Time.physical();
 		targetCode.apply(self, this);
 	}
 
-	public Deadline deadline() {
+	public Optional<Deadline> deadline() {
 		return deadline;
+	}
+
+	public boolean has_passed() {
+		if(deadline.isPresent())
+			if(deadline.get().deadline() != Duration.ZERO)
+				return Time.physical() < start + deadline.get().deadline().toNanos();
+
+		return false;
 	}
 
 	@Override
@@ -117,7 +127,7 @@ public class Reaction implements Runnable {
 		private Deadline deadline = new Deadline(Duration.ZERO, (reaction) -> null);
 
 		public Reaction build() {
-			return new Reaction(triggers, uses, effects, targetCode, deadline);
+			return new Reaction(triggers, uses, effects, targetCode, Optional.of(deadline));
 		}
 
 		public Builder deadline(@NotNull Deadline deadline) {
