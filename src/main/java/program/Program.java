@@ -88,13 +88,13 @@ public record Program(HashSet<Target> targets, HashSet<Import> imports,
 
 	public void run() {
 		for (Target target : targets) {
-			Object o = target.get("threads").get();
-			int number_of_threads = (int)o;
+			int number_of_threads = (int)target.get("threads").get();
 			Scheduler.createExecutorService(number_of_threads);
 
+			Duration timeout = (Duration)target.get("timeout").get();
 
-			o = target.get("timeout").get();
-			Duration timeout = (Duration)o;
+			boolean keep_alive = (boolean)target.get("keepalive").get();
+			Scheduler.setKeepAlive(keep_alive);
 
 			try {
 				mainReactor.ifPresent(Reactor::run);

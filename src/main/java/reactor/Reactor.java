@@ -184,9 +184,9 @@ public class Reactor extends Declaration implements Runnable {
 
 		for (Reaction reaction : reactions)
 			for (Trigger trigger : reaction.getTriggers())
-				if (trigger instanceof Trigger.STARTUP)
+				if (trigger instanceof Trigger.STARTUP) {
 					Scheduler.addReactionTask(reaction);
-				else if (trigger instanceof  Timer timer) {
+				} else if (trigger instanceof  Timer timer) {
 					if (timer.period().isZero()) {
 						Scheduler.addScheduledReaction(reaction, timer.offset().toNanos());
 					} else {

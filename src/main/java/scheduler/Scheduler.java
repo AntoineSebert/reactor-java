@@ -10,6 +10,7 @@ public class Scheduler {
     private static ScheduledThreadPoolExecutor executorService;
 
     private static boolean timedTasks = false;
+    private static boolean keepAlive = false;
 
     private Scheduler() {
 
@@ -55,7 +56,7 @@ public class Scheduler {
     }
 
     public static void awaitTermination(long time, TimeUnit unit) throws InterruptedException {
-        if (timedTasks)
+        if (timedTasks || keepAlive)
             executorService.awaitTermination(time, unit);
         else
             while (!isEmpty());
@@ -71,6 +72,10 @@ public class Scheduler {
 
     public static boolean isEmpty() {
          return executorService.getActiveCount() == 0;
+    }
+
+    public static void setKeepAlive(boolean value) {
+        keepAlive = value;
     }
 
 
