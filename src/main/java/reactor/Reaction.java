@@ -54,10 +54,6 @@ public class Reaction implements Runnable {
 		return effects;
 	}
 
-	public Reactor self() {
-		return self;
-	}
-
 	/**
 	 * @return the target code
 	 */
@@ -81,8 +77,16 @@ public class Reaction implements Runnable {
 		return Optional.empty();
 	}
 
+	public long start() {
+		return start;
+	}
+
 	public void self(@NotNull Reactor self) {
 		this.self = self;
+	}
+
+	public Reactor self() {
+		return self;
 	}
 
 	/**
@@ -90,7 +94,7 @@ public class Reaction implements Runnable {
 	 */
 	@Override
 	public void run() {
-		start = Time.physical();
+		start = Time.logical();
 		targetCode.apply(self, this);
 	}
 
