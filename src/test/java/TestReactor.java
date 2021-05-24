@@ -103,7 +103,7 @@ public class TestReactor {
 										.triggers(new Trigger.STARTUP())
 										.effects()
 										.targetCode((reactor, reaction) -> {
-											((Input<Integer>)((Reactor) reaction.get("g").get()).get("x").get()).set(1);
+											((Input<Integer>) reactor.get(new String[]{"g", "x"}).get()).set(1);
 
 											return null;
 										})
@@ -121,12 +121,12 @@ public class TestReactor {
 				.targets(Target.Java)
 				.reactors((new Reactor.Builder("HelloWorld"))
 						.reactions((new Reaction.Builder())
+								.triggers(new Trigger.STARTUP())
 								.targetCode((reaction, self) -> {
 									System.out.println("Hello World.\n");
 
 									return null;
 								})
-								.triggers(new Trigger.STARTUP())
 								.build()
 						).build())
 				.build();
