@@ -6,10 +6,7 @@ import reactor.port.Output;
 import scheduler.Scheduler;
 
 import java.io.IOException;
-import java.time.temporal.TemporalUnit;
 import java.util.*;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Reactor extends Declaration implements Runnable {
 	protected String preamble;
@@ -17,10 +14,6 @@ public class Reactor extends Declaration implements Runnable {
 	private final HashMap<String, Declaration> declarations = new HashMap<>();
 	protected ArrayList<Reaction> reactions = new ArrayList<>();
 	private final HashSet<Statement> statements = new HashSet<>();
-
-	protected Map<Trigger, Reaction> pool = new HashMap<>();
-	protected Queue<Reaction> exec_q = new LinkedList<>();
-	AtomicBoolean in_exec_q = new AtomicBoolean(false);
 
 	public Reactor(@NotNull String name, @NotNull String preamble, @NotNull ArrayList<? extends Reaction> reactions,
 	               @NotNull Iterable<? extends Parameter<?>> params, @NotNull Iterable<? extends Declaration> declarations,
@@ -40,7 +33,7 @@ public class Reactor extends Declaration implements Runnable {
 		for (int i = 0; i < limit; i++) {
 			reactions.get(i).self(this);
 
-			for (Trigger t : reactions.get(i).getTriggers()) {
+			for (Trigger t : reactions.get(i).getTriggers().values()) {
 				TriggerObserver.addReactionMapEntry(t, reactions.get(i));
 			}
 
@@ -174,16 +167,12 @@ public class Reactor extends Declaration implements Runnable {
 	public void run() {
 		init();
 
-		for (Declaration decl : declarations.values())
-			if (decl instanceof Reactor reactor)
-				reactor.run();
-
 		for (Statement statement : statements)
 			if(statement instanceof Instantiation instance)
 				instance.reactor().ifPresent(Reactor::run);
 
 		for (Reaction reaction : reactions)
-			for (Trigger trigger : reaction.getTriggers())
+			for (Trigger trigger : reaction.getTriggers().values())
 				if (trigger instanceof Trigger.STARTUP)
 					Scheduler.addReactionTask(reaction);
 				else if (trigger instanceof  Timer timer) {
@@ -197,7 +186,7 @@ public class Reactor extends Declaration implements Runnable {
 
 	public void before_shutdown() {
 		for (Reaction reaction : reactions) {
-			for (Trigger trigger : reaction.getTriggers()) {
+			for (Trigger trigger : reaction.getTriggers().values()) {
 				if (trigger instanceof  Trigger.SHUTDOWN)
 					Scheduler.addReactionTask(reaction);
 			}
