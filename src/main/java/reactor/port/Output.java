@@ -18,15 +18,21 @@ public class Output<T> extends Declaration implements Port<T> {
 
 	/**
 	 * @param name name
-	 * @throws ExceptionInInitializerError if the name is empty or the width is less than 1
 	 */
 	public Output(@NotNull String name) {
 		super(name);
 	}
 
+	/*
+	TODO :
+	Reactions in a reactor may set an output value more than once at any instant of logical time, but only the last of
+	the values set will be sent on the output port.
+	 */
 	@Override
 	public void set(@NotNull T value) {
 		time = Time.logical();
+		this.value = Optional.of(value);
+
 		if (connection != null)
 			connection.set(value);
 	}
