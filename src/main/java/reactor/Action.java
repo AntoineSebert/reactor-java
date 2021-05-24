@@ -76,6 +76,10 @@ public class Action<T> extends Declaration implements Trigger {
 		last = timestamp;
 	}
 
+	@Override
+	public void ToLF(int lvl) {
+	}
+
 	public enum Type {
 		logical,
 		physical

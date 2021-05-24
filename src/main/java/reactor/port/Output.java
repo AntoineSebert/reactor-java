@@ -23,6 +23,10 @@ public class Output<T> extends Declaration implements Port<T> {
 		super(name);
 	}
 
+	@Override
+	public void ToLF(int lvl) {
+	}
+
 	/*
 	TODO :
 	Reactions in a reactor may set an output value more than once at any instant of logical time, but only the last of
