@@ -7,7 +7,7 @@ import java.util.concurrent.*;
 
 public class Scheduler {
 
-    private static ScheduledThreadPoolExecutor executorService = null;
+    private static ScheduledThreadPoolExecutor executorService;
 
     private Scheduler() {
 

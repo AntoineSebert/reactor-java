@@ -86,7 +86,6 @@ public record Program(HashSet<Target> targets, HashSet<Import> imports,
 
 
 	public void run() {
-
 		for (Target target : targets) {
 			Object o = target.get("threads").isPresent() ? target.get("threads").get() : 10;
 			int number_of_threads = 10;
