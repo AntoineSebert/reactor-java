@@ -8,7 +8,7 @@ import java.time.Duration;
  * Action specification class.
  * https://github.com/icyphy/lingua-franca/wiki/Language-Specification#action-declaration
  */
-public class Action<T> extends Declaration implements Trigger, Effect {
+public class Action<T> extends Declaration implements Trigger {
 	public static Duration TIME_PRECISION;
 	private final Type type;
 	private Policy policy;
