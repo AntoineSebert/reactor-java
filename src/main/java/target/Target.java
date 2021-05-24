@@ -74,9 +74,8 @@ public class Target {
 			throw new ExceptionInInitializerError("Timestamp precision cannot be zero");
 
 		for (Map.Entry<String, Object> param : params.entrySet())
-			if ("timeout".equals(param.getKey()))
-				if (param.getValue() == Duration.ZERO)
-					throw new ExceptionInInitializerError("Target parameter 'timeout' must be a non-zero timestamp with unit");
+			if ("timeout".equals(param.getKey()) && param.getValue() == Duration.ZERO)
+				throw new ExceptionInInitializerError("Target parameter 'timeout' must be a non-zero timestamp with unit");
 
 		this.name = name;
 		this.params = params;
