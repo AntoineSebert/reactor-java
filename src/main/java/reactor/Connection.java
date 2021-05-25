@@ -13,8 +13,8 @@ public class Connection<T> implements Statement {
 	private Duration after = Duration.ZERO;
 	private boolean physical;
 
-	public Connection(@NotNull String[] input_name, @NotNull String[] output_name) {
-		if(input_name.length == 0 || output_name.length == 0)
+	public Connection(@NotNull String input_name, @NotNull String output_name) {
+		if(input_name.isEmpty() || output_name.isEmpty())
 			throw new ExceptionInInitializerError("Connection must specify input and output");
 
 		this.input_name = input_name;
