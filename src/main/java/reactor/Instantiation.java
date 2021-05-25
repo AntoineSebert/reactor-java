@@ -40,4 +40,11 @@ public class Instantiation implements Statement {
 		if (o == null || getClass() != o.getClass()) return false;
 		return name.equals(((Instantiation) o).name);
 	}
+
+	public void ToLF(int lvl){
+		String instantiation = "\t".repeat(lvl) +
+				name + " = new " + reactor_name + "();";
+
+		System.out.println(instantiation);
+	}
 }

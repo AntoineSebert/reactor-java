@@ -71,4 +71,11 @@ public class Import {
 	public int hashCode() {
 		return reactors.hashCode();
 	}
+
+	public void toLF(int lvl){
+		for (Reactor r: reactors.values()){
+			String _import = "\t".repeat(lvl) +"Import " + r.name() +".lf;\n";
+			System.out.println(_import);
+		}
+	}
 }
