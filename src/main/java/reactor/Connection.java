@@ -77,13 +77,7 @@ public class Connection<T> implements Statement {
 			connection.append("\t");
 		}
 
-		for (String name: output_name){
-			connection.append(name).append(" -> ");
-		}
-
-		for (String name: input_name){
-			connection.append(name);
-		}
+		connection.append(output_name).append(" -> ").append(input_name);
 
 		System.out.println(connection);
 	}
