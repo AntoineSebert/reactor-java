@@ -9,8 +9,9 @@ public class Scheduler {
 
     private static ScheduledThreadPoolExecutor executorService;
 
-    private static boolean timedTasks = false;
-    private static boolean keepAlive = false;
+    private static boolean timedTasks;
+    private static boolean keepAlive;
+    private static volatile boolean aborted;
 
     private Scheduler() {
 
@@ -19,6 +20,9 @@ public class Scheduler {
     public static void createExecutorService(int number_of_threads) throws RuntimeException {
             if (executorService == null) {
                 executorService = (ScheduledThreadPoolExecutor) Executors.newScheduledThreadPool(number_of_threads);
+                timedTasks = false;
+                keepAlive = false;
+                aborted = false;
             }
 
     }
@@ -55,14 +59,25 @@ public class Scheduler {
         return false;
     }
 
-    public static void awaitTermination(long time, TimeUnit unit) throws InterruptedException {
-        if (timedTasks || keepAlive)
-            executorService.awaitTermination(time, unit);
-        else
-            while (!isEmpty());
+    public static void awaitTermination(long time, TimeUnit unit) throws RuntimeException {
+        try {
+            if (timedTasks || keepAlive)
+                executorService.awaitTermination(time, unit);
+            else {
+                while (!isEmpty()) {
+                    if (aborted) throw new InterruptedException();
+                };
+            }
+
+
+        } catch (InterruptedException e) {
+            throw new RuntimeException();
+        }
+
+
     }
 
-    public static void awaitTermination(){
+    public static void awaitTermination() throws RuntimeException {
             while (!isEmpty());
     }
 
@@ -78,6 +93,19 @@ public class Scheduler {
         keepAlive = value;
     }
 
+    public static void request_stop() {
+        executorService.shutdown();
+    }
 
+    public static void shutdown() {
+        executorService.shutdownNow();
+    }
+
+    public static void abort() {
+        System.out.println("Aborted");
+        aborted = true;
+        executorService.shutdownNow();
+        Thread.currentThread().interrupt();
+    }
 }
 
