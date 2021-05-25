@@ -42,7 +42,7 @@ public class ToLFTest {
                         .reactors((new Reactor.Builder("ToLFTest"))
                                 .declarations(x,y,out)
                                 .statements(
-                                        new Connection<Integer>(new String[]{"g.y"}, new String[]{"d.x"}),
+                                        new Connection<Integer>("g.y", "d.x"),
                                         new Instantiation("a", "HelloWorld"),
                                         new Instantiation("b", "HelloWorld")
                                 )
