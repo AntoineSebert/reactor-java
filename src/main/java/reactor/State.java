@@ -16,22 +16,15 @@ public class State<T> extends Declaration {
 	 */
 	public State(@NotNull String name, @NotNull T value) {
 		super(name);
-
 		this.value = value;
-	}
-
-	public State(@NotNull String name) {
-		super(name);
-
-		value = (T) new Object();
-	}
-
-	@Override
-	public void ToLF(int lvl) {
 	}
 
 	public State(@NotNull String name, @NotNull Parameter<? extends T> param) {
 		this(name, param.value());
+	}
+
+	@Override
+	public void ToLF(int lvl) {
 	}
 
 	/**
