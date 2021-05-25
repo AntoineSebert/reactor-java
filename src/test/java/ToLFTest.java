@@ -6,11 +6,16 @@ import reactor.port.Input;
 import reactor.port.Output;
 import target.Target;
 
+import java.time.Duration;
+
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 public class ToLFTest {
     @Test
     public void TestToLF(){
+
+        Duration duration = Duration.ofNanos(100);
+
         Program hello_world = (new Program.Builder())
                 .targets(Target.Java)
                 .reactors((new Reactor.Builder("HelloWorld"))
@@ -33,8 +38,11 @@ public class ToLFTest {
                                 .declarations(
                                         new Input<>("x", true),
                                         new Input<>("y", true),
-                                        new Output<Integer>("o")
+                                        new Output<Integer>("o"),
+                                        new State<>("a", 2),
+                                        new Timer("b", duration, duration)
                                 )
+                                .param("ParamTest", 2)
                                 .statements(
                                         new Connection<Integer>("g.y", "d.x"),
                                         new Instantiation("a", "HelloWorld"),
