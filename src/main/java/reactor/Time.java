@@ -3,7 +3,7 @@ package reactor;
 import java.time.Duration;
 
 public class Time {
-	static long logical;
+	private static long logical;
 
 	public static long physical() {
 		return System.nanoTime();
@@ -30,5 +30,9 @@ public class Time {
 
 	public static boolean has_passed(long old, Duration time) {
 		return time.plus(Duration.ofNanos(old)).toNanos() < physical();
+	}
+
+	public static void next() {
+		logical++;
 	}
 }
