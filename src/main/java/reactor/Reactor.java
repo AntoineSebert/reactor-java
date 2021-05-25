@@ -154,6 +154,9 @@ public class Reactor extends Declaration implements Runnable {
 		// lazy initialization
 		resolveStatements();
 
+		for(Reaction reaction : reactions)
+			reaction.init();
+
 		try {
 			if (!preamble.isEmpty())
 				Runtime.getRuntime().exec(preamble);

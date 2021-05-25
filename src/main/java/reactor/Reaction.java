@@ -68,7 +68,7 @@ public class Reaction implements Runnable {
 		this.self = self;
 	}
 
-	public void resolve() {
+	public void init() {
 		for(String name : trigger_names) {
 			if("STARTUP".equals(name)) {
 				triggers.put(name, new Trigger.STARTUP());
@@ -126,8 +126,6 @@ public class Reaction implements Runnable {
 	 */
 	@Override
 	public void run() {
-		resolve();
-
 		if (has_passed())
 			targetCode.apply(self, this);
 		else
