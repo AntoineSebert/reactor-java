@@ -25,6 +25,9 @@ public class Output<T> extends Declaration implements Port<T> {
 
 	@Override
 	public void ToLF(int lvl) {
+		String output = "\t".repeat(lvl) + getClass().getSimpleName() +
+				" " + name + ":" + name.getClass().getSimpleName()+";";
+		System.out.println(output);
 	}
 
 	@Override
