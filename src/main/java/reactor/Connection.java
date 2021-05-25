@@ -9,20 +9,19 @@ import java.time.Duration;
 public class Connection<T> implements Statement {
 	private Input<T> input;
 	private Output<T> output;
-	String[] input_name;
-	String[] output_name;
+	String input_name, output_name;
 	private Duration after = Duration.ZERO;
 	private boolean physical;
 
-	public Connection(@NotNull String[] input_name, @NotNull String[] output_name) {
-		if(input_name.length == 0 || output_name.length == 0)
+	public Connection(@NotNull String input_name, @NotNull String output_name) {
+		if(input_name.isEmpty() || output_name.isEmpty())
 			throw new ExceptionInInitializerError("Connection must specify input and output");
 
 		this.input_name = input_name;
 		this.output_name = output_name;
 	}
 
-	public boolean isInitialized() {
+	public boolean is_init() {
 		return input != null && output != null;
 	}
 

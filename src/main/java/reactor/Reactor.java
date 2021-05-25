@@ -122,7 +122,7 @@ public class Reactor extends Declaration implements Runnable {
 		List<? extends Connection<?>> connections = statements.stream()
 				.filter(s -> s instanceof Connection<?>)
 				.map(s -> (Connection<?>) s)
-				.filter(c -> !c.isInitialized())
+				.filter(c -> !c.is_init())
 				.toList();
 
 		for (Instantiation instance : instantiations)
@@ -133,21 +133,20 @@ public class Reactor extends Declaration implements Runnable {
 						"Could not find reactor '" + instance.reactor_name() + "' for instantiation of '" + instance.name() + "'");
 
 		for (Connection<?> connection : connections) {
-			var input_result = get(connection.input_name[0]);
+			var input_result = get(connection.input_name);
 
 			if (input_result.isPresent() && input_result.get() instanceof Input<?> input)
 				connection.input(input);
 			else
-				throw new ExceptionInInitializerError(
-						"Name '" + connection.input_name[0] + "' does not identify and Input");
+				throw new ExceptionInInitializerError("Name '" + connection.input_name + "' does not identify and Input");
 
-			var output_result = get(connection.output_name[0]);
+			var output_result = get(connection.output_name);
 
 			if (output_result.isPresent() && output_result.get() instanceof Output<?> output)
 				connection.output(output);
 			else
-				throw new ExceptionInInitializerError(
-						"Name '" + connection.output_name[0] + "' does not identify and Output");
+				throw new ExceptionInInitializerError("Name '" + connection.output_name + "' does not identify and Output");
+		}
 		}
 	}
 
@@ -174,7 +173,7 @@ public class Reactor extends Declaration implements Runnable {
 			for (Trigger trigger : reaction.getTriggers().values())
 				if (trigger instanceof Trigger.STARTUP) {
 					Scheduler.addReactionTask(reaction);
-				} else if (trigger instanceof  Timer timer) {
+				} else if (trigger instanceof Timer timer) {
 					if (timer.period().isZero()) {
 						Scheduler.addScheduledReaction(reaction, timer.offset().toNanos());
 					} else {
