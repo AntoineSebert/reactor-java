@@ -37,4 +37,9 @@ public class Parameter<T> {
 		if (o == null || getClass() != o.getClass()) return false;
 		return name.equals(((Parameter<?>) o).name);
 	}
+
+	public void ToLF(int lvl) {
+		String param = "\t".repeat(lvl) +"(" + name + ": " + value.getClass().getSimpleName() +"(" + value + "))";
+		System.out.print(param);
+	}
 }
