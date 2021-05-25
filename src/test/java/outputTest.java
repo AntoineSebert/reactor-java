@@ -2,7 +2,6 @@ import org.junit.jupiter.api.Test;
 import program.Program;
 import reactor.Reaction;
 import reactor.Reactor;
-import reactor.Trigger;
 import reactor.port.Input;
 import reactor.port.Output;
 import target.Target;
@@ -26,7 +25,7 @@ public class outputTest {
 											y.set(2);
 											return null;
 										})
-										.triggers(new Trigger.STARTUP())
+										.triggers("STARTUP")
 										.build()
 								).build())
 						.reactors((new Reactor.Builder("outputTest"))
@@ -43,7 +42,7 @@ public class outputTest {
 
 											return null;
 										})
-										.triggers(x, y)
+										.triggers("x", "y")
 										.build()
 								).build()
 						).build()

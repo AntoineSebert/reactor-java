@@ -2,9 +2,6 @@ import org.junit.jupiter.api.Test;
 import program.Program;
 import reactor.Reaction;
 import reactor.Reactor;
-import reactor.Trigger;
-import reactor.port.Input;
-import reactor.port.Output;
 import target.Target;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
@@ -22,7 +19,7 @@ public class StartupShutDownTest {
 
                                             return null;
                                         })
-                                        .triggers(new Trigger.STARTUP())
+                                        .triggers("STARTUP")
                                         .build()
                                 ).build())
                         .reactors((new Reactor.Builder("startupTest"))
@@ -33,7 +30,7 @@ public class StartupShutDownTest {
 
                                             return null;
                                         })
-                                        .triggers(new Trigger.SHUTDOWN())
+                                        .triggers("SHUTDOWN")
                                         .build()
                                 ).build()
         ,(new Reactor.Builder("shutdowntest"))
@@ -43,7 +40,7 @@ public class StartupShutDownTest {
                                     System.out.println("This should be printed first");
                                     return null;
                                 })
-                                .triggers(new Trigger.STARTUP())
+                                .triggers("STARTUP")
                                 .build()
                         ).build())
                         .build()

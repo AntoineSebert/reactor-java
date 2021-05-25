@@ -1,6 +1,7 @@
 package target;
 
 import org.jetbrains.annotations.NotNull;
+import reactor.Reactor;
 
 import java.lang.reflect.Type;
 import java.time.Duration;
@@ -74,9 +75,8 @@ public class Target {
 			throw new ExceptionInInitializerError("Timestamp precision cannot be zero");
 
 		for (Map.Entry<String, Object> param : params.entrySet())
-			if ("timeout".equals(param.getKey()))
-				if (param.getValue() == Duration.ZERO)
-					throw new ExceptionInInitializerError("Target parameter 'timeout' must be a non-zero timestamp with unit");
+			if ("timeout".equals(param.getKey()) && param.getValue() == Duration.ZERO)
+				throw new ExceptionInInitializerError("Target parameter 'timeout' must be a non-zero timestamp with unit");
 
 		this.name = name;
 		this.params = params;
@@ -122,6 +122,11 @@ public class Target {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
 		return name.equals(((Target) o).name);
+	}
+
+	public void toLF(int lvl) {
+		String target = "\t".repeat(lvl) +"Target " + name +";\n";
+		System.out.println(target);
 	}
 
 	public static class Builder {

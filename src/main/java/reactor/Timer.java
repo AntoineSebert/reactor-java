@@ -17,6 +17,10 @@ public class Timer extends Declaration implements Trigger {
 		super(name);
 	}
 
+	@Override
+	public void ToLF(int lvl) {
+	}
+
 	public Timer(@NotNull String name, @NotNull Duration period) {
 		super(name);
 

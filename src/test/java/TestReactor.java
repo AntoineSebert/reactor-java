@@ -4,7 +4,6 @@ import org.junit.jupiter.api.Test;
 import program.Program;
 import reactor.*;
 import reactor.port.Input;
-import reactor.port.Output;
 import target.Target;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
@@ -23,7 +22,7 @@ public class TestReactor {
 
 									return null;
 								})
-								.triggers(new Trigger.STARTUP())
+								.triggers("STARTUP")
 								.build()
 						).build())
 				.build()
@@ -43,11 +42,11 @@ public class TestReactor {
 								.declarations(new Input<Integer>("x"), new Input<Integer>("y"))
 								.reactions(
 										(new Reaction.Builder())
-												.triggers(new Output<>("y"))
-												.effects(new Output<>("y"))
-												.targetCode((self, reaction) -> {
-													((Output<Integer>) reaction.get("y").get()).set(
-															((Input<Integer>) reaction.get("x").get()).value()
+												.triggers("x")
+												.effects("y")
+												.targetCode((self, r) -> {
+													(r.e("y")).set(
+															((Input<Integer>) r.t("x")).value()
 																	* ((Parameter<Integer>) self.param("scale").get()).value()
 													);
 
@@ -63,9 +62,9 @@ public class TestReactor {
 								)
 								.reactions(
 										(new Reaction.Builder())
-												.triggers(new Output<>("y"))
-												.targetCode((self, reaction) -> {
-													Input<Integer> x = ((Input<Integer>) reaction.get("x").get());
+												.triggers("y")
+												.targetCode((self, r) -> {
+													Input<Integer> x = ((Input<Integer>) r.t("x"));
 
 													System.out.println("Received " + x.value() +".\n");
 													((State<Boolean>) self.get("received_value").get()).set(true);
@@ -79,7 +78,7 @@ public class TestReactor {
 												})
 												.build(),
 										(new Reaction.Builder())
-												.triggers(new Trigger.STARTUP())
+												.triggers("STARTUP")
 												.targetCode((self, reaction) -> {
 													if (((State<Boolean>) self.get("received_value").get()).get())
 														System.out.println("Test passes.\n");
@@ -96,14 +95,14 @@ public class TestReactor {
 						.statements(
 								new Instantiation("g", "Scale"),
 								new Instantiation("d", "Test"),
-								new Connection<Integer>(new String[]{"g", "y"}, new String[]{"d", "x"})
+								new Connection<Integer>("g.y", "d.x")
 						)
 						.reactions(
 								(new Reaction.Builder())
-										.triggers(new Trigger.STARTUP())
-										.effects()
-										.targetCode((reactor, reaction) -> {
-											((Input<Integer>)((Reactor) reaction.get("g").get()).get("x").get()).set(1);
+										.triggers("STARTUP")
+										.effects("g.x")
+										.targetCode((self, r) -> {
+											r.e("g.x").set(1);
 
 											return null;
 										})
@@ -121,12 +120,12 @@ public class TestReactor {
 				.targets(Target.Java)
 				.reactors((new Reactor.Builder("HelloWorld"))
 						.reactions((new Reaction.Builder())
+								.triggers("STARTUP")
 								.targetCode((reaction, self) -> {
 									System.out.println("Hello World.\n");
 
 									return null;
 								})
-								.triggers(new Trigger.STARTUP())
 								.build()
 						).build())
 				.build();

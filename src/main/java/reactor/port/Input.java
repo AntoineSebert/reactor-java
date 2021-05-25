@@ -20,6 +20,15 @@ public class Input<T> extends Declaration implements Port<T> {
 	public Input(@NotNull String name) {
 		super(name);
 	}
+
+	@Override
+	public void ToLF(int lvl) {
+
+		String input = "\t".repeat(lvl) + getClass().getSimpleName() +
+				" " + name + ":" + name.getClass().getSimpleName()+";";
+		System.out.println(input);
+	}
+
 	/**
 	 * @param name    name
 	 * @param mutable mutability
