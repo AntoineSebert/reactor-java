@@ -82,7 +82,7 @@ public class Reactor extends Declaration implements Runnable {
 				).reactor().get();
 		}
 		else
-			return ((Reactor) lookup(_name[0])).lookup(Arrays.toString(Arrays.copyOfRange(_name, 1, _name.length)));
+			return ((Reactor) lookup(_name[0])).lookup(String.join("", Arrays.copyOfRange(_name, 1, _name.length)));
 	}
 
 	public Parameter<?> param(@NotNull String name) {
