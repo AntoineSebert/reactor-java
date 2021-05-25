@@ -39,12 +39,12 @@ public class Scheduler {
         executorService.submit(reaction);
     }
 
-    public static void addScheduledReaction(@NotNull Reaction reaction,@NotNull long delay) {
+    public static void addScheduledReaction(@NotNull Reaction reaction, long delay) {
         timedTasks = true;
         executorService.schedule(reaction, delay, TimeUnit.NANOSECONDS);
     }
 
-    public static void addRepeatingReaction(@NotNull Reaction reaction,@NotNull long period, @NotNull long delay) {
+    public static void addRepeatingReaction(@NotNull Reaction reaction, long period, long delay) {
         timedTasks = true;
         executorService.scheduleAtFixedRate(reaction, delay, period, TimeUnit.NANOSECONDS);
     }
@@ -66,7 +66,7 @@ public class Scheduler {
             else {
                 while (!isEmpty()) {
                     if (aborted) throw new InterruptedException();
-                };
+                }
             }
 
 
