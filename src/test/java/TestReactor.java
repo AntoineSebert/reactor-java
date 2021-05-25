@@ -13,6 +13,7 @@ public class TestReactor {
 	@DisplayName("HelloWorld")
 	public void testHelloWorld() {
 		System.out.println("[testHelloWorld]");
+
 		assertDoesNotThrow(() -> (new Program.Builder())
 				.targets(Target.Java)
 				.mainReactor((new Reactor.Builder("Minimal"))
@@ -47,7 +48,7 @@ public class TestReactor {
 												.targetCode((self, r) -> {
 													(r.e("y")).set(
 															((Input<Integer>) r.t("x")).value()
-																	* ((Parameter<Integer>) self.param("scale").get()).value()
+																	* ((Parameter<Integer>) self.param("scale")).value()
 													);
 
 													return null;
@@ -67,7 +68,7 @@ public class TestReactor {
 													Input<Integer> x = ((Input<Integer>) r.t("x"));
 
 													System.out.println("Received " + x.value() +".\n");
-													((State<Boolean>) self.get("received_value").get()).set(true);
+													((State<Boolean>) self.lookup("received_value")).set(true);
 
 													if (x.value() != 2) {
 														System.out.println("ERROR: Expected 2!\n");
@@ -80,7 +81,7 @@ public class TestReactor {
 										(new Reaction.Builder())
 												.triggers("STARTUP")
 												.targetCode((self, reaction) -> {
-													if (((State<Boolean>) self.get("received_value").get()).get())
+													if (((State<Boolean>) self.lookup("received_value")).get())
 														System.out.println("Test passes.\n");
 													else
 														System.out.println("ERROR: No value received by Test reactor!\n");

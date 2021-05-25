@@ -78,43 +78,23 @@ public class Reaction implements Runnable {
 				continue;
 			}
 
-			var result = self.get(name);
-
-			if (result.isPresent()) {
-				if (result.get() instanceof Trigger t)
-					triggers.put(name, t);
-				else
-					throw new ExceptionInInitializerError("Name '" + name + "' does not identify a Trigger");
-			}
+			if (self.lookup(name) instanceof Trigger t)
+				triggers.put(name, t);
 			else
-				throw new ExceptionInInitializerError("Cannot find name '" + name + "' for Trigger");
+				throw new ExceptionInInitializerError("Name '" + name + "' does not identify a Trigger");
 		}
 
-		for(String name : use_names) {
-				var result = self.get(name);
+		for(String name : use_names)
+			if (self.lookup(name) instanceof Input<?> i)
+				uses.put(name, i);
+			else
+				throw new ExceptionInInitializerError("Name '" + name + "' does not identify an Use");
 
-				if (result.isPresent()) {
-					if (result.get() instanceof Input<?> i)
-						uses.put(name, i);
-					else
-						throw new ExceptionInInitializerError("Name '" + name + "' does not identify an Use");
-				}
-				else
-					throw new ExceptionInInitializerError("Cannot find name '" + name + "' for Use");
-			}
-
-		for (String name : effect_names) {
-				var result = self.get(name);
-
-				if (result.isPresent()) {
-					if (result.get() instanceof Port<?> port)
-						effects.put(name, port);
-					else
-						throw new ExceptionInInitializerError("Name '" + name + "' does not identify an Effect");
-				}
-				else
-					throw new ExceptionInInitializerError("Cannot find name '" + name + "' for Effect");
-			}
+		for (String name : effect_names)
+			if (self.lookup(name) instanceof Port<?> port)
+				effects.put(name, port);
+			else
+				throw new ExceptionInInitializerError("Name '" + name + "' does not identify an Effect");
 	}
 
 	public Reactor self() {

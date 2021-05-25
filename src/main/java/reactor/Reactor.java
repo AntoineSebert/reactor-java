@@ -65,38 +65,28 @@ public class Reactor extends Declaration implements Runnable {
 		return params;
 	}
 
-	public Optional<? extends Declaration> get(@NotNull String name) {
-		if (declarations.containsKey(name))
-			return Optional.of(declarations.get(name));
-		else
-			for (Statement s : statements)
-				if (s instanceof Instantiation i && i.name.equals(name))
-					return i.reactor();
+	public Declaration lookup(@NotNull String name) {
+		if (name.isEmpty())
+			throw new RuntimeException("Cannot lookup empty name");
 
-		return Optional.empty();
-	}
+		var _name = name.split("\\.");
 
-	public Optional<? extends Declaration> get(@NotNull String[] name) {
-		switch (name.length) {
-			case 0:
-				throw new RuntimeException("Cannot lookup empty name");
-			case 1:
-				return get(name[0]);
-			default:
-				var result = get(name[0]);
-
-				if (result.isPresent()) {
-					if (result.get() instanceof Reactor r)
-						return r.get(Arrays.copyOfRange(name, 1, name.length));
-					else
-						return result;
-				} else
-					return Optional.empty();
+		if (_name.length == 1) {
+			if (declarations.containsKey(name))
+				return declarations.get(name);
+			else
+				return ((Instantiation) statements.stream()
+						.filter(s -> s instanceof Instantiation i && i.name.equals(name))
+						.findFirst()
+						.get()
+				).reactor().get();
 		}
+		else
+			return ((Reactor) lookup(_name[0])).lookup(Arrays.toString(Arrays.copyOfRange(_name, 1, _name.length)));
 	}
 
-	public Optional<Parameter<?>> param(@NotNull String name) {
-		return Optional.ofNullable(params.getOrDefault(name, null));
+	public Parameter<?> param(@NotNull String name) {
+		return params.get(name);
 	}
 
 	/**
@@ -133,16 +123,16 @@ public class Reactor extends Declaration implements Runnable {
 						"Could not find reactor '" + instance.reactor_name() + "' for instantiation of '" + instance.name() + "'");
 
 		for (Connection<?> connection : connections) {
-			var input_result = get(connection.input_name);
+			var input_result = lookup(connection.input_name);
 
-			if (input_result.isPresent() && input_result.get() instanceof Input<?> input)
+			if (input_result instanceof Input<?> input)
 				connection.input(input);
 			else
 				throw new ExceptionInInitializerError("Name '" + connection.input_name + "' does not identify and Input");
 
-			var output_result = get(connection.output_name);
+			var output_result = lookup(connection.output_name);
 
-			if (output_result.isPresent() && output_result.get() instanceof Output<?> output)
+			if (output_result instanceof Output<?> output)
 				connection.output(output);
 			else
 				throw new ExceptionInInitializerError("Name '" + connection.output_name + "' does not identify and Output");
