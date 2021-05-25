@@ -17,7 +17,7 @@ public class AbnormalExecution {
                         .mainReactor((new Reactor.Builder("Minimal"))
                                 .reactions((new Reaction.Builder())
                                         .targetCode((self, reaction) -> {
-                                            //Scheduler.abort();
+                                            Scheduler.abort();
                                             System.out.println("This should not be printed");
 
                                             return null;

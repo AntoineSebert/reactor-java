@@ -126,7 +126,7 @@ public class Reaction implements Runnable {
 	 */
 	@Override
 	public void run() {
-		if (has_passed())
+		if (!has_passed())
 			targetCode.apply(self, this);
 		else
 			deadline.get().handler().apply(self, this);

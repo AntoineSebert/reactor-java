@@ -147,7 +147,7 @@ public class Reactor extends Declaration implements Runnable {
 			else
 				throw new ExceptionInInitializerError("Name '" + connection.output_name + "' does not identify and Output");
 		}
-		}
+
 	}
 
 	protected void init() {

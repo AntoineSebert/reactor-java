@@ -12,7 +12,6 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 public class ScheduledTaskTest {
     @Test
     public void testShutdownAndStartup() {
-        Timer t = new Timer("t", Duration.ofSeconds(1),Duration.ofSeconds(1));
         assertDoesNotThrow(
                 () -> (new Program.Builder())
                         .targets(Target.Java)
@@ -26,7 +25,7 @@ public class ScheduledTaskTest {
                                         .build()
                                 ).build())
                         .reactors((new Reactor.Builder("startupTest"))
-                                        .declarations()
+                                        .declarations(new Timer("t", Duration.ofSeconds(1), Duration.ofSeconds(1)))
                                         .reactions((new Reaction.Builder())
                                                 .targetCode((self, reaction) -> {
                                                     System.out.println("This should be fired every second");

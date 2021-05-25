@@ -6,7 +6,6 @@ import reactor.Action;
 import reactor.Reactor;
 import scheduler.Scheduler;
 import target.Target;
-
 import java.time.Duration;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
@@ -96,15 +95,14 @@ public record Program(HashSet<Target> targets, HashSet<Import> imports,
 			boolean keep_alive = (boolean)target.get("keepalive").get();
 			Scheduler.setKeepAlive(keep_alive);
 
+			long start_time = System.nanoTime();
 			try {
+
 				mainReactor.ifPresent(Reactor::run);
 				for (Reactor reactor : reactors)
 					reactor.run();
 
-
 				Scheduler.awaitTermination(timeout.toNanos(), TimeUnit.NANOSECONDS);
-
-
 
 			} catch (RuntimeException e) {
 				System.out.println("Abnormal shutdown order caught");
@@ -116,7 +114,10 @@ public record Program(HashSet<Target> targets, HashSet<Import> imports,
 			Scheduler.shutDown();
 			Scheduler.awaitTermination();
 
+			long end_time = System.nanoTime() - start_time;
 
+			System.out.println();
+			System.out.println("Execution time of test took " + end_time / 1000000 + " milliseconds");
 
 		}
 
