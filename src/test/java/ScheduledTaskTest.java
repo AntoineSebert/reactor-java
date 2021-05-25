@@ -25,7 +25,7 @@ public class ScheduledTaskTest {
                                         .build()
                                 ).build())
                         .reactors((new Reactor.Builder("startupTest"))
-                                        .declarations(new Timer("t", Duration.ofSeconds(1), Duration.ofSeconds(1)))
+                                        .declarations(new Timer("t", Duration.ofSeconds(1),Duration.ofSeconds(1)))
                                         .reactions((new Reaction.Builder())
                                                 .targetCode((self, reaction) -> {
                                                     System.out.println("This should be fired every second");

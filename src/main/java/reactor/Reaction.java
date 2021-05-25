@@ -162,14 +162,14 @@ public class Reaction implements Runnable {
 		private HashSet<String> use_names = new HashSet<>();
 		private HashSet<String> effect_names = new HashSet<>();
 		private BiFunction<Reactor, Reaction, Void> targetCode = (reactor, reaction) -> null;
-		private Deadline deadline = new Deadline(Duration.ZERO, (self, r) -> null);
+		private Optional<Deadline> deadline = Optional.empty();
 
 		public Reaction build() {
-			return new Reaction(trigger_names, use_names, effect_names, targetCode, Optional.of(deadline));
+			return new Reaction(trigger_names, use_names, effect_names, targetCode, deadline);
 		}
 
 		public Builder deadline(@NotNull Deadline deadline) {
-			this.deadline = deadline;
+			this.deadline = Optional.of(deadline);
 
 			return this;
 		}
