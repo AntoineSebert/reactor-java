@@ -32,6 +32,7 @@ public class Reaction implements Runnable {
 		this.effect_names = effect_names;
 		this.targetCode = targetCode;
 		this.deadline = deadline;
+		this.timestamp = -1;
 	}
 
 	/**

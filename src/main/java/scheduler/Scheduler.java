@@ -17,7 +17,7 @@ public class Scheduler {
 
     }
 
-    public static void createExecutorService(int number_of_threads) throws RuntimeException {
+    public static void createExecutorService(int number_of_threads) {
             if (executorService == null) {
                 executorService = (ScheduledThreadPoolExecutor) Executors.newScheduledThreadPool(number_of_threads);
                 timedTasks = false;
@@ -27,15 +27,8 @@ public class Scheduler {
 
     }
 
-    public static void resetExecutorService() {
-        executorService = null;
-    }
 
-    public static ExecutorService getScheduler() {
-        return executorService;
-    }
-
-    public static void addReactionTask(@NotNull Reaction reaction) {
+    public static void addReactionTask(@NotNull Runnable reaction) {
         executorService.submit(reaction);
     }
 
@@ -60,9 +53,10 @@ public class Scheduler {
     }
 
     public static void awaitTermination(long time, TimeUnit unit) throws RuntimeException {
+        boolean termination_results;  // Might be used
         try {
             if (timedTasks || keepAlive)
-                executorService.awaitTermination(time, unit);
+                termination_results = executorService.awaitTermination(time, unit);
             else {
                 while (!isEmpty()) {
                     if (aborted) throw new InterruptedException();
@@ -81,7 +75,7 @@ public class Scheduler {
         try {
             executorService.awaitTermination(Long.MAX_VALUE, TimeUnit.MILLISECONDS);
         } catch (InterruptedException e) {
-
+            e.printStackTrace();
         }
     }
 

@@ -118,7 +118,7 @@ public record Program(HashSet<Target> targets, HashSet<Import> imports,
 			long end_time = System.nanoTime() - start_time;
 
 			System.out.println();
-			System.out.println("Logical execution time of test took " + Time.logical() + " units");
+			System.out.println("Logical execution time of test took " + Time.logical() + " time units");
 			System.out.println("Execution time of test took " + end_time / 1000000 + " milliseconds");
 
 		}

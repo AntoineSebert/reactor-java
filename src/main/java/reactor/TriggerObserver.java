@@ -11,7 +11,7 @@ public class TriggerObserver  {
 
     public static void update(Trigger trigger) {
         Reaction reaction = reactionMap.get(trigger);
-        if (reaction != null && !Scheduler.inQueue(reaction)) {
+        if (reaction.can_trigger()) {
             reaction.timestamp(trigger.timestamp());
             Scheduler.addReactionTask(reaction);
         }
