@@ -11,7 +11,7 @@ import java.time.Duration;
 public class Timer extends Declaration implements Trigger {
 	private Duration period = Duration.ZERO;
 	private Duration offset = Duration.ZERO;
-	private long time = Time.logical();
+	private final long time = Time.logical();
 
 	public Timer(@NotNull String name) {
 		super(name);
