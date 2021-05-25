@@ -104,15 +104,19 @@ public record Program(HashSet<Target> targets, HashSet<Import> imports,
 
 				Scheduler.awaitTermination(timeout.toNanos(), TimeUnit.NANOSECONDS);
 
-			} catch (InterruptedException e) {
 
+
+			} catch (RuntimeException e) {
+				System.out.println("Abnormal shutdown order caught");
+				return;
 			}
 
 			for (Reactor reactor : reactors)
 				reactor.before_shutdown();
-
 			Scheduler.shutDown();
 			Scheduler.awaitTermination();
+
+
 
 		}
 

@@ -11,6 +11,7 @@ public class Scheduler {
 
     private static boolean timedTasks = false;
     private static boolean keepAlive = false;
+    private static volatile boolean aborted = false;
 
     private Scheduler() {
 
@@ -55,14 +56,26 @@ public class Scheduler {
         return false;
     }
 
-    public static void awaitTermination(long time, TimeUnit unit) throws InterruptedException {
-        if (timedTasks || keepAlive)
-            executorService.awaitTermination(time, unit);
-        else
-            while (!isEmpty());
+    public static void awaitTermination(long time, TimeUnit unit) throws RuntimeException {
+        try {
+            if (timedTasks || keepAlive)
+                executorService.awaitTermination(time, unit);
+            else {
+                System.out.println("waiting");
+                while (!isEmpty()){
+                    if (aborted) throw new InterruptedException();
+                };
+            }
+
+
+        } catch (InterruptedException e) {
+            throw new RuntimeException();
+        }
+
+
     }
 
-    public static void awaitTermination(){
+    public static void awaitTermination() throws RuntimeException {
             while (!isEmpty());
     }
 
@@ -78,6 +91,19 @@ public class Scheduler {
         keepAlive = value;
     }
 
+    public static void request_stop() {
+        executorService.shutdown();
+    }
 
+    public static void shutdown() {
+        executorService.shutdownNow();
+    }
+
+    public static void abort() {
+        System.out.println("Aborted");
+        aborted = true;
+        executorService.shutdownNow();
+        Thread.currentThread().stop();
+    }
 }
 
