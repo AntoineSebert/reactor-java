@@ -33,10 +33,6 @@ public class Reactor extends Declaration implements Runnable {
 		for (int i = 0; i < limit; i++) {
 			reactions.get(i).self(this);
 
-			for (Trigger t : reactions.get(i).getTriggers().values()) {
-				TriggerObserver.addReactionMapEntry(t, reactions.get(i));
-			}
-
 			this.reactions.add(reactions.get(i));
 		}
 
@@ -147,12 +143,20 @@ public class Reactor extends Declaration implements Runnable {
 		for(Reaction reaction : reactions)
 			reaction.init();
 
+		int limit = reactions.size();
+		for (int i = 0; i < limit; i++) {
+			for (Trigger t : reactions.get(i).getTriggers().values()) {
+				TriggerObserver.addReactionMapEntry(t, reactions.get(i));
+			}
+		}
+
 		try {
 			if (!preamble.isEmpty())
 				Runtime.getRuntime().exec(preamble);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+
 	}
 
 	public void run() {

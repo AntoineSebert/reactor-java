@@ -19,7 +19,8 @@ public class outputTest {
 								.reactions((new Reaction.Builder())
 										.targetCode((self, reaction) -> {
 											reaction.e("outputTest.y").set(1);
-											reaction.e("outputTest.x").set(1);
+											reaction.e("outputTest.x").set(2);
+
 											return null;
 										})
 										.triggers("STARTUP")
@@ -34,9 +35,8 @@ public class outputTest {
 											int result = 0;
 											if (((Input<?>) self.lookup("x")).isPresent()) result += ((Input<Integer>) self.lookup("x")).value();
 											if (((Input<?>) self.lookup("y")).isPresent()) result += ((Input<Integer>) self.lookup("y")).value();
-											((Input<Integer>) self.lookup("o")).set(result);
-											System.out.println(result);
-											System.out.println(((Input<Integer>) self.lookup("o")).value());
+											((Output<Integer>) self.lookup("o")).set(result);
+											System.out.println(((Output<Integer>) self.lookup("o")).value());
 
 											return null;
 										})

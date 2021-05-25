@@ -1,9 +1,7 @@
 package reactor.port;
 
 import org.jetbrains.annotations.NotNull;
-import reactor.Connection;
-import reactor.Declaration;
-import reactor.Time;
+import reactor.*;
 
 import java.util.Optional;
 
@@ -60,6 +58,7 @@ public class Input<T> extends Declaration implements Port<T> {
 	private void _set(@NotNull T value) {
 		if (mutable) {
 			this.value = Optional.of(value);
+			TriggerObserver.update(this);
 		} else
 			throw new RuntimeException("Cannot modify an immutable type");
 	}
