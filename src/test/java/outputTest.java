@@ -17,11 +17,9 @@ public class outputTest {
 						.targets(Target.Java)
 						.mainReactor((new Reactor.Builder("Minimal"))
 								.reactions((new Reaction.Builder())
-										.targetCode((self, reaction) -> {
-											reaction.e("outputTest.y").set(1);
-											reaction.e("outputTest.x").set(2);
-
-											return null;
+										.targetCode((self, r) -> {
+											r.e("outputTest.y").set(1);
+											r.e("outputTest.x").set(2);
 										})
 										.triggers("STARTUP")
 										.effects("outputTest.x", "outputTest.y")
@@ -31,14 +29,12 @@ public class outputTest {
 								.declarations(new Input<>("x", true), new Input<>("y", true), new Output<>("o"))
 								.statements()
 								.reactions((new Reaction.Builder())
-										.targetCode((self, reaction) -> {
+										.targetCode((self, r) -> {
 											int result = 0;
 											if (((Input<?>) self.lookup("x")).isPresent()) result += ((Input<Integer>) self.lookup("x")).value();
 											if (((Input<?>) self.lookup("y")).isPresent()) result += ((Input<Integer>) self.lookup("y")).value();
 											((Output<Integer>) self.lookup("o")).set(result);
 											System.out.println(((Output<Integer>) self.lookup("o")).value());
-
-											return null;
 										})
 										.triggers("x", "y")
 										.build()

@@ -6,7 +6,7 @@ import reactor.port.Port;
 
 import java.time.Duration;
 import java.util.*;
-import java.util.function.BiFunction;
+import java.util.function.BiConsumer;
 
 /**
  * Reaction specification class.
@@ -20,12 +20,12 @@ public class Reaction implements Runnable {
 	private HashSet<String> use_names;
 	private HashMap<String, Port<?>> effects = new HashMap<>();
 	private HashSet<String> effect_names;
-	private final BiFunction<Reactor, Reaction, Void> targetCode;
+	private final BiConsumer<Reactor, Reaction> targetCode;
 	private final Optional<Deadline> deadline;
 	private long timestamp;
 	
 	public Reaction(@NotNull HashSet<String> trigger_names, @NotNull HashSet<String> use_names,
-	                @NotNull HashSet<String> effect_names, @NotNull BiFunction<Reactor, Reaction, Void> targetCode,
+	                @NotNull HashSet<String> effect_names, @NotNull BiConsumer<Reactor, Reaction> targetCode,
 	                @NotNull Optional<Deadline> deadline) {
 		this.trigger_names = trigger_names;
 		this.use_names = use_names;
@@ -110,10 +110,10 @@ public class Reaction implements Runnable {
 	 */
 	@Override
 	public void run() {
-		if (!has_passed())
-			targetCode.apply(self, this);
+		if (has_passed())
+			deadline.get().handler().accept(self, this);
 		else
-			deadline.get().handler().apply(self, this);
+			targetCode.accept(self, this);
 	}
 
 	public Optional<Deadline> deadline() {
@@ -145,7 +145,7 @@ public class Reaction implements Runnable {
 		private HashSet<String> trigger_names = new HashSet<>();
 		private HashSet<String> use_names = new HashSet<>();
 		private HashSet<String> effect_names = new HashSet<>();
-		private BiFunction<Reactor, Reaction, Void> targetCode = (reactor, reaction) -> null;
+		private BiConsumer<Reactor, Reaction> targetCode = (reactor, reaction) -> {};
 		private Optional<Deadline> deadline = Optional.empty();
 
 		public Reaction build() {
@@ -176,7 +176,7 @@ public class Reaction implements Runnable {
 			return this;
 		}
 
-		public Builder targetCode(@NotNull BiFunction<Reactor, Reaction, Void> targetCode) {
+		public Builder targetCode(@NotNull BiConsumer<Reactor, Reaction> targetCode) {
 			this.targetCode = targetCode;
 
 			return this;

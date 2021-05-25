@@ -15,34 +15,23 @@ public class StartupShutDownTest {
                         .targets(Target.Java)
                         .mainReactor((new Reactor.Builder("Minimal"))
                                 .reactions((new Reaction.Builder())
-                                        .targetCode((self, reaction) -> {
-
-                                            return null;
-                                        })
                                         .triggers("STARTUP")
                                         .build()
                                 ).build())
                         .reactors((new Reactor.Builder("startupTest"))
                                 .declarations()
                                 .reactions((new Reaction.Builder())
-                                        .targetCode((self, reaction) -> {
-                                            System.out.println("This should be printed second");
-
-                                            return null;
-                                        })
+                                        .targetCode((self, reaction) -> System.out.println("This should be printed second"))
                                         .triggers("SHUTDOWN")
                                         .build()
-                                ).build()
-        ,(new Reactor.Builder("shutdowntest"))
-                        .declarations()
-                        .reactions((new Reaction.Builder())
-                                .targetCode((self, reaction) -> {
-                                    System.out.println("This should be printed first");
-                                    return null;
-                                })
-                                .triggers("STARTUP")
-                                .build()
-                        ).build())
+                                ).build(),
+                                (new Reactor.Builder("shutdowntest"))
+                                .declarations()
+                                .reactions((new Reaction.Builder())
+                                        .targetCode((self, reaction) -> System.out.println("This should be printed first"))
+                                        .triggers("STARTUP")
+                                        .build()
+                                ).build())
                         .build()
                         .run()
         );

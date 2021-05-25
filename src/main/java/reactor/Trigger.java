@@ -1,6 +1,5 @@
 package reactor;
 
-
 /**
  * reactor.Trigger specification class, either Timer, Action, Output or Input.
  * https://github.com/icyphy/lingua-franca/wiki/Language-Specification#reaction-declaration

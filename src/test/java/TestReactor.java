@@ -18,11 +18,7 @@ public class TestReactor {
 				.targets(Target.Java)
 				.mainReactor((new Reactor.Builder("Minimal"))
 						.reactions((new Reaction.Builder())
-								.targetCode((self, r) -> {
-									System.out.println("Hello World.\n");
-
-									return null;
-								})
+								.targetCode((self, r) -> System.out.println("Hello World.\n"))
 								.triggers("STARTUP")
 								.build()
 						).build())
@@ -45,14 +41,10 @@ public class TestReactor {
 										(new Reaction.Builder())
 												.triggers("x")
 												.effects("y")
-												.targetCode((self, r) -> {
-													(r.e("y")).set(
-															((Input<Integer>) r.t("x")).value()
-																	* ((Parameter<Integer>) self.param("scale")).value()
-													);
-
-													return null;
-												})
+												.targetCode((self, r) -> (r.e("y")).set(
+														((Input<Integer>) r.t("x")).value()
+																* ((Parameter<Integer>) self.param("scale")).value()
+												))
 												.build()
 								)
 								.build(),
@@ -74,8 +66,6 @@ public class TestReactor {
 														System.out.println("ERROR: Expected 2!\n");
 														System.exit(1);
 													}
-
-													return null;
 												})
 												.build(),
 										(new Reaction.Builder())
@@ -85,8 +75,6 @@ public class TestReactor {
 														System.out.println("Test passes.\n");
 													else
 														System.out.println("ERROR: No value received by Test reactor!\n");
-
-													return null;
 												})
 												.build()
 								)
@@ -102,11 +90,7 @@ public class TestReactor {
 								(new Reaction.Builder())
 										.triggers("STARTUP")
 										.effects("g.x")
-										.targetCode((self, r) -> {
-											r.e("g.x").set(1);
-
-											return null;
-										})
+										.targetCode((self, r) -> r.e("g.x").set(1))
 										.build()
 						)
 						.build())
@@ -122,11 +106,7 @@ public class TestReactor {
 				.reactors((new Reactor.Builder("HelloWorld"))
 						.reactions((new Reaction.Builder())
 								.triggers("STARTUP")
-								.targetCode((reaction, self) -> {
-									System.out.println("Hello World.\n");
-
-									return null;
-								})
+								.targetCode((reaction, self) -> System.out.println("Hello World.\n"))
 								.build()
 						).build())
 				.build();
