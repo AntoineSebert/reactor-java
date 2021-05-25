@@ -123,7 +123,7 @@ public class Reactor extends Declaration implements Runnable {
 		List<? extends Connection<?>> connections = statements.stream()
 				.filter(s -> s instanceof Connection<?>)
 				.map(s -> (Connection<?>) s)
-				.filter(c -> !c.isInitialized())
+				.filter(c -> !c.is_init())
 				.toList();
 
 		for (Instantiation instance : instantiations)

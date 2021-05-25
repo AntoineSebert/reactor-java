@@ -9,8 +9,7 @@ import java.time.Duration;
 public class Connection<T> implements Statement {
 	private Input<T> input;
 	private Output<T> output;
-	String[] input_name;
-	String[] output_name;
+	String input_name, output_name;
 	private Duration after = Duration.ZERO;
 	private boolean physical;
 
@@ -22,7 +21,7 @@ public class Connection<T> implements Statement {
 		this.output_name = output_name;
 	}
 
-	public boolean isInitialized() {
+	public boolean is_init() {
 		return input != null && output != null;
 	}
 
