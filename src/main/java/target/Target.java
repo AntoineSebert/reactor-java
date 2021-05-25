@@ -123,7 +123,19 @@ public class Target {
 	}
 
 	public void toLF(int lvl) {
-		String target = "\t".repeat(lvl) +"Target " + name +";\n";
+
+		StringBuilder target = new StringBuilder("\t".repeat(lvl) +"Target " + name);
+
+		if(params.isEmpty()) {
+			target.append(";\n");
+		} else {
+			target.append(" { \n");
+			for (Map.Entry<String, Object> entry : params.entrySet()) {
+				target.append("\t").append(entry.getKey()).append(" : ").append(entry.getValue()).append(",\n");
+			}
+			target.append("};\n");
+		}
+
 		System.out.println(target);
 	}
 
