@@ -7,12 +7,12 @@ package reactor;
 public interface Trigger {
 	long timestamp();
 
-	default boolean isStartup(Trigger t) {
-		return t instanceof STARTUP;
+	default boolean isStartup() {
+		return this instanceof STARTUP;
 	}
 
-	default boolean isShudown(Trigger t) {
-		return t instanceof SHUTDOWN;
+	default boolean isShutdown() {
+		return this instanceof SHUTDOWN;
 	}
 
 	class STARTUP implements Trigger {
