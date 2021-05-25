@@ -60,6 +60,10 @@ public class Reaction implements Runnable {
 		return timestamp;
 	}
 
+	public boolean can_trigger() {
+		return timestamp < Time.logical();
+	}
+
 	public void timestamp(long timestamp) {
 		this.timestamp = timestamp;
 	}
