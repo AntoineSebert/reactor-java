@@ -10,19 +10,19 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 public class AbnormalExecution {
     @Test
-    public void InputTests(){
+    public void AbnormalExecution(){
         assertDoesNotThrow(
                 () -> (new Program.Builder())
                         .targets(Target.Java)
                         .mainReactor((new Reactor.Builder("Minimal"))
                                 .reactions((new Reaction.Builder())
                                         .targetCode((self, reaction) -> {
-                                            Scheduler.abort();
+                                            //Scheduler.abort();
                                             System.out.println("This should not be printed");
 
                                             return null;
                                         })
-                                        .triggers(new Trigger.STARTUP())
+                                        .triggers("STARTUP")
                                         .build()
                                 ).build()
                         )

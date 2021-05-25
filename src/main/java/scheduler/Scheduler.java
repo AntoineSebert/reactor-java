@@ -9,9 +9,9 @@ public class Scheduler {
 
     private static ScheduledThreadPoolExecutor executorService;
 
-    private static boolean timedTasks = false;
-    private static boolean keepAlive = false;
-    private static volatile boolean aborted = false;
+    private static boolean timedTasks;
+    private static boolean keepAlive;
+    private static volatile boolean aborted;
 
     private Scheduler() {
 
@@ -20,6 +20,9 @@ public class Scheduler {
     public static void createExecutorService(int number_of_threads) throws RuntimeException {
             if (executorService == null) {
                 executorService = (ScheduledThreadPoolExecutor) Executors.newScheduledThreadPool(number_of_threads);
+                timedTasks = false;
+                keepAlive = false;
+                aborted = false;
             }
 
     }
@@ -61,8 +64,7 @@ public class Scheduler {
             if (timedTasks || keepAlive)
                 executorService.awaitTermination(time, unit);
             else {
-                System.out.println("waiting");
-                while (!isEmpty()){
+                while (!isEmpty()) {
                     if (aborted) throw new InterruptedException();
                 };
             }
@@ -103,7 +105,7 @@ public class Scheduler {
         System.out.println("Aborted");
         aborted = true;
         executorService.shutdownNow();
-        Thread.currentThread().stop();
+        Thread.currentThread().interrupt();
     }
 }
 
