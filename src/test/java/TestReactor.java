@@ -17,7 +17,7 @@ public class TestReactor {
 				.targets(Target.Java)
 				.mainReactor((new Reactor.Builder("Minimal"))
 						.reactions((new Reaction.Builder())
-								.targetCode((reaction, self) -> {
+								.targetCode((self, r) -> {
 									System.out.println("Hello World.\n");
 
 									return null;
