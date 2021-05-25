@@ -32,12 +32,12 @@ public class Scheduler {
         executorService.submit(reaction);
     }
 
-    public static void addScheduledReaction(@NotNull Reaction reaction, long delay) {
+    public static void addScheduledReaction(@NotNull Runnable reaction, long delay) {
         timedTasks = true;
         executorService.schedule(reaction, delay, TimeUnit.NANOSECONDS);
     }
 
-    public static void addRepeatingReaction(@NotNull Reaction reaction, long period, long delay) {
+    public static void addRepeatingReaction(@NotNull Runnable reaction, long period, long delay) {
         timedTasks = true;
         executorService.scheduleAtFixedRate(reaction, delay, period, TimeUnit.NANOSECONDS);
     }
