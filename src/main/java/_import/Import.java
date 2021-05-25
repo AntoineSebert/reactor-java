@@ -29,8 +29,7 @@ public class Import {
 
 	public Import(@NotNull Program program, @NotNull Map<String/*name*/, String/*alias*/> aliasing) {
 		if (aliasing.isEmpty())
-			for (Reactor r : program.getReactors())
-				reactors.put(r.name(), r);
+			program.getReactors().forEach(r -> reactors.put(r.name(), r));
 		else {
 			Set<String> dups = findDuplicates(aliasing.values());
 
