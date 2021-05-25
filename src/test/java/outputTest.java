@@ -9,9 +9,6 @@ import target.Target;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 public class outputTest {
-	Input<Integer> x = new Input<>("x", true);
-	Input<Integer> y = new Input<>("y", true);
-	Output<Integer> out = new Output<>("o");
 	@Test
 	public void testOutputTest() {
 
@@ -21,24 +18,25 @@ public class outputTest {
 						.mainReactor((new Reactor.Builder("Minimal"))
 								.reactions((new Reaction.Builder())
 										.targetCode((self, reaction) -> {
-											x.set(1);
-											y.set(2);
+											reaction.e("outputTest.y").set(1);
+											reaction.e("outputTest.x").set(1);
 											return null;
 										})
 										.triggers("STARTUP")
+										.effects("outputTest.x", "outputTest.y")
 										.build()
 								).build())
 						.reactors((new Reactor.Builder("outputTest"))
-								.declarations(x, y, out)
+								.declarations(new Input<>("x", true), new Input<>("y", true), new Output<>("o"))
 								.statements()
 								.reactions((new Reaction.Builder())
 										.targetCode((self, reaction) -> {
 											int result = 0;
-											if (x.isPresent()) result += x.value();
-											if (y.isPresent()) result += y.value();
-											out.set(result);
+											if (((Input<?>) self.lookup("x")).isPresent()) result += ((Input<Integer>) self.lookup("x")).value();
+											if (((Input<?>) self.lookup("y")).isPresent()) result += ((Input<Integer>) self.lookup("y")).value();
+											((Input<Integer>) self.lookup("o")).set(result);
 											System.out.println(result);
-											System.out.println(out.value());
+											System.out.println(((Input<Integer>) self.lookup("o")).value());
 
 											return null;
 										})

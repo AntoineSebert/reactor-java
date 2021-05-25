@@ -105,7 +105,7 @@ public record Program(HashSet<Target> targets, HashSet<Import> imports,
 				Scheduler.awaitTermination(timeout.toNanos(), TimeUnit.NANOSECONDS);
 
 			} catch (RuntimeException e) {
-				System.out.println("Abnormal shutdown order caught");
+				e.printStackTrace();
 				return;
 			}
 

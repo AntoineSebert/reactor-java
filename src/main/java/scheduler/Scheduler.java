@@ -77,8 +77,12 @@ public class Scheduler {
 
     }
 
-    public static void awaitTermination() throws RuntimeException {
-            while (!isEmpty());
+    public static void awaitTermination() {
+        try {
+            executorService.awaitTermination(Long.MAX_VALUE, TimeUnit.MILLISECONDS);
+        } catch (InterruptedException e) {
+
+        }
     }
 
     public static void shutDown() {
@@ -105,7 +109,6 @@ public class Scheduler {
         System.out.println("Aborted");
         aborted = true;
         executorService.shutdownNow();
-        Thread.currentThread().interrupt();
     }
 }
 
