@@ -29,11 +29,9 @@ public class Reactor extends Declaration implements Runnable {
 			this.declarations.put(decl.name(), decl);
 
 		// replace by better loop
-		int limit = reactions.size();
-		for (int i = 0; i < limit; i++) {
-			reactions.get(i).self(this);
-
-			this.reactions.add(reactions.get(i));
+		for (Reaction reaction : reactions) {
+			reaction.self(this);
+			this.reactions.add(reaction);
 		}
 
 		for (Statement statement : statements)
@@ -143,12 +141,9 @@ public class Reactor extends Declaration implements Runnable {
 		for(Reaction reaction : reactions)
 			reaction.init();
 
-		int limit = reactions.size();
-		for (int i = 0; i < limit; i++) {
-			for (Trigger t : reactions.get(i).getTriggers().values()) {
-				TriggerObserver.addReactionMapEntry(t, reactions.get(i));
-			}
-		}
+		for (Reaction reaction : reactions)
+			for (Trigger t : reaction.getTriggers().values())
+				TriggerObserver.addReactionMapEntry(t, reaction);
 
 		try {
 			if (!preamble.isEmpty())
@@ -199,7 +194,7 @@ public class Reactor extends Declaration implements Runnable {
 			if(state instanceof  Instantiation instance) {
 				instance.ToLF(1);
 			}
-			if(state instanceof Connection connection) {
+			if(state instanceof Connection<?> connection) {
 				connection.ToLF(1);
 			}
 		}

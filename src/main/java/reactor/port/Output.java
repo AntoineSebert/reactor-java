@@ -27,11 +27,6 @@ public class Output<T> extends Declaration implements Port<T> {
 	public void ToLF(int lvl) {
 	}
 
-	/*
-	TODO :
-	Reactions in a reactor may set an output value more than once at any instant of logical time, but only the last of
-	the values set will be sent on the output port.
-	 */
 	@Override
 	public void set(@NotNull T value) {
 		time = Time.logical();

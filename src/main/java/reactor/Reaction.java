@@ -32,7 +32,7 @@ public class Reaction implements Runnable {
 		this.effect_names = effect_names;
 		this.targetCode = targetCode;
 		this.deadline = deadline;
-		this.timestamp = -1;
+		timestamp = -1;
 	}
 
 	/**
@@ -115,6 +115,8 @@ public class Reaction implements Runnable {
 			deadline.get().handler().accept(self, this);
 		else
 			targetCode.accept(self, this);
+
+		Time.next();
 	}
 
 	public Optional<Deadline> deadline() {
