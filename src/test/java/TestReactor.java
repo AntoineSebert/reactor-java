@@ -1,4 +1,3 @@
-import _import.Import;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import program.Program;
@@ -81,32 +80,5 @@ public class TestReactor {
 						)
 						.build())
 				.build());
-	}
-
-	@Test
-	@DisplayName("Import")
-	public void testImport() {
-		System.out.println("[testImport]");
-		Program hello_world = (new Program.Builder())
-				.targets(Target.Java)
-				.reactors((new Reactor.Builder("HelloWorld"))
-						.reactions((new Reaction.Builder())
-								.triggers("STARTUP")
-								.targetCode((reaction, self) -> System.out.println("Hello World.\n"))
-								.build()
-						).build())
-				.build();
-
-		assertDoesNotThrow(() -> (new Program.Builder())
-				.targets(Target.Java)
-				.imports(new Import(hello_world))
-				.mainReactor((new Reactor.Builder("TwoHelloWorlds"))
-						.statements(
-								new Instantiation("a", "HelloWorld"),
-								new Instantiation("b", "HelloWorld")
-						)
-						.build())
-				.build()
-				.run());
 	}
 }
