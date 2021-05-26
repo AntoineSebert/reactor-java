@@ -14,7 +14,18 @@ public class Action<T> extends Declaration implements Trigger {
 	private Policy policy;
 	private Duration minDelay;
 	private Duration minSpacing;
-	private long time, last;
+	private long timestamp/*future*/, last/*past*/;
+
+	public enum Type {
+		logical,
+		physical
+	}
+
+	public enum Policy {
+		defer,
+		drop,
+		replace
+	}
 
 	/**
 	 * @param name name
@@ -32,7 +43,6 @@ public class Action<T> extends Declaration implements Trigger {
 		this.policy = policy;
 		this.minDelay = minDelay;
 		this.minSpacing = minSpacing;
-		time = type == Type.logical ? Time.logical() + minDelay.toNanos() : Time.physical();
 	}
 
 	/**
@@ -65,30 +75,42 @@ public class Action<T> extends Declaration implements Trigger {
 
 	@Override
 	public long timestamp() {
-		return time;
+		return timestamp;
 	}
 
-	public long getLast() {
+	public long last() {
 		return last;
 	}
 
-	public void setLast(long timestamp) {
-		last = timestamp;
-	}
+	public long setLast() { return last = timestamp; }
 
 	@Override
 	public void toLF(int lvl) {
 	}
 
-	public enum Type {
-		logical,
-		physical
-	}
+	public int start(Reaction r, long offset) {
+		long tag = 0;
 
-	public enum Policy {
-		defer,
-		drop,
-		replace
+		if(type == Type.logical)
+			tag = r.timestamp() + minDelay.toNanos() + offset;
+		else
+			Time.physical();
+
+		if(minSpacing != Duration.ZERO && last + minSpacing.toNanos() > tag)
+			switch(policy) {
+				case drop:
+					return -1;
+				case replace:
+					timestamp = tag;
+					return 0;
+				case defer:
+					timestamp = last + minSpacing.toNanos();
+
+					return 1;
+			}
+
+		timestamp = tag;
+		return 1;
 	}
 
 	public static class Builder {
