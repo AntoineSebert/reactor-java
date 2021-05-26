@@ -1,6 +1,5 @@
 package reactor;
 
-
 /**
  * reactor.Trigger specification class, either Timer, Action, Output or Input.
  * https://github.com/icyphy/lingua-franca/wiki/Language-Specification#reaction-declaration
@@ -8,12 +7,12 @@ package reactor;
 public interface Trigger {
 	long timestamp();
 
-	default boolean isStartup(Trigger t) {
-		return t instanceof STARTUP;
+	default boolean isStartup() {
+		return this instanceof STARTUP;
 	}
 
-	default boolean isShudown(Trigger t) {
-		return t instanceof SHUTDOWN;
+	default boolean isShutdown() {
+		return this instanceof SHUTDOWN;
 	}
 
 	class STARTUP implements Trigger {

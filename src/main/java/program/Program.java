@@ -88,12 +88,12 @@ public record Program(HashSet<Target> targets, HashSet<Import> imports,
 
 	public void run() {
 		for (Target target : targets) {
-			int number_of_threads = (int)target.get("threads").get();
+			int number_of_threads = target.get("threads");
 			Scheduler.createExecutorService(number_of_threads);
 
-			Duration timeout = (Duration)target.get("timeout").get();
+			Duration timeout = target.get("timeout");
 
-			boolean keep_alive = (boolean)target.get("keepalive").get();
+			boolean keep_alive = target.get("keepalive");
 			Scheduler.setKeepAlive(keep_alive);
 
 			long start_time = System.nanoTime();

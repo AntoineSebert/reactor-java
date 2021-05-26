@@ -6,7 +6,7 @@ import java.util.Optional;
 
 public class Instantiation implements Statement {
 	Optional<Reactor> reactor = Optional.empty();
-	String name, reactor_name;
+	final String name, reactor_name;
 
 	public Instantiation(@NotNull String name, @NotNull String reactor_name) {
 		this.name = name;

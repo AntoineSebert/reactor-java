@@ -16,28 +16,17 @@ public class ScheduledTaskTest {
                 () -> (new Program.Builder())
                         .targets(Target.Java)
                         .mainReactor((new Reactor.Builder("Minimal"))
+                                .reactions((new Reaction.Builder()).triggers("STARTUP").build())
+                                .build())
+                        .reactors((new Reactor.Builder("startupTest"))
+                                .declarations(new Timer("t", Duration.ofSeconds(1),Duration.ofSeconds(1)))
                                 .reactions((new Reaction.Builder())
-                                        .targetCode((self, reaction) -> {
-
-                                            return null;
-                                        })
-                                        .triggers("STARTUP")
+                                        .targetCode((self, reaction) -> System.out.println("This should be fired every second"))
+                                        .triggers("t")
                                         .build()
                                 ).build())
-                        .reactors((new Reactor.Builder("startupTest"))
-                                        .declarations(new Timer("t", Duration.ofSeconds(1),Duration.ofSeconds(1)))
-                                        .reactions((new Reaction.Builder())
-                                                .targetCode((self, reaction) -> {
-                                                    System.out.println("This should be fired every second");
-
-                                                    return null;
-                                                })
-                                                .triggers("t")
-                                                .build()
-                                        ).build())
                         .build()
                         .run()
         );
     }
-
 }

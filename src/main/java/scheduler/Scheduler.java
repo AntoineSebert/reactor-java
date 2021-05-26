@@ -37,7 +37,7 @@ public class Scheduler {
         executorService.schedule(reaction, delay, TimeUnit.NANOSECONDS);
     }
 
-    public static void addRepeatingReaction(@NotNull Runnable reaction,long period, long delay) {
+    public static void addRepeatingReaction(@NotNull Runnable reaction, long period, long delay) {
         timedTasks = true;
         executorService.scheduleAtFixedRate(reaction, delay, period, TimeUnit.NANOSECONDS);
     }
