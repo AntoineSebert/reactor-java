@@ -48,7 +48,7 @@ public class Reactor extends Declaration implements Runnable {
 				if(contextReactors.containsKey(name))
 					return contextReactors.get(name);
 
-				return null;
+				throw new RuntimeException("Cannot find identifier '" + name + "'.");
 			}
 		}
 		else
@@ -83,20 +83,25 @@ public class Reactor extends Declaration implements Runnable {
 				.filter(i -> i.reactor().isEmpty())
 				.toList();
 
-		List<? extends Connection<?>> connections = statements.stream()
-				.filter(s -> s instanceof Connection<?>)
-				.map(s -> (Connection<?>) s)
-				.filter(c -> !c.is_init())
-				.toList();
-
 		for (Instantiation instance : instantiations)
-			if (declarations.containsKey(instance.reactor_name()) && declarations.get(instance.reactor_name()) instanceof Reactor reactor)
-				instance.setReactor(reactor);
+			if (declarations.containsKey(instance.reactor_name()) && declarations.get(instance.reactor_name()) instanceof Reactor reactor) {
+				try {
+					instance.setReactor((Reactor) reactor.clone());
+				} catch (CloneNotSupportedException e) {
+					e.printStackTrace();
+				}
+			}
 			else if (contextReactors.containsKey(instance.reactor_name()))
 				instance.setReactor(contextReactors.get(instance.reactor_name()));
 			else
 				throw new ExceptionInInitializerError(
 						"Could not find reactor '" + instance.reactor_name() + "' for instantiation of '" + instance.name() + "'");
+
+		List<? extends Connection<?>> connections = statements.stream()
+				.filter(s -> s instanceof Connection<?>)
+				.map(s -> (Connection<?>) s)
+				.filter(c -> !c.is_init())
+				.toList();
 
 		for (Connection<?> connection : connections) {
 			var input_result = lookup(connection.input_name);

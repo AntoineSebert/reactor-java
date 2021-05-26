@@ -175,7 +175,6 @@ public class Reaction implements Runnable {
 
 	}
 
-
 	public static class Builder {
 		private HashSet<String> trigger_names = new HashSet<>();
 		private HashSet<String> use_names = new HashSet<>();
