@@ -126,8 +126,7 @@ public class Reaction implements Runnable {
 	}
 
 	public boolean has_passed() {
-		if(deadline.isPresent())
-			if(deadline.get().deadline() != Duration.ZERO)
+		if(deadline.isPresent() && deadline.get().deadline() != Duration.ZERO)
 				return timestamp + deadline.get().deadline().toNanos() < Time.physical();
 
 		return false;

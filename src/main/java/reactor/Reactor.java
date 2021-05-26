@@ -5,25 +5,16 @@ import reactor.port.Input;
 import reactor.port.Output;
 import scheduler.Scheduler;
 
-import java.io.IOException;
 import java.util.*;
 
 public class Reactor extends Declaration implements Runnable {
-	protected String preamble;
-	protected HashMap<String, Parameter<?>> params = new HashMap<>();
 	private final HashMap<String, Declaration> declarations = new HashMap<>();
 	protected ArrayList<Reaction> reactions = new ArrayList<>();
 	private final HashSet<Statement> statements = new HashSet<>();
 
-	public Reactor(@NotNull String name, @NotNull String preamble, @NotNull ArrayList<? extends Reaction> reactions,
-				   @NotNull Iterable<? extends Parameter<?>> params, @NotNull Iterable<? extends Declaration> declarations,
-				   @NotNull Iterable<? extends Statement> statements) {
+	public Reactor(@NotNull String name, @NotNull Iterable<? extends Reaction> reactions,
+				   @NotNull Iterable<? extends Declaration> declarations, @NotNull Iterable<? extends Statement> statements) {
 		super(name);
-
-		for (Parameter<?> p : params)
-			this.params.put(p.name(), p);
-
-		this.preamble = preamble;
 
 		for (Declaration decl : declarations)
 			this.declarations.put(decl.name(), decl);
@@ -36,27 +27,6 @@ public class Reactor extends Declaration implements Runnable {
 
 		for (Statement statement : statements)
 			this.statements.add(statement);
-	}
-
-	/**
-	 * @return the preamble
-	 */
-	public String getPreamble() {
-		return preamble;
-	}
-
-	/**
-	 * @return the reactions
-	 */
-	public ArrayList<Reaction> getReactions() {
-		return reactions;
-	}
-
-	/**
-	 * @return the parameters
-	 */
-	public HashMap<String, Parameter<?>> getParams() {
-		return params;
 	}
 
 	public Declaration lookup(@NotNull String name) {
@@ -77,10 +47,6 @@ public class Reactor extends Declaration implements Runnable {
 		}
 		else
 			return ((Reactor) lookup(_name[0])).lookup(String.join("", Arrays.copyOfRange(_name, 1, _name.length)));
-	}
-
-	public Parameter<?> param(@NotNull String name) {
-		return params.get(name);
 	}
 
 	/**
@@ -134,24 +100,15 @@ public class Reactor extends Declaration implements Runnable {
 
 	}
 
-	public void init() {
-		// lazy initialization
+	protected void init() {
 		resolveStatements();
 
-		for(Reaction reaction : reactions)
+		for(Reaction reaction : reactions) {
 			reaction.init();
 
-		for (Reaction reaction : reactions)
 			for (Trigger t : reaction.getTriggers().values())
 				TriggerObserver.addReactionMapEntry(t, reaction);
-
-		try {
-			if (!preamble.isEmpty())
-				Runtime.getRuntime().exec(preamble);
-		} catch (IOException e) {
-			e.printStackTrace();
 		}
-
 	}
 
 	public void run() {
@@ -183,78 +140,47 @@ public class Reactor extends Declaration implements Runnable {
 		}
 	}
 
+	@Override
 	public void toLF(int lvl) {
 
 		System.out.print("reactor "+name+" ");
-
+		/*
 		if(!params.isEmpty()) {
 
 			for (Parameter param: params.values()) {
 				param.ToLF(0);
 			}
 		}
+		 */
 
 		System.out.println("{");
 
 		for (Declaration declaration: declarations.values()) {
-			declaration.ToLF(1);
+			declaration.toLF(1);
 		}
 
 		System.out.println();
 
 		for (Statement state: statements) {
 			if(state instanceof  Instantiation instance) {
-				instance.ToLF(1);
+				instance.toLF(1);
 			}
 			if(state instanceof Connection<?> connection) {
-				connection.ToLF(1);
-			}
-		}
-
-		System.out.println();
-
-		if (!reactions.isEmpty()) {
-			for (Reaction reaction : reactions) {
-				reaction.toLF(1);
+				connection.toLF(1);
 			}
 		}
 
 		System.out.println("}\n");
 	}
 
-	@Override
-	public void ToLF(int lvl) {
-
-	}
-
 	public static class Builder {
 		protected final String name;
-		protected final HashSet<Parameter<?>> params = new HashSet<>();
-		protected String preamble = "";
 		protected HashSet<Declaration> declarations = new HashSet<>();
 		protected HashSet<Statement> statements = new HashSet<>();
 		protected ArrayList<Reaction> reactions = new ArrayList<>();
 
 		public Builder(@NotNull String name) {
 			this.name = name;
-		}
-
-		public Builder param(Parameter<?> param) {
-			params.add(param);
-
-			return this;
-		}
-
-		public <T> Builder param(String name, T value) {
-			params.add(new Parameter<>(name, value));
-
-			return this;
-		}
-
-		public Builder preamble(@NotNull String preamble) {
-			this.preamble = preamble;
-
-			return this;
 		}
 
 		public Builder declarations(Declaration... declarations) {
@@ -276,7 +202,7 @@ public class Reactor extends Declaration implements Runnable {
 		}
 
 		public Reactor build() {
-			return new Reactor(name, preamble, reactions, params, declarations, statements);
+			return new Reactor(name, reactions, declarations, statements);
 		}
 	}
 }

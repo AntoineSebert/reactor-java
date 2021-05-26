@@ -18,7 +18,7 @@ public class Timer extends Declaration implements Trigger {
 	}
 
 	@Override
-	public void ToLF(int lvl) {
+	public void toLF(int lvl) {
 
 		StringBuilder state = new StringBuilder("\t".repeat(lvl) + getClass().getSimpleName() + " " + name
 				+ ": (");
