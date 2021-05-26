@@ -35,15 +35,18 @@ public class TestReactor {
 				.targets(Target.Java)
 				.reactors(
 						(new Reactor.Builder("Scale"))
-								.param("scale", 2)
-								.declarations(new Input<Integer>("x"), new Input<Integer>("y"))
+								.declarations(
+										new Parameter<>("scale", 2),
+										new Input<Integer>("x"),
+										new Input<Integer>("y")
+								)
 								.reactions(
 										(new Reaction.Builder())
 												.triggers("x")
 												.effects("y")
 												.targetCode((self, r) -> (r.e("y")).set(
 														((Input<Integer>) r.t("x")).value()
-																* ((Parameter<Integer>) self.param("scale")).value()
+																* ((Parameter<Integer>) self.lookup("scale")).value()
 												))
 												.build()
 								)
