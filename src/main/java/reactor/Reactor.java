@@ -33,20 +33,6 @@ public class Reactor extends Declaration implements Runnable {
 			this.statements.add(statement);
 	}
 
-	/**
-	 * @return the preamble
-	 */
-	public String getPreamble() {
-		return preamble;
-	}
-
-	/**
-	 * @return the reactions
-	 */
-	public ArrayList<Reaction> getReactions() {
-		return reactions;
-	}
-
 	public Declaration lookup(@NotNull String name) {
 		if (name.isEmpty())
 			throw new RuntimeException("Cannot lookup empty name");
@@ -119,15 +105,10 @@ public class Reactor extends Declaration implements Runnable {
 	}
 
 	protected void init() {
-		// lazy initialization
 		resolveStatements();
 
 		for(Reaction reaction : reactions)
 			reaction.init();
-
-		for (Reaction reaction : reactions)
-			for (Trigger t : reaction.getTriggers().values())
-				TriggerObserver.addReactionMapEntry(t, reaction);
 
 		try {
 			if (!preamble.isEmpty())
@@ -136,6 +117,9 @@ public class Reactor extends Declaration implements Runnable {
 			e.printStackTrace();
 		}
 
+		for (Reaction reaction : reactions)
+			for (Trigger t : reaction.getTriggers().values())
+				TriggerObserver.addReactionMapEntry(t, reaction);
 	}
 
 	public void run() {

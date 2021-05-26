@@ -15,8 +15,11 @@ public class Infinite {
                         .mainReactor((new Reactor.Builder("Minimal"))
                                 .reactions((new Reaction.Builder())
                                         .targetCode((self, reaction) -> {
+                                            /*
                                             while(true)
                                                 System.out.println("This should be fired every second");
+
+                                             */
                                         })
                                         .triggers("STARTUP")
                                         .build()
