@@ -48,7 +48,7 @@ public class Reactor extends Declaration implements Runnable {
 				if(contextReactors.containsKey(name))
 					return contextReactors.get(name);
 
-				throw new RuntimeException("Cannot find identifier '" + name + "'.");
+				return null;
 			}
 		}
 		else

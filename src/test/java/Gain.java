@@ -3,6 +3,7 @@ import org.junit.jupiter.api.Test;
 import program.Program;
 import reactor.*;
 import reactor.port.Input;
+import reactor.port.Output;
 import target.Target;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
@@ -15,7 +16,7 @@ public class Gain {
 							.declarations(
 									new Parameter<>("scale", 2),
 									new Input<Integer>("x"),
-									new Input<Integer>("y")
+									new Output<Integer>("y")
 							)
 							.reactions(
 									(new Reaction.Builder())
@@ -35,7 +36,7 @@ public class Gain {
 							)
 							.reactions(
 									(new Reaction.Builder())
-											.triggers("y")
+											.triggers("x")
 											.targetCode((self, r) -> {
 												Input<Integer> x = ((Input<Integer>) r.t("x"));
 

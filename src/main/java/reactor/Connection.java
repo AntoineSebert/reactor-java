@@ -13,12 +13,12 @@ public class Connection<T> implements Statement {
 	private Duration after = Duration.ZERO;
 	private boolean physical;
 
-	public Connection(@NotNull String input_name, @NotNull String output_name) {
+	public Connection(@NotNull String output_name, @NotNull String input_name) {
 		if(input_name.isEmpty() || output_name.isEmpty())
 			throw new ExceptionInInitializerError("Connection must specify input and output");
 
-		this.input_name = input_name;
 		this.output_name = output_name;
+		this.input_name = input_name;
 	}
 
 	public boolean is_init() {
