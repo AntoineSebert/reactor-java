@@ -113,12 +113,10 @@ public record Program(HashSet<Target> targets, HashSet<Import> imports,
 				return;
 			}
 
-			Time.next();
 			for (Reactor reactor : reactors)
 				reactor.before_shutdown();
 			Scheduler.shutDown();
 			Scheduler.awaitTermination();
-
 			long end_time = System.nanoTime() - start_time;
 
 			System.out.println();

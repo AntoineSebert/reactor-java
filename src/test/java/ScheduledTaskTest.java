@@ -12,21 +12,27 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 public class ScheduledTaskTest {
     @Test
     public void testShutdownAndStartup() {
+        long current_time = System.nanoTime() / 100000;
         assertDoesNotThrow(
+
                 () -> (new Program.Builder())
                         .targets(Target.Java)
                         .mainReactor((new Reactor.Builder("Minimal"))
-                                .reactions((new Reaction.Builder()).triggers("STARTUP").build())
+                                .reactions((new Reaction.Builder())
+                                        .targetCode((self,reaction) -> {
+                                            System.out.println("Main reactor executed after " + (System.nanoTime() / 100000 - current_time) );
+                                        })
+                                        .triggers("STARTUP").build())
                                 .build())
                         .reactors((new Reactor.Builder("startupTest"))
-                                .declarations(new Timer("t", Duration.ofSeconds(1),Duration.ofSeconds(1)))
+                                .declarations(new Timer("t", Duration.ofMillis(1000),Duration.ofMillis(1000)))
                                 .reactions((new Reaction.Builder())
-                                        .targetCode((self, reaction) -> System.out.println("This should be fired every second"))
+                                        .targetCode((self, reaction) -> System.out.println("reactor executed after " + (System.nanoTime() / 100000 - current_time) ))
                                         .triggers("t")
                                         .build()
                                 ).build())
                         .build()
-                        .toLF()
+                        .run()
         );
     }
 }

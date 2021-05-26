@@ -197,7 +197,7 @@ public class Reaction implements Runnable {
 			builder.append(effect.name() + " ");
 		}
 
-		builder.append(" {\n" + "\t".repeat(level+1) + targetCode.toString() + "\t".repeat(level) + "\n" + "\t".repeat(level) + "}");
+		builder.append(" {\n" + "\t".repeat(level+1) + targetCode.toString() + "\n" + "\t".repeat(level) + "}");
 		System.out.println(builder.toString());
 
 
