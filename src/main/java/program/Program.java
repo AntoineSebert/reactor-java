@@ -130,6 +130,20 @@ public record Program(HashSet<Target> targets, HashSet<Import> imports,
 	}
 
 	public void toLF(){
+		if (mainReactor.isPresent()) {
+			mainReactor.get().init();
+		}
+
+		for (Import _import : imports) {
+			for (Reactor reactor : _import.getReactors().values()) {
+				reactor.init();
+			}
+		}
+
+		for (Reactor reactor : reactors) {
+			reactor.init();
+		}
+
 		for (Target target : targets) {
 			target.toLF(0);
 		}

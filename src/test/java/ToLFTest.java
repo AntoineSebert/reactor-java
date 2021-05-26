@@ -39,9 +39,15 @@ public class ToLFTest {
                         )
                         .reactors((new Reactor.Builder("ToLFTest"))
                                 .declarations(
-                                                                        )
+                                        new Parameter<>("ParamTest", 2),
+                                        new Input<>("x", true),
+                                        new Input<>("y", true),
+                                        new Output<Integer>("o"),
+                                        new State<>("i", 2),
+                                        new Timer("j", duration, duration),
+                                        new Action<>("action", Action.Type.logical, Action.Policy.replace,Duration.ofSeconds(1),Duration.ofSeconds(1))
+                                )
                                 .statements(
-                                        new Connection<Integer>("g.y", "d.x"),
                                         new Instantiation("a", "HelloWorld"),
                                         new Instantiation("b", "HelloWorld")
                                 )
