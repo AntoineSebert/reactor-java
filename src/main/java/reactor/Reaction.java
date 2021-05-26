@@ -3,7 +3,6 @@ package reactor;
 import org.jetbrains.annotations.NotNull;
 import reactor.port.Input;
 import reactor.port.Port;
-import scheduler.Scheduler;
 
 import java.time.Duration;
 import java.util.*;
@@ -112,6 +111,8 @@ public class Reaction implements Runnable {
 	 */
 	@Override
 	public void run() {
+		timestamp = Time.logical();
+
 		if (has_passed())
 			deadline.get().handler().accept(self, this);
 		else
@@ -129,6 +130,33 @@ public class Reaction implements Runnable {
 				return timestamp + deadline.get().deadline().toNanos() < Time.physical();
 
 		return false;
+	}
+
+	public <T> void schedule(@NotNull String name, @NotNull Duration offset, Optional<T> payload) {
+		if(name.isEmpty())
+			throw new RuntimeException("Cannot schedule action with empty name");
+
+		if(self.lookup(name) instanceof Action<?> action) {
+			var result = action.type() == Action.Type.logical ?
+					action.start(this, offset.toNanos())
+					: action.start(offset.toNanos());
+			if (result == 0) {
+				// if new event is still pending in the event queue
+				if(true)
+				// payload of the new event is assigned to the preceding event
+					payload.ifPresent(action::replace); // replace last
+				else {
+					payload.ifPresent(action::add);
+					TriggerObserver.update(action);
+				}
+			}
+			else if(result == 1) {
+				payload.ifPresent(action::add);
+				TriggerObserver.update(action);
+			}
+		}
+		else
+			throw new RuntimeException("Cannot find action '" + name + "'");
 	}
 
 	@Override

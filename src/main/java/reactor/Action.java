@@ -3,6 +3,8 @@ package reactor;
 import org.jetbrains.annotations.NotNull;
 
 import java.time.Duration;
+import java.util.Optional;
+import java.util.TreeMap;
 
 /**
  * Action specification class.
@@ -14,7 +16,8 @@ public class Action<T> extends Declaration implements Trigger {
 	private Policy policy;
 	private Duration minDelay;
 	private Duration minSpacing;
-	private long timestamp/*future*/, last/*past*/;
+	private long timestamp/*future?*/, last/*past*/;
+	private TreeMap<Long, T> payload = new TreeMap<>();
 
 	public enum Type {
 		logical,
@@ -48,29 +51,41 @@ public class Action<T> extends Declaration implements Trigger {
 	/**
 	 * @return the type
 	 */
-	public Type getType() {
+	public Type type() {
 		return type;
 	}
 
 	/**
 	 * @return the policy
 	 */
-	public Policy getPolicy() {
+	public Policy policy() {
 		return policy;
 	}
 
 	/**
 	 * @return the minimal delay
 	 */
-	public Duration getMinDelay() {
+	public Duration minDelay() {
 		return minDelay;
 	}
 
 	/**
 	 * @return the minimal spacing
 	 */
-	public Duration getMinSpacing() {
+	public Duration minSpacing() {
 		return minSpacing;
+	}
+
+	public T get(long timestamp) {
+		return payload.floorEntry(timestamp).getValue();
+	}
+
+	public void add(Object payload) {
+		this.payload.put(timestamp, (T) payload);
+	}
+
+	public void replace(Object payload) {
+		this.payload.replace(this.payload.lastKey(), (T) payload);
 	}
 
 	@Override
@@ -101,12 +116,30 @@ public class Action<T> extends Declaration implements Trigger {
 	}
 
 	public int start(Reaction r, long offset) {
-		long tag = 0;
+		assert type == Type.logical;
 
-		if(type == Type.logical)
-			tag = r.timestamp() + minDelay.toNanos() + offset;
-		else
-			Time.physical();
+		long tag = r.timestamp() + minDelay.toNanos() + offset;
+
+		if(minSpacing != Duration.ZERO && last + minSpacing.toNanos() > tag)
+			switch(policy) {
+				case drop:
+					return -1;
+				case replace:
+					timestamp = tag;
+					return 0;
+				case defer:
+					timestamp = last + minSpacing.toNanos();
+
+					return 1;
+			}
+
+		timestamp = tag;
+		return 1;
+	}
+
+	public int start(long offset) {
+		assert type == Type.physical;
+		long tag = Time.physical();
 
 		if(minSpacing != Duration.ZERO && last + minSpacing.toNanos() > tag)
 			switch(policy) {
@@ -131,6 +164,7 @@ public class Action<T> extends Declaration implements Trigger {
 		private Policy policy = Policy.defer;
 		private Duration minDelay = Duration.ZERO;
 		private Duration minSpacing = Duration.ZERO;
+		private Optional<?> payload = Optional.empty();
 
 		public Builder(@NotNull String name, @NotNull Type type) {
 			this.name = name;
@@ -155,6 +189,12 @@ public class Action<T> extends Declaration implements Trigger {
 
 		public Builder minSpacing(@NotNull Duration minSpacing) {
 			this.minSpacing = minSpacing;
+
+			return this;
+		}
+
+		public Builder payload(@NotNull Object payload) {
+			this.payload = Optional.of(payload);
 
 			return this;
 		}
