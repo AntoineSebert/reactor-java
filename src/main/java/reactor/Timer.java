@@ -24,13 +24,13 @@ public class Timer extends Declaration implements Trigger {
 				+ ": (");
 
 		if(offset != Duration.ZERO && period != Duration.ZERO) {
-			state.append(offset.getNano()).append(" nsec,");
+			state.append(offset.toNanos()).append(" nsec,");
 		} else if (offset != Duration.ZERO) {
-			state.append(offset.getNano()).append(" nsec");
+			state.append(offset.toNanos()).append(" nsec");
 		}
 
 		if(period != Duration.ZERO) {
-			state.append(period.getNano()).append(" nsec");
+			state.append(period.toNanos()).append(" nsec");
 		}
 
 		state.append(");");

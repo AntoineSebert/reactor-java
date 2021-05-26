@@ -15,7 +15,7 @@ public class Gain {
 					(new Reactor.Builder("Scale"))
 							.declarations(
 									new Parameter<>("scale", 2),
-									new Input<Integer>("x"),
+									new Input<Integer>("x", true),
 									new Output<Integer>("y")
 							)
 							.reactions(
@@ -50,7 +50,7 @@ public class Gain {
 											})
 											.build(),
 									(new Reaction.Builder())
-											.triggers("STARTUP")
+											.triggers("SHUTDOWN")
 											.targetCode((self, reaction) -> {
 												if (((State<Boolean>) self.lookup("received_value")).get())
 													System.out.println("Test passes.\n");
@@ -86,6 +86,6 @@ public class Gain {
 	@Test
 	@DisplayName("Gain toLF")
 	public void testGainToLF() {
-		assertDoesNotThrow(() -> program.run());
+		assertDoesNotThrow(() -> program.toLF());
 	}
 }

@@ -100,18 +100,12 @@ public record Program(HashSet<Target> targets, HashSet<Import> imports,
 			Scheduler.setKeepAlive(keep_alive);
 
 			long start_time = System.nanoTime();
-			try {
 
-				mainReactor.ifPresent(Reactor::run);
-				for (Reactor reactor : reactors)
-					reactor.run();
+			mainReactor.ifPresent(Reactor::run);
+			for (Reactor reactor : reactors)
+				reactor.run();
 
-				Scheduler.awaitTermination(timeout.toNanos(), TimeUnit.NANOSECONDS);
-
-			} catch (RuntimeException e) {
-				e.printStackTrace();
-				return;
-			}
+			Scheduler.awaitTermination(timeout.toNanos(), TimeUnit.NANOSECONDS);
 
 			for (Reactor reactor : reactors)
 				reactor.before_shutdown();

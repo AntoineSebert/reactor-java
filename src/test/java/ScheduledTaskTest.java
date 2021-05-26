@@ -1,3 +1,4 @@
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import program.Program;
 import reactor.Reaction;
@@ -10,12 +11,8 @@ import java.time.Duration;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 public class ScheduledTaskTest {
-    @Test
-    public void testShutdownAndStartup() {
         long current_time = System.nanoTime() / 100000;
-        assertDoesNotThrow(
-
-                () -> (new Program.Builder())
+                private Program ScheduledTask = (new Program.Builder())
                         .targets(Target.Java)
                         .mainReactor((new Reactor.Builder("Minimal"))
                                 .reactions((new Reaction.Builder())
@@ -31,8 +28,16 @@ public class ScheduledTaskTest {
                                         .triggers("t")
                                         .build()
                                 ).build())
-                        .build()
-                        .run()
-        );
+                        .build();
+    @Test
+    @DisplayName("Test ScheduledTak")
+    public void TestToLF() {
+        assertDoesNotThrow(() -> ScheduledTask.toLF());
+    }
+
+    @Test
+    @DisplayName("Test ScheduledTaskRun")
+    public void TestToRun() {
+        assertDoesNotThrow(() -> ScheduledTask.run());
     }
 }

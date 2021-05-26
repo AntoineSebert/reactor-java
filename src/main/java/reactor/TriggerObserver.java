@@ -12,6 +12,7 @@ public class TriggerObserver  {
 
 
     public static void update(Trigger trigger) {
+
         Set<Reaction> reactions = reactionMap.get(trigger);
         for (Reaction reaction : reactions) {
             if (reaction.can_trigger()) {

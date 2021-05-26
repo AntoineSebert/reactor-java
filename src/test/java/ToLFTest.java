@@ -19,6 +19,7 @@ public class ToLFTest {
             .reactors((new Reactor.Builder("HelloWorld"))
                     .reactions((new Reaction.Builder())
                             .targetCode((self, reaction) -> {
+                                System.out.println("Hello world");
                             })
                             .triggers("STARTUP")
                             .build())
