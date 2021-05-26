@@ -5,20 +5,16 @@ import reactor.port.Input;
 import reactor.port.Output;
 import scheduler.Scheduler;
 
-import java.io.IOException;
 import java.util.*;
 
 public class Reactor extends Declaration implements Runnable {
-	protected String preamble;
 	private final HashMap<String, Declaration> declarations = new HashMap<>();
 	protected ArrayList<Reaction> reactions = new ArrayList<>();
 	private final HashSet<Statement> statements = new HashSet<>();
 
-	public Reactor(@NotNull String name, @NotNull String preamble, @NotNull Iterable<? extends Reaction> reactions,
+	public Reactor(@NotNull String name, @NotNull Iterable<? extends Reaction> reactions,
 				   @NotNull Iterable<? extends Declaration> declarations, @NotNull Iterable<? extends Statement> statements) {
 		super(name);
-
-		this.preamble = preamble;
 
 		for (Declaration decl : declarations)
 			this.declarations.put(decl.name(), decl);
@@ -107,19 +103,12 @@ public class Reactor extends Declaration implements Runnable {
 	protected void init() {
 		resolveStatements();
 
-		for(Reaction reaction : reactions)
+		for(Reaction reaction : reactions) {
 			reaction.init();
 
-		try {
-			if (!preamble.isEmpty())
-				Runtime.getRuntime().exec(preamble);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
-		for (Reaction reaction : reactions)
 			for (Trigger t : reaction.getTriggers().values())
 				TriggerObserver.addReactionMapEntry(t, reaction);
+		}
 	}
 
 	public void run() {
@@ -186,19 +175,12 @@ public class Reactor extends Declaration implements Runnable {
 
 	public static class Builder {
 		protected final String name;
-		protected String preamble = "";
 		protected HashSet<Declaration> declarations = new HashSet<>();
 		protected HashSet<Statement> statements = new HashSet<>();
 		protected ArrayList<Reaction> reactions = new ArrayList<>();
 
 		public Builder(@NotNull String name) {
 			this.name = name;
-		}
-
-		public Builder preamble(@NotNull String preamble) {
-			this.preamble = preamble;
-
-			return this;
 		}
 
 		public Builder declarations(Declaration... declarations) {
@@ -220,7 +202,7 @@ public class Reactor extends Declaration implements Runnable {
 		}
 
 		public Reactor build() {
-			return new Reactor(name, preamble, reactions, declarations, statements);
+			return new Reactor(name, reactions, declarations, statements);
 		}
 	}
 }
