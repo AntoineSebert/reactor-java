@@ -4,9 +4,9 @@ import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Type;
 import java.time.Duration;
+import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Target specification class.
@@ -28,6 +28,8 @@ public class Target {
 	}
 
 	enum Parameters {
+		build(String.class),
+		files(String[].class),
 		compiler(String.class),
 		fast(Boolean.class),
 		flags(String[].class),
@@ -43,20 +45,28 @@ public class Target {
 			this.type = type;
 		}
 
-		public Type getType() {
+		public Type type() {
 			return type;
 		}
 	}
 
+	static EnumMap<Parameters, Object> _default = new EnumMap<>(Parameters.class) {{
+		put(Parameters.build, "");
+		put(Parameters.files, new String[]{});
+		put(Parameters.compiler, "javac");
+		put(Parameters.fast, false);
+		put(Parameters.flags, new String[]{});
+		put(Parameters.keepalive, false);
+		put(Parameters.no_compile, false);
+		put(Parameters.threads, 1);
+		put(Parameters.logging, Logging.log);
+		put(Parameters.timeout, Duration.parse("PT10S"));
+	}};
+
 	public static final Target Java = new Target(
 			"Java",
 			Duration.ofNanos(1),
-			new HashMap<>(1) {{
-				put("default", TimeUnit.NANOSECONDS);
-				put("threads", 1);
-				put("timeout", Duration.parse("PT10S"));
-				put("keepalive", false);
-			}}
+			new HashMap<>()
 	);
 
 	/**
@@ -70,11 +80,19 @@ public class Target {
 			throw new ExceptionInInitializerError(getClass().getTypeName() + " name cannot be empty");
 
 		if (precision == Duration.ZERO)
-			throw new ExceptionInInitializerError("Timestamp precision cannot be zero");
+			throw new ExceptionInInitializerError("Target time precision cannot be zero");
 
 		for (Map.Entry<String, Object> param : params.entrySet())
 			if ("timeout".equals(param.getKey()) && param.getValue() == Duration.ZERO)
 				throw new ExceptionInInitializerError("Target parameter 'timeout' must be a non-zero timestamp with unit");
+			else
+				try {
+					var expected = Parameters.valueOf(param.getKey()).type();
+
+					if(param.getValue().getClass() != expected)
+						throw new ExceptionInInitializerError(
+								"Type of parameter '" + param.getKey() + "' does not match '" + expected + "'");
+				} catch(IllegalArgumentException ignored) {}
 
 		this.name = name;
 		this.params = params;
@@ -103,11 +121,15 @@ public class Target {
 	}
 
 	public <T> T get(@NotNull String name) {
-		return (T) params.get(name);
-	}
+		if(params.containsKey(name))
+			return (T) params.get(name);
+		else {
+			for (Parameters p : Parameters.values())
+				if (p.name().equals(name))
+					return (T) _default.get(Parameters.valueOf(name));
 
-	public void setParams(@NotNull Map<String, Object> params) {
-		this.params.putAll(params);
+			return null;
+		}
 	}
 
 	@Override
