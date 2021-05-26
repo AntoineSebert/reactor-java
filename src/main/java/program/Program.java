@@ -110,6 +110,7 @@ public record Program(HashSet<Target> targets, HashSet<Import> imports,
 				return;
 			}
 
+			Time.next();
 			for (Reactor reactor : reactors)
 				reactor.before_shutdown();
 			Scheduler.shutDown();
