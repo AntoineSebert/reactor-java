@@ -6,6 +6,7 @@ import reactor.Declaration;
 import reactor.Time;
 
 import java.util.Optional;
+import java.util.UUID;
 
 /**
  * reactor.port.Output specification class.
@@ -15,12 +16,14 @@ public class Output<T> extends Declaration implements Port<T> {
 	protected long time;
 	private Connection<T> connection;
 	private Optional<T> value = Optional.empty();
+	private UUID uuid;
 
 	/**
 	 * @param name name
 	 */
 	public Output(@NotNull String name) {
 		super(name);
+		this.uuid = UUID.randomUUID();
 	}
 
 	@Override
@@ -62,5 +65,9 @@ public class Output<T> extends Declaration implements Port<T> {
 	@Override
 	public boolean isPresent() {
 		return value.isPresent();
+	}
+
+	public String toString() {
+		return String.valueOf(uuid);
 	}
 }

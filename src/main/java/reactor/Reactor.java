@@ -84,13 +84,8 @@ public class Reactor extends Declaration implements Runnable {
 				.toList();
 
 		for (Instantiation instance : instantiations)
-			if (declarations.containsKey(instance.reactor_name()) && declarations.get(instance.reactor_name()) instanceof Reactor reactor) {
-				try {
-					instance.setReactor((Reactor) reactor.clone());
-				} catch (CloneNotSupportedException e) {
-					e.printStackTrace();
-				}
-			}
+			if (declarations.containsKey(instance.reactor_name()) && declarations.get(instance.reactor_name()) instanceof Reactor reactor)
+				instance.setReactor(reactor);
 			else if (contextReactors.containsKey(instance.reactor_name()))
 				instance.setReactor(contextReactors.get(instance.reactor_name()));
 			else
@@ -127,8 +122,9 @@ public class Reactor extends Declaration implements Runnable {
 			for(Reaction reaction : reactions) {
 				reaction.init();
 
-				for (Trigger t : reaction.getTriggers().values())
+				for (Trigger t : reaction.getTriggers().values()) {
 					TriggerObserver.addReactionMapEntry(t, reaction);
+				}
 			}
 
 			is_init = true;

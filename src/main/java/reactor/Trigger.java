@@ -1,12 +1,13 @@
 package reactor;
 
+import java.util.UUID;
+
 /**
  * reactor.Trigger specification class, either Timer, Action, Output or Input.
  * https://github.com/icyphy/lingua-franca/wiki/Language-Specification#reaction-declaration
  */
 public interface Trigger {
 	long timestamp();
-
 	default boolean isStartup() {
 		return this instanceof STARTUP;
 	}

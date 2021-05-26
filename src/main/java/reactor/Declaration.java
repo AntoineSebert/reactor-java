@@ -6,8 +6,8 @@ public abstract class Declaration {
 	protected Declaration(String name) {
 		if (name.isEmpty())
 			throw new ExceptionInInitializerError(getClass().getTypeName() + " name cannot be empty");
-
 		this.name = name;
+
 	}
 
 	/**

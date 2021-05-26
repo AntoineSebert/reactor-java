@@ -4,6 +4,7 @@ import org.jetbrains.annotations.NotNull;
 import reactor.*;
 
 import java.util.Optional;
+import java.util.UUID;
 
 /**
  * Input specification class.
@@ -14,9 +15,11 @@ public class Input<T> extends Declaration implements Port<T> {
 	protected long time;
 	private Optional<T> value = Optional.empty();
 	private Connection<T> connection;
+	private UUID uuid;
 
 	public Input(@NotNull String name) {
 		super(name);
+		this.uuid = UUID.randomUUID();
 	}
 
 	@Override
@@ -34,8 +37,8 @@ public class Input<T> extends Declaration implements Port<T> {
 	 */
 	public Input(@NotNull String name, boolean mutable) {
 		super(name);
-
 		this.mutable = mutable;
+		this.uuid = UUID.randomUUID();
 	}
 
 	/**
@@ -87,5 +90,9 @@ public class Input<T> extends Declaration implements Port<T> {
 	@Override
 	public T value() {
 		return value.orElse(null);
+	}
+
+	public String toString() {
+		return String.valueOf(this.uuid);
 	}
 }

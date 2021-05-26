@@ -3,6 +3,7 @@ package reactor;
 import org.jetbrains.annotations.NotNull;
 
 import java.time.Duration;
+import java.util.UUID;
 
 /**
  * reactor.Timer specification class.
@@ -12,9 +13,11 @@ public class Timer extends Declaration implements Trigger {
 	private Duration period = Duration.ZERO;
 	private Duration offset = Duration.ZERO;
 	private final long time = Time.logical();
+	private UUID uuid;
 
 	public Timer(@NotNull String name) {
 		super(name);
+		this.uuid = UUID.randomUUID();
 	}
 
 	@Override
@@ -68,5 +71,9 @@ public class Timer extends Declaration implements Trigger {
 	@Override
 	public long timestamp() {
 		return time;
+	}
+
+	public String toString() {
+		return String.valueOf(uuid);
 	}
 }
