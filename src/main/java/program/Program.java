@@ -116,9 +116,7 @@ public record Program(HashSet<Target> targets, HashSet<Import> imports,
 			System.out.println();
 			System.out.println("Logical execution time of test took " + Time.logical() + " time units");
 			System.out.println("Execution time of test took " + end_time / 1000000 + " milliseconds");
-
 		}
-
 	}
 
 	public void toLF(){
@@ -139,7 +137,6 @@ public record Program(HashSet<Target> targets, HashSet<Import> imports,
 		}
 
 		for (Import _import : imports) {
-
 			_import.toLF(0);
 		}
 

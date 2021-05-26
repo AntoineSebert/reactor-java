@@ -51,8 +51,11 @@ public class Reactor extends Declaration implements Runnable {
 				return null;
 			}
 		}
+		else if(lookup(_name[0]) instanceof Reactor r) {
+			return r.lookup(String.join("", Arrays.copyOfRange(_name, 1, _name.length)));
+		}
 		else
-			return ((Reactor) lookup(_name[0])).lookup(String.join("", Arrays.copyOfRange(_name, 1, _name.length)));
+			return null;
 	}
 
 	/**
@@ -108,8 +111,9 @@ public class Reactor extends Declaration implements Runnable {
 
 			var output_result = lookup(connection.output_name);
 
-			if (output_result instanceof Output<?> output)
+			if (output_result instanceof Output<?> output) {
 				connection.output(output);
+			}
 			else
 				throw new ExceptionInInitializerError("Name '" + connection.output_name + "' does not identify and Output");
 		}

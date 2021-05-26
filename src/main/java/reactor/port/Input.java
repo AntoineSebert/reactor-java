@@ -1,7 +1,10 @@
 package reactor.port;
 
 import org.jetbrains.annotations.NotNull;
-import reactor.*;
+import reactor.Connection;
+import reactor.Declaration;
+import reactor.Time;
+import reactor.TriggerObserver;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -11,11 +14,12 @@ import java.util.UUID;
  * https://github.com/icyphy/lingua-franca/wiki/Language-Specification#input-declaration
  */
 public class Input<T> extends Declaration implements Port<T> {
-	protected boolean mutable;
+	protected boolean mutable = true;
 	protected long time;
 	private Optional<T> value = Optional.empty();
 	private Connection<T> connection;
 	private UUID uuid;
+
 
 	public Input(@NotNull String name) {
 		super(name);
@@ -25,8 +29,7 @@ public class Input<T> extends Declaration implements Port<T> {
 	@Override
 	public void toLF(int lvl) {
 
-		String input = "\t".repeat(lvl) + getClass().getSimpleName() +
-				" " + name + ":" + name.getClass().getSimpleName()+";";
+		String input = "\t".repeat(lvl) + "input " + name + ":" +";";
 		System.out.println(input);
 	}
 
@@ -59,11 +62,9 @@ public class Input<T> extends Declaration implements Port<T> {
 	}
 
 	private void _set(@NotNull T value) {
-		if (mutable) {
-			this.value = Optional.of(value);
-			TriggerObserver.update(this);
-		} else
-			throw new RuntimeException("Cannot modify an immutable type");
+		assert mutable;
+		this.value = Optional.of(value);
+		TriggerObserver.update(this);
 	}
 
 	@Override

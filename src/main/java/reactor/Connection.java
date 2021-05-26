@@ -27,10 +27,12 @@ public class Connection<T> implements Statement {
 
 	public void output(Output<?> output) {
 		this.output = (Output<T>) output;
+		this.output.connect(this);
 	}
 
 	public void input(Input<?> input) {
 		this.input = (Input<T>) input;
+		this.input.connect(this);
 	}
 
 	public Output<T> output() {
