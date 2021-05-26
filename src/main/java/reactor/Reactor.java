@@ -11,6 +11,7 @@ public class Reactor extends Declaration implements Runnable {
 	private final HashMap<String, Declaration> declarations = new HashMap<>();
 	protected ArrayList<Reaction> reactions = new ArrayList<>();
 	private final HashSet<Statement> statements = new HashSet<>();
+	private HashMap<String, Reactor> contextReactors = new HashMap<>();
 	private boolean is_init;
 
 	public Reactor(@NotNull String name, @NotNull Iterable<? extends Reaction> reactions,
@@ -38,12 +39,17 @@ public class Reactor extends Declaration implements Runnable {
 		if (_name.length == 1) {
 			if (declarations.containsKey(name))
 				return declarations.get(name);
-			else
-				return ((Instantiation) statements.stream()
-						.filter(s -> s instanceof Instantiation i && i.name.equals(name))
-						.findFirst()
-						.get()
-				).reactor().get();
+			else {
+				for (Statement s : statements)
+					if (s instanceof Instantiation i)
+						if(i.name.equals(name))
+							return i.reactor().get();
+
+				if(contextReactors.containsKey(name))
+					return contextReactors.get(name);
+
+				return null;
+			}
 		}
 		else
 			return ((Reactor) lookup(_name[0])).lookup(String.join("", Arrays.copyOfRange(_name, 1, _name.length)));
@@ -60,10 +66,14 @@ public class Reactor extends Declaration implements Runnable {
 		return reactions;
 	}
 
-	public void setContextReactors(@NotNull Map<String, ? extends Reactor> contextReactors) {
-		for (Map.Entry<String, ? extends Reactor> entry : contextReactors.entrySet())
+	public void setContextReactors(@NotNull Map<String, Reactor> contextReactors) {
+		for (Map.Entry<String, Reactor> entry : contextReactors.entrySet())
 			if (entry.getValue() != this && !declarations.containsKey(entry.getKey()))
-				declarations.put(entry.getKey(), entry.getValue());
+				this.contextReactors.put(entry.getKey(), entry.getValue());
+
+		for(Map.Entry<String, Declaration> d : declarations.entrySet())
+			if(d.getValue() instanceof Reactor r)
+				r.setContextReactors(this.contextReactors);
 	}
 
 	private void resolveStatements() {
@@ -82,6 +92,8 @@ public class Reactor extends Declaration implements Runnable {
 		for (Instantiation instance : instantiations)
 			if (declarations.containsKey(instance.reactor_name()) && declarations.get(instance.reactor_name()) instanceof Reactor reactor)
 				instance.setReactor(reactor);
+			else if (contextReactors.containsKey(instance.reactor_name()))
+				instance.setReactor(contextReactors.get(instance.reactor_name()));
 			else
 				throw new ExceptionInInitializerError(
 						"Could not find reactor '" + instance.reactor_name() + "' for instantiation of '" + instance.name() + "'");

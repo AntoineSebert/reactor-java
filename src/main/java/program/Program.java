@@ -3,11 +3,11 @@ package program;
 import _import.Import;
 import org.jetbrains.annotations.NotNull;
 import reactor.Action;
-import reactor.Reaction;
 import reactor.Reactor;
 import reactor.Time;
 import scheduler.Scheduler;
 import target.Target;
+
 import java.time.Duration;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
@@ -47,6 +47,9 @@ public record Program(HashSet<Target> targets, HashSet<Import> imports,
 
 		mainReactor.ifPresent(reactor -> reactor.setContextReactors(globalReactors));
 
+		for(Reactor r : reactors)
+			r.setContextReactors(globalReactors);
+
 		Iterator<Target> targetIt = targets.iterator();
 		Action.TIME_PRECISION = targetIt.next().getPrecision();
 
@@ -85,7 +88,6 @@ public record Program(HashSet<Target> targets, HashSet<Import> imports,
 	public Optional<Reactor> getMainReactor() {
 		return mainReactor;
 	}
-
 
 	public void run() {
 		for (Target target : targets) {
@@ -128,20 +130,6 @@ public record Program(HashSet<Target> targets, HashSet<Import> imports,
 	}
 
 	public void toLF(){
-		if (mainReactor.isPresent()) {
-			mainReactor.get().init();
-		}
-
-		for (Import _import : imports) {
-			for (Reactor reactor : _import.getReactors().values()) {
-				reactor.init();
-			}
-		}
-
-		for (Reactor reactor : reactors) {
-			reactor.init();
-		}
-
 		for (Target target : targets) {
 			target.toLF(0);
 		}
