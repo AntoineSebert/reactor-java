@@ -76,7 +76,6 @@ public class Reaction implements Runnable {
 
 	public void init() {
 		for(String name : trigger_names) {
-
 			if("STARTUP".equals(name)) {
 				triggers.put(name, new Trigger.STARTUP());
 				continue;
@@ -146,34 +145,33 @@ public class Reaction implements Runnable {
 	}
 
 	public void toLF(int level) {
-		String reaction_string = "reaction (";
-
+		StringBuilder builder = new StringBuilder();
+		builder.append("reaction (");
+		System.out.println(triggers.size());
 		for (Trigger trigger : getTriggers().values()) {
 			if (trigger.isStartup()) {
-				reaction_string += "startup, ";
+				builder.append("startup, ");
 			} else if (trigger.isShutdown()) {
-				reaction_string += "shutdown, ";
+				builder.append("shutdown, ");
 			} else if ( trigger instanceof  Declaration declaration) {
-				reaction_string += declaration.name() + ", ";
+				builder.append(declaration.name() + ", ");
 
 			}
 		}
-		reaction_string = reaction_string.substring(0, reaction_string.length()-2) + ")";
+		builder.delete(builder.length()-2, builder.length()).append(")");
 
 		String uses_string = "";
 		for (Input<?> use : uses.values()) {
-			uses_string +=  " " + use.name();
+			builder.append(" " + use.name());
 		}
-		if (!uses.isEmpty()) uses_string = " ";
+		builder.append(!uses.isEmpty() ? uses_string = " " : "");
 
-		String effects_string = "";
-		if (!effects.isEmpty()) effects_string = "-> ";
+		builder.append(!effects.isEmpty() ? "-> " : "");
 		for (Port<?> effect : effects.values()) {
-			effects_string += effect.name() + " ";
+			builder.append(effect.name() + " ");
 		}
 
-		String param = "\t".repeat(level) + reaction_string + uses_string + effects_string + " {";
-		System.out.println(param);
+		System.out.println("\t".repeat(level) + builder.toString() + " {");
 		System.out.println("\t".repeat(level+1) + targetCode.toString());
 		System.out.println("\t".repeat(level) + "}");
 

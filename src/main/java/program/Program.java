@@ -128,12 +128,26 @@ public record Program(HashSet<Target> targets, HashSet<Import> imports,
 	}
 
 	public void toLF(){
+		if (mainReactor.isPresent()) {
+			mainReactor.get().init();
+		}
+
+		for (Import _import : imports) {
+			for (Reactor reactor : _import.getReactors().values()) {
+				reactor.init();
+			}
+		}
+
+		for (Reactor reactor : reactors) {
+			reactor.init();
+		}
 
 		for (Target target : targets) {
 			target.toLF(0);
 		}
 
 		for (Import _import : imports) {
+
 			_import.toLF(0);
 		}
 
@@ -141,7 +155,6 @@ public record Program(HashSet<Target> targets, HashSet<Import> imports,
 			reactor.toLF(0);
 		}
 		if(mainReactor.isPresent()){
-			mainReactor.get().init();
 			System.out.print("main ");
 			mainReactor.get().toLF(0);
 		}

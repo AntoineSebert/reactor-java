@@ -150,7 +150,6 @@ public class Reactor extends Declaration implements Runnable {
 
 	@Override
 	public void toLF(int lvl) {
-		init();
 		System.out.print("reactor "+name+" ");
 		/*
 		if(!params.isEmpty()) {
@@ -178,6 +177,9 @@ public class Reactor extends Declaration implements Runnable {
 			}
 		}
 
+		for (Reaction reaction : reactions) {
+			reaction.toLF(1);
+		}
 		System.out.println("}\n");
 	}
 

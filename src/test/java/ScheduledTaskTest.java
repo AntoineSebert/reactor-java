@@ -26,7 +26,7 @@ public class ScheduledTaskTest {
                                         .build()
                                 ).build())
                         .build()
-                        .run()
+                        .toLF()
         );
     }
 }

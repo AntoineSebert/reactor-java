@@ -19,8 +19,11 @@ public class ToLFTest {
         Program hello_world = (new Program.Builder())
                 .targets(Target.Java)
                 .reactors((new Reactor.Builder("HelloWorld"))
-                        .reactions((new Reaction.Builder()).triggers("STARTUP").build())
-                        .build())
+                        .reactions((new Reaction.Builder())
+                                .targetCode((self, reaction) -> {})
+                                .triggers("STARTUP")
+                                .build()
+                        ).build())
                 .build();
 
         assertDoesNotThrow(

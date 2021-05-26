@@ -88,11 +88,13 @@ public class Action<T> extends Declaration implements Trigger {
 	public void toLF(int lvl) {
 		StringBuilder builder = new StringBuilder();
 		builder.append("\t".repeat(lvl))
-			.append(type == Type.logical ? "logical" : "physical")
-			.append(minDelay.isZero() ? "" : minDelay.toNanos())
+			.append(type == Type.logical ? "logical " : "physical ")
+			.append(name)
+			.append(minDelay.isZero() ? "" : " (" + minDelay.toNanos())
 			.append(minSpacing.isZero() ? "" : ", " + minSpacing.toNanos())
-			.append(policy != null ? policy.name() : "")
-			.append(minDelay.isZero() ? "" : ")");
+			.append(policy != null ? ", " + policy.name() : "")
+			.append(minDelay.isZero() ? "" : ")")
+		    .append(";");
 
 
 		System.out.println(builder.toString());
