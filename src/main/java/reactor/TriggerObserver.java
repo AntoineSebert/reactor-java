@@ -9,7 +9,6 @@ public class TriggerObserver  {
 
 
     public static void update(Trigger trigger) {
-        System.out.println(trigger);
         Set<Reaction> reactions = reactionMap.get(trigger.toString());
         for (Reaction reaction : reactions) {
             if (reaction.can_trigger()) {
