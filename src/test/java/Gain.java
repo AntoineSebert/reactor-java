@@ -39,14 +39,13 @@ public class Gain {
 									(new Reaction.Builder())
 											.triggers("x")
 											.targetCode((self, r) -> {
-												System.out.println(("Test"));
 												Input<Integer> x = ((Input<Integer>) r.t("x"));
 												System.out.println("Received " + x.value() + ".\n");
 												((State<Boolean>) self.lookup("received_value")).set(true);
 
 												if (x.value() != 2) {
 													System.out.println("ERROR: Expected 2!\n");
-													System.exit(1);
+													//System.exit(1);
 												}
 											})
 											.build(),
@@ -71,9 +70,9 @@ public class Gain {
 					.reactions(
 							(new Reaction.Builder())
 									.triggers("STARTUP")
-									.effects("d.x")
+									.effects("g.x")
 									.targetCode((self, r) -> {
-										r.e("d.x").set(1);
+										r.e("g.x").set(1);
 									})
 									.build()
 					)
