@@ -11,6 +11,7 @@ public class Reactor extends Declaration implements Runnable {
 	private final HashMap<String, Declaration> declarations = new HashMap<>();
 	protected ArrayList<Reaction> reactions = new ArrayList<>();
 	private final HashSet<Statement> statements = new HashSet<>();
+	private boolean is_init;
 
 	public Reactor(@NotNull String name, @NotNull Iterable<? extends Reaction> reactions,
 				   @NotNull Iterable<? extends Declaration> declarations, @NotNull Iterable<? extends Statement> statements) {
@@ -19,7 +20,6 @@ public class Reactor extends Declaration implements Runnable {
 		for (Declaration decl : declarations)
 			this.declarations.put(decl.name(), decl);
 
-		// replace by better loop
 		for (Reaction reaction : reactions) {
 			reaction.self(this);
 			this.reactions.add(reaction);
@@ -54,6 +54,10 @@ public class Reactor extends Declaration implements Runnable {
 	 */
 	public HashSet<Statement> getStatements() {
 		return statements;
+	}
+
+	public ArrayList<Reaction> getReactions() {
+		return reactions;
 	}
 
 	public void setContextReactors(@NotNull Map<String, ? extends Reactor> contextReactors) {
@@ -97,22 +101,26 @@ public class Reactor extends Declaration implements Runnable {
 			else
 				throw new ExceptionInInitializerError("Name '" + connection.output_name + "' does not identify and Output");
 		}
-
 	}
 
-	protected void init() {
-		resolveStatements();
+	public void init() {
+		if(!is_init) {
+			resolveStatements();
 
-		for(Reaction reaction : reactions) {
-			reaction.init();
+			for(Reaction reaction : reactions) {
+				reaction.init();
 
-			for (Trigger t : reaction.getTriggers().values())
-				TriggerObserver.addReactionMapEntry(t, reaction);
+				for (Trigger t : reaction.getTriggers().values())
+					TriggerObserver.addReactionMapEntry(t, reaction);
+			}
+
+			is_init = true;
 		}
 	}
 
 	public void run() {
-		init();
+		if(!is_init)
+			init();
 
 		for (Statement statement : statements)
 			if (statement instanceof Instantiation instance)
