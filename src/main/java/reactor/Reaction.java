@@ -128,10 +128,8 @@ public class Reaction implements Runnable {
 	}
 
 	public boolean has_passed() {
-		if(deadline.isPresent() && deadline.get().deadline() != Duration.ZERO)
-				return timestamp + deadline.get().deadline().toNanos() < Time.physical();
-
-		return false;
+		return deadline.isPresent() && deadline.get().deadline() != Duration.ZERO
+				&& (timestamp + deadline.get().deadline().toNanos() < Time.physical());
 	}
 
 	public <T> void schedule(@NotNull String name, @NotNull Duration offset, Optional<T> payload) {
@@ -143,6 +141,7 @@ public class Reaction implements Runnable {
 					action.start(this, offset.toNanos())
 					: action.start(offset.toNanos());
 			if (result == 0) {
+				// TODO
 				// if new event is still pending in the event queue
 				if(true)
 				// payload of the new event is assigned to the preceding event
