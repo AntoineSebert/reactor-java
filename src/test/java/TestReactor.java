@@ -10,23 +10,6 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 public class TestReactor {
 	@Test
-	@DisplayName("HelloWorld")
-	public void testHelloWorld() {
-		System.out.println("[testHelloWorld]");
-
-		assertDoesNotThrow(() -> (new Program.Builder())
-				.targets(Target.Java)
-				.mainReactor((new Reactor.Builder("Minimal"))
-						.reactions((new Reaction.Builder())
-								.targetCode((self, r) -> System.out.println("Hello World.\n"))
-								.triggers("STARTUP")
-								.build()
-						).build())
-				.build()
-				.run());
-	}
-
-	@Test
 	@DisplayName("Gain")
 	public void testGain() {
 		System.out.println("[testGain]");
