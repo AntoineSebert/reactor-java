@@ -41,7 +41,8 @@ public class ToLFTest {
                                         new Input<>("y", true),
                                         new Output<Integer>("o"),
                                         new State<>("a", 2),
-                                        new Timer("b", duration, duration)
+                                        new Timer("b", duration, duration),
+                                        new Action<>("action", Action.Type.logical, Action.Policy.replace,Duration.ofSeconds(1),Duration.ofSeconds(1))
                                 )
                                 .statements(
                                         new Connection<Integer>("g.y", "d.x"),

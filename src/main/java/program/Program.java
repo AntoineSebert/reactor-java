@@ -138,13 +138,9 @@ public record Program(HashSet<Target> targets, HashSet<Import> imports,
 		}
 
 		for (Reactor reactor : reactors) {
-			for (Reaction reaction : reactor.getReactions()) {
-				reaction.init();
-			}
 			reactor.toLF(0);
 		}
 		if(mainReactor.isPresent()){
-			mainReactor.get().init();
 			System.out.print("main ");
 			mainReactor.get().toLF(0);
 		}
