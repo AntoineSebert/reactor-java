@@ -70,7 +70,7 @@ public class Connection<T> implements Statement {
 		input.set(value, msg_time);
 	}
 
-	public void ToLF(int lvl) {
+	public void toLF(int lvl) {
 		StringBuilder connection = new StringBuilder();
 
 		for (int i = 0; i < lvl; i++) {

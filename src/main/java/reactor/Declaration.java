@@ -29,5 +29,5 @@ public abstract class Declaration {
 		return name.equals(((Declaration) o).name);
 	}
 
-	public abstract void ToLF(int lvl);
+	public abstract void toLF(int lvl);
 }

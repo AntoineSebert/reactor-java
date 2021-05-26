@@ -20,7 +20,7 @@ public class Input<T> extends Declaration implements Port<T> {
 	}
 
 	@Override
-	public void ToLF(int lvl) {
+	public void toLF(int lvl) {
 
 		String input = "\t".repeat(lvl) + getClass().getSimpleName() +
 				" " + name + ":" + name.getClass().getSimpleName()+";";

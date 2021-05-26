@@ -183,40 +183,37 @@ public class Reactor extends Declaration implements Runnable {
 		}
 	}
 
+	@Override
 	public void toLF(int lvl) {
 
 		System.out.print("reactor "+name+" ");
-
+		/*
 		if(!params.isEmpty()) {
 
 			for (Parameter param: params.values()) {
 				param.ToLF(0);
 			}
 		}
+		 */
 
 		System.out.println("{");
 
 		for (Declaration declaration: declarations.values()) {
-			declaration.ToLF(1);
+			declaration.toLF(1);
 		}
 
 		System.out.println();
 
 		for (Statement state: statements) {
 			if(state instanceof  Instantiation instance) {
-				instance.ToLF(1);
+				instance.toLF(1);
 			}
 			if(state instanceof Connection<?> connection) {
-				connection.ToLF(1);
+				connection.toLF(1);
 			}
 		}
 
 		System.out.println("}\n");
-	}
-
-	@Override
-	public void ToLF(int lvl) {
-
 	}
 
 	public static class Builder {

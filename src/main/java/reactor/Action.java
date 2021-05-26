@@ -77,7 +77,7 @@ public class Action<T> extends Declaration implements Trigger {
 	}
 
 	@Override
-	public void ToLF(int lvl) {
+	public void toLF(int lvl) {
 	}
 
 	public enum Type {

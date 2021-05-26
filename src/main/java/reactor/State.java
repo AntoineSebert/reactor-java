@@ -24,7 +24,7 @@ public class State<T> extends Declaration {
 	}
 
 	@Override
-	public void ToLF(int lvl) {
+	public void toLF(int lvl) {
 
 		String state = "\t".repeat(lvl) + getClass().getSimpleName() + " " + name
 				+ ": " + value.getClass().getSimpleName() + "(" + value + ");";

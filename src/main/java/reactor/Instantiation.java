@@ -41,7 +41,7 @@ public class Instantiation implements Statement {
 		return name.equals(((Instantiation) o).name);
 	}
 
-	public void ToLF(int lvl){
+	public void toLF(int lvl){
 		String instantiation = "\t".repeat(lvl) +
 				name + " = new " + reactor_name + "();";
 
