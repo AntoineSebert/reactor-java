@@ -128,14 +128,15 @@ public record Program(HashSet<Target> targets, HashSet<Import> imports,
 	}
 
 	public void toLF(){
-		if (mainReactor.isPresent()) {
-			mainReactor.get().init();
-		}
 
 		for (Import _import : imports) {
 			for (Reactor reactor : _import.getReactors().values()) {
 				reactor.init();
 			}
+		}
+
+		if (mainReactor.isPresent()) {
+			mainReactor.get().init();
 		}
 
 		for (Reactor reactor : reactors) {
