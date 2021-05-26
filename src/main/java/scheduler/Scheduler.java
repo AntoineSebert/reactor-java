@@ -4,6 +4,7 @@ import org.jetbrains.annotations.NotNull;
 import reactor.Reaction;
 
 import java.util.concurrent.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class Scheduler {
 
@@ -12,7 +13,7 @@ public class Scheduler {
 	private static boolean timedTasks;
 	private static boolean keepAlive;
 	private static volatile boolean aborted;
-
+	private static AtomicInteger taskCount;
 	private Scheduler() {
 
 	}
@@ -23,20 +24,23 @@ public class Scheduler {
 			timedTasks = false;
 			keepAlive = false;
 			aborted = false;
+			taskCount = new AtomicInteger(0);
 		}
 	}
 
 	public static void addReactionTask(@NotNull Reaction reaction) {
-		reaction.toLF(2);
+		taskCount.incrementAndGet();
 		executorService.submit(reaction);
 	}
 
 	public static void addScheduledReaction(@NotNull Runnable reaction, long delay) {
+		taskCount.incrementAndGet();
 		timedTasks = true;
 		executorService.schedule(reaction, delay, TimeUnit.NANOSECONDS);
 	}
 
 	public static void addRepeatingReaction(@NotNull Runnable reaction, long period, long delay) {
+		taskCount.incrementAndGet();
 		timedTasks = true;
 		executorService.scheduleAtFixedRate(reaction, delay, period, TimeUnit.NANOSECONDS);
 	}
@@ -54,9 +58,9 @@ public class Scheduler {
 	public static void awaitTermination(long time, TimeUnit unit) throws RuntimeException {
 		boolean termination_results;  // Might be used
 		try {
-			if (timedTasks || keepAlive)
+			if (timedTasks || keepAlive) {
 				termination_results = executorService.awaitTermination(time, unit);
-			else {
+		} else {
 				while (!isEmpty()) {
 					if (aborted) throw new InterruptedException();
 				}
@@ -79,7 +83,8 @@ public class Scheduler {
 	}
 
 	public static boolean isEmpty() {
-		return executorService.getActiveCount() == 0;
+		long active = executorService.getCompletedTaskCount();
+		return active == taskCount.get();
 	}
 
 	public static void setKeepAlive(boolean value) {
