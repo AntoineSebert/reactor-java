@@ -3,6 +3,7 @@ package program;
 import _import.Import;
 import org.jetbrains.annotations.NotNull;
 import reactor.Action;
+import reactor.Reaction;
 import reactor.Reactor;
 import reactor.Time;
 import scheduler.Scheduler;
@@ -126,7 +127,8 @@ public record Program(HashSet<Target> targets, HashSet<Import> imports,
 
 	}
 
-	public void ToLF(){
+	public void toLF(){
+
 		for (Target target : targets) {
 			target.toLF(0);
 		}
@@ -135,10 +137,14 @@ public record Program(HashSet<Target> targets, HashSet<Import> imports,
 			_import.toLF(0);
 		}
 
-		for (Reactor reactor : reactors){
+		for (Reactor reactor : reactors) {
+			for (Reaction reaction : reactor.getReactions()) {
+				reaction.init();
+			}
 			reactor.toLF(0);
 		}
 		if(mainReactor.isPresent()){
+			mainReactor.get().init();
 			System.out.print("main ");
 			mainReactor.get().toLF(0);
 		}

@@ -11,6 +11,7 @@ public interface Port<T> extends Trigger {
 	Connection<T> getConnection();
 	void connect(@NotNull Connection<T> connection);
 	T value();
+	String name();
 	long timestamp();
 	boolean isPresent();
 	void set(@NotNull T value);

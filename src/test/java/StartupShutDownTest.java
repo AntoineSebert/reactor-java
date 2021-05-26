@@ -33,7 +33,7 @@ public class StartupShutDownTest {
                                         .build()
                                 ).build())
                         .build()
-                        .run()
+                        .toLF()
         );
     }
 }

@@ -48,10 +48,11 @@ public class ToLFTest {
                                         new Instantiation("a", "HelloWorld"),
                                         new Instantiation("b", "HelloWorld")
                                 )
-                                .reactions((new Reaction.Builder()).triggers("SHUTDOWN").build()
+                                .reactions((new Reaction.Builder())
+                                .triggers("SHUTDOWN").build()
                                 ).build())
                         .build()
-                        .ToLF()
+                        .toLF()
         );
     }
 }

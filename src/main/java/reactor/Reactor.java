@@ -134,7 +134,7 @@ public class Reactor extends Declaration implements Runnable {
 
 	}
 
-	protected void init() {
+	public void init() {
 		// lazy initialization
 		resolveStatements();
 
@@ -208,6 +208,14 @@ public class Reactor extends Declaration implements Runnable {
 			}
 			if(state instanceof Connection<?> connection) {
 				connection.ToLF(1);
+			}
+		}
+
+		System.out.println();
+
+		if (!reactions.isEmpty()) {
+			for (Reaction reaction : reactions) {
+				reaction.toLF(1);
 			}
 		}
 

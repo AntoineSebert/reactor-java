@@ -3,6 +3,7 @@ package reactor;
 import org.jetbrains.annotations.NotNull;
 import reactor.port.Input;
 import reactor.port.Port;
+import scheduler.Scheduler;
 
 import java.time.Duration;
 import java.util.*;
@@ -75,6 +76,7 @@ public class Reaction implements Runnable {
 
 	public void init() {
 		for(String name : trigger_names) {
+
 			if("STARTUP".equals(name)) {
 				triggers.put(name, new Trigger.STARTUP());
 				continue;
@@ -143,6 +145,42 @@ public class Reaction implements Runnable {
 	public int hashCode() {
 		return Objects.hash(triggers, uses, effects);
 	}
+
+	public void toLF(int level) {
+		String reaction_string = "reaction (";
+
+		for (Trigger trigger : getTriggers().values()) {
+			if (trigger.isStartup()) {
+				reaction_string += "startup, ";
+			} else if (trigger.isShutdown()) {
+				reaction_string += "shutdown, ";
+			} else if ( trigger instanceof  Declaration declaration) {
+				reaction_string += declaration.name() + ", ";
+
+			}
+		}
+		reaction_string = reaction_string.substring(0, reaction_string.length()-2) + ")";
+
+		String uses_string = "";
+		for (Input<?> use : uses.values()) {
+			uses_string +=  " " + use.name();
+		}
+		if (!uses.isEmpty()) uses_string = " ";
+
+		String effects_string = "";
+		if (!effects.isEmpty()) effects_string = "-> ";
+		for (Port<?> effect : effects.values()) {
+			effects_string += effect.name() + " ";
+		}
+
+		String param = "\t".repeat(level) + reaction_string + uses_string + effects_string + " {";
+		System.out.println(param);
+		System.out.println("\t".repeat(level+1) + targetCode.toString());
+		System.out.println("\t".repeat(level) + "}");
+
+
+	}
+
 
 	public static class Builder {
 		private HashSet<String> trigger_names = new HashSet<>();

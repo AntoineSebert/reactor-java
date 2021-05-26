@@ -29,12 +29,13 @@ public class Scheduler {
 
 
     public static void addReactionTask(@NotNull Runnable reaction) {
-        executorService.submit(reaction);
+            executorService.submit(reaction);
     }
 
     public static void addScheduledReaction(@NotNull Runnable reaction, long delay) {
         timedTasks = true;
         executorService.schedule(reaction, delay, TimeUnit.NANOSECONDS);
+        
     }
 
     public static void addRepeatingReaction(@NotNull Runnable reaction, long period, long delay) {
