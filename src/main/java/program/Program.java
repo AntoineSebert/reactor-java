@@ -128,9 +128,7 @@ public record Program(HashSet<Target> targets, HashSet<Import> imports,
 	}
 
 	public void toLF(){
-		if (mainReactor.isPresent()) {
-			mainReactor.get().init();
-		}
+		mainReactor.ifPresent(Reactor::init);
 
 		for (Import _import : imports) {
 			for (Reactor reactor : _import.getReactors().values()) {
