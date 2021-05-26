@@ -146,8 +146,7 @@ public class Reaction implements Runnable {
 
 	public void toLF(int level) {
 		StringBuilder builder = new StringBuilder();
-		builder.append("reaction (");
-		System.out.println(triggers.size());
+		builder.append("\t".repeat(level) + "reaction (");
 		for (Trigger trigger : getTriggers().values()) {
 			if (trigger.isStartup()) {
 				builder.append("startup, ");
@@ -160,20 +159,18 @@ public class Reaction implements Runnable {
 		}
 		builder.delete(builder.length()-2, builder.length()).append(")");
 
-		String uses_string = "";
 		for (Input<?> use : uses.values()) {
 			builder.append(" " + use.name());
 		}
-		builder.append(!uses.isEmpty() ? uses_string = " " : "");
+		builder.append(!uses.isEmpty() ? " " : "");
 
 		builder.append(!effects.isEmpty() ? "-> " : "");
 		for (Port<?> effect : effects.values()) {
 			builder.append(effect.name() + " ");
 		}
 
-		System.out.println("\t".repeat(level) + builder.toString() + " {");
-		System.out.println("\t".repeat(level+1) + targetCode.toString());
-		System.out.println("\t".repeat(level) + "}");
+		builder.append(" {\n" + "\t".repeat(level) + targetCode.toString() + "\t".repeat(level) + "}\n");
+		System.out.println(builder.toString());
 
 
 	}
