@@ -50,8 +50,8 @@ public class Gain {
 											})
 											.build(),
 									(new Reaction.Builder())
-											.triggers("STARTUP")
-											.targetCode((self, reaction) -> {
+											.triggers("SHUTDOWN")
+											.targetCode((self, r) -> {
 												if (((State<Boolean>) self.lookup("received_value")).get())
 													System.out.println("Test passes.\n");
 												else
@@ -86,6 +86,6 @@ public class Gain {
 	@Test
 	@DisplayName("Gain toLF")
 	public void testGainToLF() {
-		assertDoesNotThrow(() -> program.run());
+		assertDoesNotThrow(() -> program.toLF());
 	}
 }
