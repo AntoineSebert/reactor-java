@@ -23,8 +23,7 @@ public class Timer extends Declaration implements Trigger {
 	@Override
 	public void toLF(int lvl) {
 
-		StringBuilder state = new StringBuilder("\t".repeat(lvl) + getClass().getSimpleName() + " " + name
-				+ ": (");
+		StringBuilder state = new StringBuilder("\t".repeat(lvl) + getClass().getSimpleName() + " " + name + ": (");
 
 		if(offset != Duration.ZERO && period != Duration.ZERO) {
 			state.append(offset.toNanos()).append(" nsec,");

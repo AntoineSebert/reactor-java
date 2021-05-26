@@ -27,8 +27,6 @@ class Output<T> {
 	}
 }
 
-class Reactor {}
-
 public class Gain extends Reactor {
 	Scale g = new Scale();
 	Test d = new Test();

@@ -53,6 +53,8 @@ public class Reaction implements Runnable {
 		return uses;
 	}
 
+	public HashMap<String, Port<?>> getEffects() { return effects; }
+
 	public <T> Port<T> e(@NotNull String name) {
 		return (Port<T>) effects.get(name);
 	}
@@ -159,19 +161,6 @@ public class Reaction implements Runnable {
 			throw new RuntimeException("Cannot find action '" + name + "'");
 	}
 
-	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
-		Reaction reaction = (Reaction) o;
-		return triggers.equals(reaction.triggers) && uses.equals(reaction.uses) && effects.equals(reaction.effects);
-	}
-
-	@Override
-	public int hashCode() {
-		return Objects.hash(triggers, uses, effects);
-	}
-
 	public void toLF(int level) {
 		StringBuilder builder = new StringBuilder();
 		builder.append("\t".repeat(level) + "reaction (");
@@ -197,7 +186,7 @@ public class Reaction implements Runnable {
 			builder.append(effect.name() + " ");
 		}
 
-		builder.append(" {\n" + "\t".repeat(level+1) + targetCode.toString() + "\n" + "\t".repeat(level) + "}");
+		builder.append(" {=\n" + "\t".repeat(level+1) + targetCode.toString() + "\n" + "\t".repeat(level) + "=}");
 		System.out.println(builder.toString());
 
 
