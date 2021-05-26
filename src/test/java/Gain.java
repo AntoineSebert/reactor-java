@@ -23,6 +23,7 @@ public class Gain {
 											.triggers("x")
 											.effects("y")
 											.targetCode((self, r) -> (r.e("y")).set(
+
 													((Input<Integer>) r.t("x")).value()
 															* ((Parameter<Integer>) self.lookup("scale")).value()
 											))
@@ -31,15 +32,15 @@ public class Gain {
 							.build(),
 					(new Reactor.Builder("Test"))
 							.declarations(
-									new Input<Integer>("x"),
+									new Input<Integer>("x", true),
 									new State<>("received_value", false)
 							)
 							.reactions(
 									(new Reaction.Builder())
 											.triggers("x")
 											.targetCode((self, r) -> {
+												System.out.println(("Test"));
 												Input<Integer> x = ((Input<Integer>) r.t("x"));
-
 												System.out.println("Received " + x.value() + ".\n");
 												((State<Boolean>) self.lookup("received_value")).set(true);
 
@@ -63,15 +64,17 @@ public class Gain {
 			)
 			.mainReactor((new Reactor.Builder("Gain"))
 					.statements(
-							new Instantiation("g", "Scale"),
 							new Instantiation("d", "Test"),
+							new Instantiation("g", "Scale"),
 							new Connection<Integer>("g.y", "d.x")
 					)
 					.reactions(
 							(new Reaction.Builder())
 									.triggers("STARTUP")
-									.effects("g.x")
-									.targetCode((self, r) -> r.e("g.x").set(1))
+									.effects("d.x")
+									.targetCode((self, r) -> {
+										r.e("d.x").set(1);
+									})
 									.build()
 					)
 					.build())
